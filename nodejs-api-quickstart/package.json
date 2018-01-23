@@ -1,0 +1,23 @@
+{
+  "name": "nodejs-api-quickstart",
+  "version": "1.0.0",
+  "description": "Simple NodeJS API Template that provides basic API calls",
+  "main": "app.js",
+  "private": true,
+  "scripts": {
+    "start": "node app.js"
+  },
+  "engines": {
+    "node": "8.9.4"
+  },
+  "author": "Agilit-e",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "1.18.2",
+    "cors": "2.8.4",
+    "dotenv": "4.0.0",
+    "express": "4.16.2",
+    "lodash": "4.17.4",
+    "moment": "2.19.1"
+  }
+}
