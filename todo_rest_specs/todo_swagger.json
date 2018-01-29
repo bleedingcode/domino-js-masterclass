@@ -67,7 +67,8 @@
             "domino_auth": []
           },
           {
-            "application_auth": []
+            "application_auth": [],
+            "user_auth": []
           }
         ]
       }
@@ -113,7 +114,8 @@
             "domino_auth": []
           },
           {
-            "application_auth": []
+            "application_auth": [],
+            "user_auth": []
           }
         ]
       }
@@ -165,7 +167,8 @@
             "domino_auth": []
           },
           {
-            "application_auth": []
+            "application_auth": [],
+            "user_auth": []
           }
         ]
       },
@@ -206,7 +209,8 @@
             "domino_auth": []
           },
           {
-            "application_auth": []
+            "application_auth": [],
+            "user_auth": []
           }
         ]
       }
@@ -250,7 +254,8 @@
             "domino_auth": []
           },
           {
-            "application_auth": []
+            "application_auth": [],
+            "user_auth": []
           }
         ]
       },
@@ -308,7 +313,8 @@
             "domino_auth": []
           },
           {
-            "application_auth": []
+            "application_auth": [],
+            "user_auth": []
           }
         ]
       }
@@ -363,7 +369,8 @@
             "domino_auth": []
           },
           {
-            "application_auth": []
+            "application_auth": [],
+            "user_auth": []
           }
         ]
       }
@@ -425,7 +432,8 @@
             "domino_auth": []
           },
           {
-            "application_auth": []
+            "application_auth": [],
+            "user_auth": []
           }
         ]
       },
@@ -486,7 +494,8 @@
             "domino_auth": []
           },
           {
-            "application_auth": []
+            "application_auth": [],
+            "user_auth": []
           }
         ]
       }
@@ -549,7 +558,8 @@
             "domino_auth": []
           },
           {
-            "application_auth": []
+            "application_auth": [],
+            "user_auth": []
           }
         ]
       }
@@ -603,7 +613,8 @@
             "domino_auth": []
           },
           {
-            "application_auth": []
+            "application_auth": [],
+            "user_auth": []
           }
         ]
       }
@@ -657,7 +668,8 @@
             "domino_auth": []
           },
           {
-            "application_auth": []
+            "application_auth": [],
+            "user_auth": []
           }
         ]
       }
@@ -742,7 +754,8 @@
             "domino_auth": []
           },
           {
-            "application_auth": []
+            "application_auth": [],
+            "user_auth": []
           }
         ]
       }
@@ -756,6 +769,11 @@
       "type": "apiKey",
       "in": "header",
       "name": "X-TODO-API-KEY"
+    },
+    "user_auth": {
+      "type": "apiKey",
+      "in": "header",
+      "name": "X-TODO-USER-KEY"
     }
   },
   "definitions": {
@@ -780,7 +798,7 @@
         },
         "type": {
           "type": "string",
-          "description": "ToDo type, see enum",
+          "description": "ToDo type, see enum'",
           "enum": [
             "Personal",
             "Team"

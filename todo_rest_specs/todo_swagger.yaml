@@ -47,6 +47,7 @@ paths:
       security:
         - domino_auth: []
         - application_auth: []
+          user_auth: []
   /store:
     post:
       tags:
@@ -75,6 +76,7 @@ paths:
       security:
         - domino_auth: []
         - application_auth: []
+          user_auth: []
   '/store/{store}':
     put:
       tags:
@@ -107,6 +109,7 @@ paths:
       security:
         - domino_auth: []
         - application_auth: []
+          user_auth: []
     get:
       tags:
         - store
@@ -132,6 +135,7 @@ paths:
       security:
         - domino_auth: []
         - application_auth: []
+          user_auth: []
   '/store/{store}/access':
     get:
       tags:
@@ -159,6 +163,7 @@ paths:
       security:
         - domino_auth: []
         - application_auth: []
+          user_auth: []
     put:
       tags:
         - store
@@ -198,6 +203,7 @@ paths:
       security:
         - domino_auth: []
         - application_auth: []
+          user_auth: []
   '/todos/{store}':
     post:
       tags:
@@ -232,6 +238,7 @@ paths:
       security:
         - domino_auth: []
         - application_auth: []
+          user_auth: []
   '/todos/{store}/{toDoId}':
     put:
       tags:
@@ -271,6 +278,7 @@ paths:
       security:
         - domino_auth: []
         - application_auth: []
+          user_auth: []
     delete:
       tags:
         - todo
@@ -310,6 +318,7 @@ paths:
       security:
         - domino_auth: []
         - application_auth: []
+          user_auth: []
   '/todos/{store}/{toDoId}/reassign':
     put:
       tags:
@@ -350,6 +359,7 @@ paths:
       security:
         - domino_auth: []
         - application_auth: []
+          user_auth: []
   '/todos/{store}/{toDoId}/complete':
     put:
       tags:
@@ -384,6 +394,7 @@ paths:
       security:
         - domino_auth: []
         - application_auth: []
+          user_auth: []
   '/todos/{store}/{toDoId}/reopen':
     put:
       tags:
@@ -418,6 +429,7 @@ paths:
       security:
         - domino_auth: []
         - application_auth: []
+          user_auth: []
   /user/login:
     get:
       tags:
@@ -475,6 +487,7 @@ paths:
       security:
         - domino_auth: []
         - application_auth: []
+          user_auth: []
 securityDefinitions:
   domino_auth:
     type: basic
@@ -482,6 +495,10 @@ securityDefinitions:
     type: apiKey
     in: header
     name: X-TODO-API-KEY
+  user_auth:
+    type: apiKey
+    in: header
+    name: X-TODO-USER-KEY
 definitions:
   Store:
     type: object
@@ -505,7 +522,7 @@ definitions:
           stored are stored
       type:
         type: string
-        description: 'ToDo type, see enum'
+        description: 'ToDo type, see enum'''
         enum:
           - Personal
           - Team
