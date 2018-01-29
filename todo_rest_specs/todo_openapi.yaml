@@ -1,0 +1,607 @@
+openapi: 3.0.0
+servers:
+  - url: 'http://localhost:8081/api'
+info:
+  description: >-
+    This is the contract for our ToDo app. Data will be stored in Domino. The UI
+    will be React
+  version: 1.0.0
+  title: Swagger Domino/React ToDos
+  contact:
+    name: Paul Withers
+    email: watsonwork.me/pwithers@intec.co.uk
+    url: 'http://www.intec.co.uk'
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+tags:
+  - name: store
+    description: CRUD for ToDos NSF(s)
+  - name: user
+    description: Operations about users
+  - name: todo
+    description: Everything about your ToDos
+paths:
+  /stores:
+    get:
+      tags:
+        - store
+      summary: Get all stores the user has access to
+      description: ''
+      operationId: getStores
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Store'
+        '401':
+          description: Unauthenticated
+      security:
+        - domino_auth: []
+        - application_auth: []
+          user_auth: []
+  /store:
+    post:
+      tags:
+        - store
+      summary: Add a new ToDo NSF instance
+      description: ''
+      operationId: createStore
+      responses:
+        '400':
+          description: Invalid input
+        '401':
+          description: Unauthenticated
+        '409':
+          description: Conflict in name
+      security:
+        - domino_auth: []
+        - application_auth: []
+          user_auth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Store'
+        description: Store object that should be created
+        required: true
+  '/store/{store}':
+    put:
+      tags:
+        - store
+      description: Change the title of a ToDo store
+      operationId: changeTitle
+      parameters:
+        - name: store
+          in: path
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: newTitle
+          description: New title for the store
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          $ref: '#/components/schemas/Store'
+        '400':
+          description: Invalid store name or id supplied
+        '401':
+          description: Unauthenticated
+        '405':
+          description: Validation exception
+      security:
+        - domino_auth: []
+        - application_auth: []
+          user_auth: []
+    get:
+      tags:
+        - store
+      description: Retrieve information about a ToDo store
+      operationId: getStoreInfo
+      parameters:
+        - name: store
+          description: store id or name
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          $ref: '#/components/schemas/Store'
+        '400':
+          description: Invalid store name or id supplied
+        '401':
+          description: Unauthenticated
+      security:
+        - domino_auth: []
+        - application_auth: []
+          user_auth: []
+  '/store/{store}/access':
+    get:
+      tags:
+        - store
+        - user
+      description: query access level for the current user for the relevant store
+      operationId: queryAccess
+      parameters:
+        - name: store
+          description: store id or name
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          $ref: '#/components/schemas/User'
+        '400':
+          description: Invalid store name or id supplied
+        '401':
+          description: Unauthenticated
+      security:
+        - domino_auth: []
+        - application_auth: []
+          user_auth: []
+    put:
+      tags:
+        - store
+        - user
+      description: >-
+        add or update access for users for the relevant store. This can only be
+        done by an Admin for the store.
+      operationId: updateAccess
+      parameters:
+        - name: store
+          description: store id or name
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: boolean success
+          content:
+            application/json:
+              schema:
+                type: boolean
+                description: success or failure
+        '400':
+          description: Invalid store name or id supplied
+        '401':
+          description: Unauthenticated
+      security:
+        - domino_auth: []
+        - application_auth: []
+          user_auth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/User'
+        description: users to update access for
+        required: true
+  '/todos/{store}':
+    post:
+      tags:
+        - todo
+      description: add a todo to the store
+      operationId: addToDo
+      parameters:
+        - name: store
+          description: store id or name in which to post the ToDo
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Returned ToDo
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ToDo'
+        '400':
+          description: Invalid store name or id supplied
+        '401':
+          description: Not authorised
+      security:
+        - domino_auth: []
+        - application_auth: []
+          user_auth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ToDo'
+        description: ToDo to post to the store
+        required: true
+  '/todos/{store}/{toDoId}':
+    put:
+      tags:
+        - todo
+      description: update a ToDo in the store
+      operationId: updateToDo
+      parameters:
+        - name: store
+          description: store id or name in which the ToDo resides
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: toDoId
+          description: id of the ToDo
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Returned ToDo
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ToDo'
+        '400':
+          description: Invalid store name or id supplied
+        '401':
+          description: Not authorised
+      security:
+        - domino_auth: []
+        - application_auth: []
+          user_auth: []
+      requestBody:
+        $ref: '#/components/requestBodies/ToDo'
+    delete:
+      tags:
+        - todo
+      description: delete a ToDo from the store
+      operationId: deleteToDo
+      parameters:
+        - name: store
+          description: store id or name in which the ToDo resides
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: toDoId
+          description: id of the ToDo
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: boolean success
+          content:
+            application/json:
+              schema:
+                type: boolean
+                description: boolean success or failure
+        '400':
+          description: Invalid store name or id supplied
+        '401':
+          description: Not authorised
+      security:
+        - domino_auth: []
+        - application_auth: []
+          user_auth: []
+      requestBody:
+        $ref: '#/components/requestBodies/ToDo'
+  '/todos/{store}/{toDoId}/reassign':
+    put:
+      tags:
+        - todo
+      description: 'Reassign a todo to another user, changes status to reassigned'
+      operationId: reassignToDo
+      parameters:
+        - name: store
+          description: store id or name in which the ToDo resides
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: toDoId
+          description: id of the ToDo
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: boolean success
+          content:
+            application/json:
+              schema:
+                type: boolean
+                description: boolean success or failure
+        '400':
+          description: Invalid store name or id supplied
+        '401':
+          description: Not authorised
+      security:
+        - domino_auth: []
+        - application_auth: []
+          user_auth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+        description: User to reassign the ToDo to
+        required: true
+  '/todos/{store}/{toDoId}/complete':
+    put:
+      tags:
+        - todo
+      description: Complete a todo
+      operationId: complete
+      parameters:
+        - name: store
+          description: store id or name in which the ToDo resides
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: toDoId
+          description: id of the ToDo
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: boolean success
+          content:
+            application/json:
+              schema:
+                type: boolean
+                description: boolean success or failure
+        '400':
+          description: Invalid store name or id supplied
+        '401':
+          description: Not authorised
+      security:
+        - domino_auth: []
+        - application_auth: []
+          user_auth: []
+  '/todos/{store}/{toDoId}/reopen':
+    put:
+      tags:
+        - todo
+      description: Reopen a todo
+      operationId: reopen
+      parameters:
+        - name: store
+          description: store id or name in which the ToDo resides
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: toDoId
+          description: id of the ToDo
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: boolean success
+          content:
+            application/json:
+              schema:
+                type: boolean
+                description: boolean success or failure
+        '400':
+          description: Invalid store name or id supplied
+        '401':
+          description: Not authorised
+      security:
+        - domino_auth: []
+        - application_auth: []
+          user_auth: []
+  /user/login:
+    get:
+      tags:
+        - user
+      summary: Logs user into the system
+      description: >-
+        Relevant only for Domino authentication, not included in the API, just
+        standard Domino authentication
+      operationId: loginUser
+      parameters:
+        - name: username
+          in: query
+          description: The user name for login
+          required: true
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: The password for login in clear text
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: boolean
+                description: success or failure
+        '400':
+          description: Invalid username/password supplied
+  '/user/{username}':
+    get:
+      tags:
+        - user
+      summary: Get user by user name
+      description: ''
+      operationId: getUserByName
+      parameters:
+        - name: username
+          in: path
+          description: The name that needs to be fetched.
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Invalid username supplied
+        '404':
+          description: User not found
+      security:
+        - domino_auth: []
+        - application_auth: []
+          user_auth: []
+components:
+  requestBodies:
+    ToDo:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ToDo'
+      description: ToDo to update in the store
+      required: true
+  securitySchemes:
+    domino_auth:
+      type: http
+      scheme: basic
+    application_auth:
+      type: apiKey
+      in: header
+      name: X-TODO-API-KEY
+    user_auth:
+      type: apiKey
+      in: header
+      name: X-TODO-USER-KEY
+  schemas:
+    Store:
+      type: object
+      properties:
+        replicaId:
+          type: string
+          description: 16 character hexadecimal string corresponding to NSF's replica id
+          minLength: 16
+          maxLength: 16
+          format: hex
+          readOnly: true
+        title:
+          type: string
+          description: >-
+            Display name for store, e.g. a project name or an individual user
+            for personal ToDos
+        name:
+          type: string
+          description: >-
+            File name for the NSF, appended to the folder name where all ToDo
+            stored are stored
+        type:
+          type: string
+          description: 'ToDo type, see enum'''
+          enum:
+            - Personal
+            - Team
+      required:
+        - title
+        - name
+        - type
+    ToDo:
+      type: object
+      properties:
+        unid:
+          type: string
+          description: Unique ID across all replicas
+          minLength: 32
+          maxLength: 32
+          format: hex
+          readOnly: true
+        author:
+          type: string
+          description: >-
+            username of the person who creates the ToDo - set automatically via
+            the API from the currentUser passed across
+          readOnly: true
+        currentUser:
+          $ref: '#/components/schemas/User'
+        taskName:
+          type: string
+          description: Brief description of task
+        description:
+          type: string
+          description: Detailed description of the task
+        dueDate:
+          type: string
+          format: date
+          description: Date when the task is due in RFC 3339 section 5.6 format 2018-03-19
+        priority:
+          type: string
+          description: 'Priority for the ToDo, see enum'
+          enum:
+            - Low
+            - Medium
+            - High
+        assignedTo:
+          type: string
+          description: >-
+            Name of the person the ToDo is assigned to. If not set, current user
+            will be used
+        status:
+          type: string
+          description: >-
+            Current status of the ToDo. Set via workflow actions, defaulting to
+            New
+          enum:
+            - New
+            - Reassigned
+            - Complete
+          readOnly: true
+      required:
+        - currentUser
+        - taskName
+        - description
+        - dueDate
+        - priority
+    User:
+      type: object
+      properties:
+        username:
+          type: string
+          description: >-
+            If Domino authentication is in operation for REST access, this
+            property will be ignored for the CurrentUser. If not, the REST
+            service  will use the username passed, replacing '@' with '_',
+            append a computed OU, and use the server's O.
+        access:
+          type: object
+          description: >-
+            Required when setting access levels, returned when checking access
+            levels, irrelevant otherwise.
+          properties:
+            level:
+              type: string
+              description: >-
+                Application access level. This will be converted to Editor or
+                Reader in Domino ACL
+              enum:
+                - Admin
+                - Reader
+                - Editor
+                - No Access
+            allowDelete:
+              type: boolean
+              description: Whether or not Delete documents privilege is added

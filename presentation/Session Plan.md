@@ -55,7 +55,7 @@ Microservices is nothing new, just the tools we use and the extent to which we b
 ###HTTP Response Codes
 - What they are?
 - When to use which?
-- Properly handle HTTP 500
+- [Wikipedia](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes)
 
 ###Data Integrity
 Code for failure and "bad data" on both sides. This is why DAS is not recommended - no validation / conversion
@@ -65,8 +65,14 @@ DO YOU WANT TO EXPOSE EDITABILITY OF YOUR "STATUS" FIELD? WOULD YOU MAKE IT EDIT
 ###Swagger
 - Provides a contract
 - Swagger Editor to design, describe and document contract as JSON
-- Swagger UI allows interaction
-- Documentation NEEDS examples: parameter is integer, I'm passing 366, why is it breaking on both sides? Because it takes an integer where 0 means X, 1 means Y, 2 means Z and nothing else is expected
+- Swagger 3.0 spec is out (since July 2017, OAS 3.0.0), `openapi: "3.0.0"`, but none of the examples have been updated. Also Docker example doesn't support OpenAPI 3.0.0, online editor does
+- [OpenAPI 3.0 docs](https://swagger.io/docs/specification/about/), [Swagger 2.0 docs](https://swagger.io/docs/specification/2-0/basic-structure/)
+- Convert from 2.0 to 3.0.0 with [Mermade](https://mermade.org.uk/openapi-converter) or [SwaggerHub](https://app.swaggerhub.com/)
+- Write as YAML or JSON - YAML is like JSON, but no quotes needed around strings, no commas between elements and no curly braces
+- operationIds can be added, but needs to be on all for that path
+- Documentation NEEDS examples: parameter is integer, I'm passing 366, why is it breaking on both sides? Because it takes an integer where 0 means X, 1 means Y, 2 means Z and nothing else is expected. Use enums instead. Examples should **_add_** value, not be tautological.
+- Swagger UI allows interaction with relevant server
+- Can use a Swagger mock server to simulate
 
 ###Testing
 - Postman (Electron) desktop app
