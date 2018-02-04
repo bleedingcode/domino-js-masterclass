@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<web-app>
+	<display-name>todoApp Servlet</display-name>
+	<servlet>
+		<servlet-name>todoAppApp</servlet-name>
+		<servlet-class>org.openntf.todo.ODADataServlet
+		</servlet-class>
+		<init-param>
+			<param-name>javax.ws.rs.Application</param-name>
+			<param-value>org.openntf.todo.ToDoApplication
+			</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>todoAppApp</servlet-name>
+		<url-pattern>/rest/*</url-pattern>
+	</servlet-mapping>
+</web-app>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>org.openntf.todo.update</artifactId>
+  <packaging>eclipse-update-site</packaging>
+  <name>Update Site for ODA Demo Servlet</name>
+  <description>Update Site project for Demo REST Servlet using OpenNTF Domino API</description>
+  <parent>
+  	<groupId>org.openntf.todo</groupId>
+  	<artifactId>todo</artifactId>
+  	<version>1.0.0</version>
+  </parent>
+  
+  	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-packaging-plugin</artifactId>
+				<version>${tycho-version}</version>
+				<configuration>
+					<!-- <target>${project.build.directory}/eclipse</target> -->
+					<archiveSite>true</archiveSite>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>

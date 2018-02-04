@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>org.openntf.todo</artifactId>
+  <packaging>eclipse-plugin</packaging>
+  <name>ToDo REST Servlet Plugin</name>
+  <description>Plugin project for ToDo Servlet Starter using OpenNTF Domino API</description>
+  <parent>
+  	<groupId>org.openntf.todo</groupId>
+  	<artifactId>todo</artifactId>
+  	<version>1.0.0</version>
+  </parent>
+  <dependencies>
+  	<dependency>
+  		<groupId>org.openntf.domino</groupId>
+  		<artifactId>org.openntf.domino</artifactId>
+  		<version>4.2.0</version>
+  	</dependency>
+  </dependencies>
+</project>
