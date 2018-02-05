@@ -19,7 +19,6 @@
 package org.openntf.todo;
 
 import java.io.IOException;
-import java.util.ServiceLoader;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -30,7 +29,7 @@ import org.openntf.domino.ext.Session.Fixes;
 import org.openntf.domino.utils.Factory;
 import org.openntf.domino.utils.Factory.ThreadConfig;
 import org.openntf.domino.xsp.ODAPlatform;
-import org.openntf.todo.authentication.IAuthenticationFactory;
+import org.openntf.todo.authentication.Authenticator;
 
 import com.ibm.domino.services.AbstractRestServlet;
 
@@ -43,8 +42,6 @@ import com.ibm.domino.services.AbstractRestServlet;
  */
 public class ODADataServlet extends AbstractRestServlet {
 	private static final long serialVersionUID = 1L;
-	private boolean authenticationFactoriesSearched;
-	private IAuthenticationFactory authenticationFactory;
 
 	/**
 	 * Constructor
@@ -93,7 +90,7 @@ public class ODADataServlet extends AbstractRestServlet {
 			// Check immediately to make sure either Domino authentication has been performed or X-TODO-API-KEY is
 			// valid.
 			// This method calls Factory.setSessionFactory(relevant-factory, SessionType.CURRENT);
-			if (!getAuthenticationFactory().isAuthenticated(request)) {
+			if (!Authenticator.getInstance().getAuthenticationFactory().isAuthenticated(request)) {
 				response.sendError(401);
 			}
 			super.doService(request, response);
@@ -101,40 +98,6 @@ public class ODADataServlet extends AbstractRestServlet {
 		} finally {
 			Factory.termThread();
 		}
-	}
-
-	/**
-	 * Loads the relevant authentication factory based on src/META-INF/services/IAuthenticationFactory
-	 * 
-	 * @return implementation of IAuthenticationFactory
-	 */
-	public IAuthenticationFactory getAuthenticationFactory() {
-		if (this.authenticationFactoriesSearched) {
-			return authenticationFactory;
-		}
-
-		this.authenticationFactoriesSearched = true;
-
-		ServiceLoader<IAuthenticationFactory> loader = ServiceLoader.load(IAuthenticationFactory.class);
-
-		for (IAuthenticationFactory factory : loader) {
-			this.authenticationFactory = factory;
-			break;
-		}
-
-		return this.authenticationFactory;
-
-	}
-
-	/**
-	 * Setter to override IAuthenticationFactory as set in src/META-INF/services/IAuthenticationFactory. You might want
-	 * to do that to use a specific authentication factory for development or testing, for example
-	 * 
-	 * @param factory
-	 */
-	public void setAuthenticationFactory(IAuthenticationFactory factory) {
-		this.authenticationFactoriesSearched = true;
-		this.authenticationFactory = factory;
 	}
 
 }

@@ -19,12 +19,14 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.openntf.domino.utils.Factory;
 import org.openntf.domino.utils.Factory.SessionType;
+import org.openntf.domino.xsp.session.DasCurrentSessionFactory;
 import org.openntf.domino.xsp.session.XPageNamedSessionFactory;
 
 import com.ibm.commons.util.StringUtil;
 
 public class ApplicationAuthenticationFactory implements IAuthenticationFactory {
-	String API_KEY = "i49chtnbea5h1dfolcqoh2qght";
+	private final String API_KEY = "i49chtnbea5h1dfolcqoh2qght";
+	private final String OU = "qemqa5tno4roja5bg71j1puk3h";
 
 	@Override
 	public boolean isAuthenticated(HttpServletRequest request) {
@@ -33,8 +35,15 @@ public class ApplicationAuthenticationFactory implements IAuthenticationFactory 
 			System.out.println("Invalid API key from HTTP Request");
 			return false;
 		}
+		// Build username
 		String userKey = request.getHeader("X-TODO-USER-KEY");
-		Factory.setSessionFactory(new XPageNamedSessionFactory(userKey, false), SessionType.CURRENT);
+		// Temporarily set as Anonymous, so we won't get an error when accessing SessonType.NATIVE
+
+		String serverName = new DasCurrentSessionFactory(null).createSession().getServerName();
+		String ORG = serverName.substring(serverName.indexOf("/O="));
+		// Now set the CURRENT session to who we actually want it to be
+		Factory.setSessionFactory(new XPageNamedSessionFactory("CN=" + userKey + "/OU=" + OU + ORG, false),
+				SessionType.CURRENT);
 		return true;
 	}
 
