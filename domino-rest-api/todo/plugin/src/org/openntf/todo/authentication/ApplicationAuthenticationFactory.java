@@ -17,6 +17,7 @@ package org.openntf.todo.authentication;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.openntf.domino.utils.Factory;
 import org.openntf.domino.utils.Factory.SessionType;
 import org.openntf.domino.xsp.session.DasCurrentSessionFactory;
@@ -40,7 +41,7 @@ public class ApplicationAuthenticationFactory implements IAuthenticationFactory 
 		// Temporarily set as Anonymous, so we won't get an error when accessing SessonType.NATIVE
 
 		String serverName = new DasCurrentSessionFactory(null).createSession().getServerName();
-		String ORG = serverName.substring(serverName.indexOf("/O="));
+		String ORG = "/O=" + StringUtils.substringAfter(serverName, "/O=");
 		// Now set the CURRENT session to who we actually want it to be
 		Factory.setSessionFactory(new XPageNamedSessionFactory("CN=" + userKey + "/OU=" + OU + ORG, false),
 				SessionType.CURRENT);

@@ -12,7 +12,10 @@
    </extension>
    <extension
          point="com.ibm.commons.Extension">
-      <service></service>
+      <service
+            class="org.openntf.todo.httpService.HttpServiceFactory"
+            type="com.ibm.xsp.adapter.serviceFactory">
+      </service>
    </extension>
 
 </plugin>

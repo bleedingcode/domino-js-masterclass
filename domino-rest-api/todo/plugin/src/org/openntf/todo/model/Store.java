@@ -3,14 +3,20 @@ package org.openntf.todo.model;
 import java.io.Serializable;
 import java.util.Objects;
 
+import org.apache.commons.lang3.StringUtils;
+import org.openntf.domino.Database;
+import org.openntf.domino.Document;
+import org.openntf.domino.Session;
+import org.openntf.domino.utils.DominoUtils;
+import org.openntf.domino.utils.Factory;
+import org.openntf.domino.utils.Factory.SessionType;
+
 public class Store implements Serializable {
 	private static final long serialVersionUID = 1L;
-
-	private String replicaId = null;
-
-	private String title = null;
-
-	private String name = null;
+	private String replicaId;
+	private String title;
+	private String name;
+	public final static String TODO_PATH = "openntf/todos/";
 
 	/**
 	 * ToDo type, see enum&#39;
@@ -31,6 +37,52 @@ public class Store implements Serializable {
 
 	private StoreType type = null;
 
+	public Store(Document doc) {
+		setReplicaId(doc.getItemValueString("replicaId"));
+		setName(doc.getItemValueString("name"));
+		setTitle(doc.getItemValueString("title"));
+		String typeFromDoc = doc.getItemValueString("type");
+		for (StoreType type : StoreType.values()) {
+			if (type.getValue().equals(typeFromDoc)) {
+				setType(type);
+				break;
+			}
+		}
+		return;
+	}
+
+	public Store(Database db) {
+		setName(db.getFilePath().toLowerCase());
+		setTitle(db.getTitle());
+		setReplicaId(db.getReplicaID());
+		String[] cats = StringUtils.split(db.getCategories(), ",");
+		for (String cat : cats) {
+			for (StoreType type : StoreType.values()) {
+				if (StringUtils.equalsIgnoreCase(type.getValue(), cat)) {
+					setType(type);
+					break;
+				}
+			}
+		}
+		serializeToCatalog();
+		return;
+	}
+
+	public void serializeToCatalog() {
+		Session sess = Factory.getSession(SessionType.NATIVE);
+		Database todoCatalog = sess.getDatabase(Store.TODO_PATH + "catalog.nsf");
+		Document doc = todoCatalog.getDocumentByUNID(DominoUtils.toUnid(getReplicaId()));
+		if (null == doc) {
+			doc = todoCatalog.createDocument();
+			doc.setUniversalID(DominoUtils.toUnid(getReplicaId()));
+		}
+		doc.replace("replicaId", getReplicaId());
+		doc.replace("name", getName());
+		doc.replace("title", getTitle());
+		doc.replace("type", getType().getValue());
+		doc.save();
+	}
+
 	/**
 	 * 16 character hexadecimal string corresponding to NSF&#39;s replica id
 	 * 
@@ -38,6 +90,11 @@ public class Store implements Serializable {
 	 **/
 	public String getReplicaId() {
 		return replicaId;
+	}
+
+	public Store setReplicaId(String replicaId) {
+		this.replicaId = replicaId;
+		return this;
 	}
 
 	public Store title(String title) {

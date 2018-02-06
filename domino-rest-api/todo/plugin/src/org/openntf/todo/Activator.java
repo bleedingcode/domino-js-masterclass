@@ -45,8 +45,7 @@ public class Activator extends Plugin {
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see org.osgi.framework.BundleActivator#start(org.osgi.framework.
-	 * BundleContext)
+	 * @see org.osgi.framework.BundleActivator#start(org.osgi.framework. BundleContext)
 	 */
 	@Override
 	public void start(final BundleContext context) throws Exception {
@@ -66,8 +65,7 @@ public class Activator extends Plugin {
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see
-	 * org.osgi.framework.BundleActivator#stop(org.osgi.framework.BundleContext)
+	 * @see org.osgi.framework.BundleActivator#stop(org.osgi.framework.BundleContext)
 	 */
 	@Override
 	public void stop(final BundleContext bundleContext) throws Exception {
