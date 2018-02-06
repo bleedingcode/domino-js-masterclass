@@ -1,20 +1,74 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <artifactId>org.openntf.todo</artifactId>
-  <packaging>eclipse-plugin</packaging>
-  <name>ToDo REST Servlet Plugin</name>
-  <description>Plugin project for ToDo Servlet Starter using OpenNTF Domino API</description>
-  <parent>
-  	<groupId>org.openntf.todo</groupId>
-  	<artifactId>todo</artifactId>
-  	<version>1.0.0</version>
-  </parent>
-  <dependencies>
-  	<dependency>
-  		<groupId>org.openntf.domino</groupId>
-  		<artifactId>org.openntf.domino</artifactId>
-  		<version>4.2.0</version>
-  	</dependency>
-  </dependencies>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>org.openntf.todo</artifactId>
+	<packaging>eclipse-plugin</packaging>
+	<name>ToDo REST Servlet Plugin</name>
+	<description>Plugin project for ToDo Servlet Starter using OpenNTF Domino API</description>
+	<parent>
+		<groupId>org.openntf.todo</groupId>
+		<artifactId>todo</artifactId>
+		<version>1.0.0</version>
+	</parent>
+	<dependencies>
+		<dependency>
+			<groupId>org.openntf.domino</groupId>
+			<artifactId>org.openntf.domino</artifactId>
+			<version>4.2.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.7</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>2.3.1</version>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<sourceDirectory>src/main/java</sourceDirectory>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<configuration>
+					<excludeTransitive>true</excludeTransitive>
+				</configuration>
+				<executions>
+					<execution>
+						<id>copy-dependencies</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>copy</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>org.apache.commons</groupId>
+									<artifactId>commons-lang3</artifactId>
+									<version>3.7</version>
+								</artifactItem>
+								<artifactItem>
+									<groupId>com.google.code.gson</groupId>
+									<artifactId>gson</artifactId>
+									<version>2.3.1</version>
+								</artifactItem>
+							</artifactItems>
+							<includeScope>compile</includeScope>
+							<includeTypes>jar</includeTypes>
+							<outputDirectory>lib</outputDirectory>
+							<overWriteIfNewer>true</overWriteIfNewer>
+							<overWriteReleases>true</overWriteReleases>
+							<overWriteSnapshots>true</overWriteSnapshots>
+							<stripVersion>true</stripVersion>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 </project>
