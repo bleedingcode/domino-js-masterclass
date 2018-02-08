@@ -21,6 +21,8 @@ tags:
     description: Operations about users
   - name: todo
     description: Everything about your ToDos
+  - name: debug
+    description: Debug only operations. Additional authorisation required
 schemes:
   - http
 paths:
@@ -207,7 +209,199 @@ paths:
         - domino_auth: []
         - application_auth: []
           user_auth: []
-  '/todos/{store}':
+  '/todos/{store}/findByStatus':
+    get:
+      tags:
+        - todo
+      description: >-
+        get all todos in a store for a particular status, sorted by due date
+        ascending. If no status is passed, default will be incomplete
+      operationId: getStoresByStatus
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: store
+          description: store id or name
+          in: path
+          required: true
+          type: string
+        - name: status
+          description: status
+          in: query
+          required: false
+          type: string
+          enum:
+            - new
+            - incomplete
+            - complete
+            - reassigned
+      responses:
+        '200':
+          description: todos for that status
+          schema:
+            type: array
+            description: array of todos
+            items:
+              $ref: '#/definitions/ToDo'
+        '400':
+          description: Invalid store name or id supplied
+        '401':
+          description: Unauthenticated
+      security:
+        - domino_auth: []
+        - application_auth: []
+          user_auth: []
+  '/todos/{store}/findByAsigneeAndStatus':
+    get:
+      tags:
+        - todo
+      description: >-
+        get all todos in a store assigned to a particular user for a particular
+        status, sorted by due date ascending. If no username or status is
+        passed, current user and incomplete status will be used
+      operationId: getStoresByAssigneeAndStatus
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: store
+          description: store id or name
+          in: path
+          required: true
+          type: string
+        - name: username
+          description: username
+          in: query
+          required: false
+          type: string
+        - name: status
+          description: status
+          in: query
+          required: false
+          type: string
+          enum:
+            - new
+            - incomplete
+            - complete
+            - reassigned
+      responses:
+        '200':
+          description: todos assigned to the user for the status
+          schema:
+            type: array
+            description: array of todos
+            items:
+              $ref: '#/definitions/ToDo'
+        '400':
+          description: Invalid store name or id supplied
+        '401':
+          description: Unauthenticated
+      security:
+        - domino_auth: []
+        - application_auth: []
+          user_auth: []
+  '/todos/{store}/findByPriorityAndStatus':
+    get:
+      tags:
+        - todo
+      description: >-
+        get all todos in a store for a particular priority and status, sorted by
+        due date ascending. If no priority and status areis passed, high and
+        unassigned will be used
+      operationId: getStoresByPriorityAndStatus
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: store
+          description: store id or name
+          in: path
+          required: true
+          type: string
+        - name: priority
+          description: priority
+          in: query
+          required: false
+          type: string
+          enum:
+            - low
+            - medium
+            - high
+        - name: status
+          description: status
+          in: query
+          required: false
+          type: string
+          enum:
+            - new
+            - incomplete
+            - complete
+            - reassigned
+      responses:
+        '200':
+          description: todos for the priority and status
+          schema:
+            type: array
+            description: array of todos
+            items:
+              $ref: '#/definitions/ToDo'
+        '400':
+          description: Invalid store name or id supplied
+        '401':
+          description: Unauthenticated
+      security:
+        - domino_auth: []
+        - application_auth: []
+          user_auth: []
+  '/todos/{store}/findByDate':
+    get:
+      tags:
+        - todo
+      description: get all todos in a store after or between dates
+      operationId: getStoresByDate
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: store
+          description: store id or name
+          in: path
+          required: true
+          type: string
+        - name: startDate
+          description: start date in RFC 3339 section 5.6 format 2018-03-19
+          in: query
+          required: true
+          type: string
+          format: date
+        - name: endDate
+          description: start date in RFC 3339 section 5.6 format 2018-03-19
+          in: query
+          required: false
+          type: string
+          format: date
+      responses:
+        '200':
+          description: incomplete todos for the priority
+          schema:
+            type: array
+            description: array of todos
+            items:
+              $ref: '#/definitions/ToDo'
+        '400':
+          description: Invalid store name or id supplied
+        '401':
+          description: Unauthenticated
+      security:
+        - domino_auth: []
+        - application_auth: []
+          user_auth: []
+  '/todo/{store}':
     post:
       tags:
         - todo
@@ -242,7 +436,7 @@ paths:
         - domino_auth: []
         - application_auth: []
           user_auth: []
-  '/todos/{store}/{toDoId}':
+  '/todo/{store}/{toDoId}':
     put:
       tags:
         - todo
@@ -322,7 +516,7 @@ paths:
         - domino_auth: []
         - application_auth: []
           user_auth: []
-  '/todos/{store}/{toDoId}/reassign':
+  '/todo/{store}/{toDoId}/reassign':
     put:
       tags:
         - todo
@@ -363,7 +557,7 @@ paths:
         - domino_auth: []
         - application_auth: []
           user_auth: []
-  '/todos/{store}/{toDoId}/complete':
+  '/todo/{store}/{toDoId}/complete':
     put:
       tags:
         - todo
@@ -398,7 +592,7 @@ paths:
         - domino_auth: []
         - application_auth: []
           user_auth: []
-  '/todos/{store}/{toDoId}/reopen':
+  '/todo/{store}/{toDoId}/reopen':
     put:
       tags:
         - todo
@@ -491,6 +685,98 @@ paths:
         - domino_auth: []
         - application_auth: []
           user_auth: []
+  /debug/toggleProfiling:
+    get:
+      tags:
+        - debug
+      summary: Toggle profiling on or off
+      description: ''
+      operationId: toggleProfiling
+      produces:
+        - application.json
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: object
+            properties:
+              profiling:
+                type: boolean
+                description: whether profiling is enabled or not
+        '401':
+          description: not authorized
+  /debug/personalStoreName:
+    get:
+      tags:
+        - debug
+      summary: Get the personal store name for the current user
+      description: ''
+      operationId: getPersonalStoreName
+      produces:
+        - application.json
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: object
+            properties:
+              username:
+                type: string
+                description: current username
+              storename:
+                type: string
+                description: current username
+        '401':
+          description: not authorized
+      security:
+        - domino_auth: []
+          debug_auth: []
+        - application_auth: []
+          user_auth: []
+          debug_auth: []
+  '/debug/{store}/prepopulate':
+    get:
+      tags:
+        - debug
+      summary: Deletes all todos in the store and generates 50 random dummy entries
+      description: ''
+      operationId: prepopulateStore
+      produces:
+        - application.json
+      parameters:
+        - name: store
+          description: store id or name in which the ToDo resides
+          in: path
+          required: true
+          type: string
+        - name: body
+          in: body
+          description: users to create todos on behalf of and as assignees
+          required: true
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/User'
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: object
+            properties:
+              username:
+                type: string
+                description: current username
+              storename:
+                type: string
+                description: current username
+        '401':
+          description: not authorized
+      security:
+        - domino_auth: []
+          debug_auth: []
+        - application_auth: []
+          user_auth: []
+          debug_auth: []
 securityDefinitions:
   domino_auth:
     type: basic
@@ -502,6 +788,10 @@ securityDefinitions:
     type: apiKey
     in: header
     name: X-TODO-USER-KEY
+  debug_auth:
+    type: apiKey
+    in: header
+    name: X-DEBUG-KEY
 definitions:
   Store:
     type: object
