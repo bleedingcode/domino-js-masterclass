@@ -62,7 +62,10 @@ paths:
       parameters:
         - in: body
           name: body
-          description: Store object that should be created
+          description: >-
+            Store object that should be created. For personal stores, "name"
+            will be ignored and auto-generated based on username. For Domino
+            usernames "/" will be replaced with "_".
           required: true
           schema:
             $ref: '#/definitions/Store'
