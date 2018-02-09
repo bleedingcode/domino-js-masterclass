@@ -1,0 +1,46 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: anrd
+  labels:
+    app: anrd
+spec:
+  ports:
+  - port: 6050
+    name: http
+  selector:
+    app: anrd
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: anrd-v003
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: anrd
+        version: v003
+    spec:
+      containers:
+      - name: anrd
+        image: agilite/node-red-docker:0.0.3
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 6050
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: gateway
+  annotations:
+    kubernetes.io/ingress.class: "istio"
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /red/.*
+        backend:
+          serviceName: anrd
+          servicePort: 6050
