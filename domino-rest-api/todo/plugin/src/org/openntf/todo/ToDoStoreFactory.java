@@ -30,6 +30,11 @@ public class ToDoStoreFactory {
 		return INSTANCE;
 	}
 
+	/**
+	 * Load all stores from ToDo Catalog into memory
+	 * 
+	 * @return ConcurrentHashMap of Store objects, with replicaID as key
+	 */
 	public Map<String, Store> getStores() {
 		if (null == stores) {
 			stores = new ConcurrentHashMap<String, Store>();
@@ -37,13 +42,29 @@ public class ToDoStoreFactory {
 		return stores;
 	}
 
-	public void addStore(Database db) {
+	/**
+	 * Add an NSF as a Store object to stores ConcurrentHashMap and writes to ToDo Catalog
+	 * 
+	 * @param db
+	 *            NSF to add
+	 */
+	public Store addStore(Database db) {
 		Store store = new Store(db);
 		synchronized (stores) {
 			stores.put(store.getReplicaId(), store);
 		}
+		return store;
 	}
 
+	/**
+	 * Get a Store object for the current session based on a Key
+	 * 
+	 * @param sess
+	 *            relevant Domino Session
+	 * @param key
+	 *            ReplicaID or filepath
+	 * @return Store object for the NSF or null
+	 */
 	public Store getStore(Session sess, String key) {
 		if (getStores().containsKey(key)) {
 			return getStores().get(key);
@@ -62,6 +83,10 @@ public class ToDoStoreFactory {
 		}
 	}
 
+	/**
+	 * Load all stores from ToDo Catalog or creates ToDo Catalog database, done via HttpService 30 seconds after server
+	 * starts
+	 */
 	public void loadStores() {
 		Future<Map<String, Store>> result = Xots.getService().submit(new StoreLoader());
 
@@ -71,17 +96,16 @@ public class ToDoStoreFactory {
 				stores.clear();
 				stores.putAll(result.get());
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (ExecutionException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
 	}
 
-	public void createToDoNSF(Session sess, String title, String name, StoreType type) throws DatabaseModuleException {
+	public Store createToDoNSF(Session sess, String title, String name, StoreType type) throws DatabaseModuleException {
 		try {
+			// Create database using name or user's name if a Personal store
 			if (StoreType.PERSONAL.equals(type)) {
 				name = Utils.getPersonalStoreName(sess);
 			}
@@ -93,6 +117,8 @@ public class ToDoStoreFactory {
 			props.put(DbProperties.ENHANCED_HTML, true);
 			dbDesign.setDatabaseProperties(props);
 			dbDesign.save();
+
+			// Create views
 			DesignView byStatus = dbDesign.createView();
 			byStatus.setSelectionFormula("SELECT Form=\"ToDo\"");
 			byStatus.setName("byStatus");
@@ -165,6 +191,11 @@ public class ToDoStoreFactory {
 			col.setTitle("Task Name");
 			col.setItemName("taskName");
 			byDueDate.save();
+
+			// TODO: Set ACL
+
+			// Add to ConcurrentHashMap of stores
+			return addStore(db);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new DatabaseModuleException(e.getMessage());

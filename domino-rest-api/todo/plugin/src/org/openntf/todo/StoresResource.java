@@ -59,7 +59,7 @@ import com.ibm.domino.osgi.core.context.ContextInfo;
  *        <li>* is @Path added to everything in this class</li>
  *
  */
-@Path("")
+@Path("/stores")
 public class StoresResource {
 
 	/**

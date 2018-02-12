@@ -60,7 +60,7 @@ public class HttpService extends com.ibm.designer.runtime.domino.adapter.HttpSer
 
 	@Override
 	public void getModules(final List<ComponentModule> arg0) {
-		// TODO Auto-generated method stub
+
 	}
 
 	// This gives the HttpService a priority level

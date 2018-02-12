@@ -1,9 +1,12 @@
 package org.openntf.todo;
 
+import java.util.Map;
+
 import org.apache.commons.lang3.StringUtils;
 import org.openntf.domino.Name;
 import org.openntf.domino.Session;
 import org.openntf.todo.authentication.ApplicationAuthenticationFactory;
+import org.openntf.todo.model.Store.StoreType;
 
 public class Utils {
 	public static String DEBUG_PREFIX = "[TODO_APP]: ";
@@ -40,6 +43,24 @@ public class Utils {
 			name = StringUtils.replace(StringUtils.replace(name, "/", "_"), " ", "_");
 		}
 		return name.toLowerCase();
+	}
+
+	public static boolean validateBody(Map<String, Object> body, String... keys) {
+		for (String key : keys) {
+			if (!body.containsKey(key)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	public static StoreType validateStoreType(String type) {
+		for (StoreType st : StoreType.values()) {
+			if (StringUtils.equalsIgnoreCase(st.getValue(), type)) {
+				return st;
+			}
+		}
+		return null;
 	}
 
 }

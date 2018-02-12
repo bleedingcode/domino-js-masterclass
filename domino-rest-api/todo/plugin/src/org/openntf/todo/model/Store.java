@@ -51,6 +51,11 @@ public class Store implements Serializable {
 		return;
 	}
 
+	/**
+	 * Converts NSF to a Store object, serializing to ToDo catalog
+	 * 
+	 * @param db
+	 */
 	public Store(Database db) {
 		setName(db.getFilePath().toLowerCase());
 		setTitle(db.getTitle());
@@ -68,6 +73,9 @@ public class Store implements Serializable {
 		return;
 	}
 
+	/**
+	 * Writes database values to document in ToDo catalog
+	 */
 	public void serializeToCatalog() {
 		Session sess = Factory.getSession(SessionType.NATIVE);
 		Database todoCatalog = sess.getDatabase(Store.TODO_PATH + "catalog.nsf");
