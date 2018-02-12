@@ -1,7 +1,8 @@
-var express = require('express');
-var app = express();
-var http = require('http').Server(app);
-var RED = require("node-red");
+const express = require('express');
+const app = express();
+const http = require('http').Server(app);
+const RED = require("node-red");
+const Utils = require('./utils/utilities');
 
 // Create the settings object - see default settings.js file for other options
 var settings = {
@@ -40,7 +41,9 @@ app.use(settings.httpNodeRoot,RED.httpNode);
 //Server Setup
 const port = 6050;
 
-http.listen(port, function() {
-  RED.start();
-  console.log("Node-RED Docker listening on: ", port);
+Utils.loadConfig(function(){
+  http.listen(port, function() {
+    RED.start();
+    console.log("Agilit-e Node-RED Docker listening on: ", port);
+  });
 });
