@@ -92,7 +92,7 @@
         "produces": [
           "application/json"
         ],
-        "response": {
+        "responses": {
           "202": {
             "description": "accepted for processing"
           },
