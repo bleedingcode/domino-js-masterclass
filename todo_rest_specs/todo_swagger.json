@@ -77,6 +77,41 @@
         ]
       }
     },
+    "/stores/todos/markOverdue": {
+      "get": {
+        "tags": [
+          "store",
+          "todo"
+        ],
+        "summary": "Mark any todos that are due as \"Overdue\" status",
+        "description": "",
+        "operationId": "markOverdue",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "response": {
+          "202": {
+            "description": "accepted for processing"
+          },
+          "401": {
+            "description": "unauthenticated"
+          }
+        },
+        "security": [
+          {
+            "domino_auth": [],
+            "sched_auth": []
+          },
+          {
+            "application_auth": [],
+            "sched_auth": []
+          }
+        ]
+      }
+    },
     "/store": {
       "post": {
         "tags": [
@@ -1202,6 +1237,11 @@
       "type": "apiKey",
       "in": "header",
       "name": "X-DEBUG-KEY"
+    },
+    "sched_auth": {
+      "type": "apiKey",
+      "in": "header",
+      "name": "X-SCHED-KEY"
     }
   },
   "definitions": {
@@ -1290,7 +1330,8 @@
           "enum": [
             "New",
             "Reassigned",
-            "Complete"
+            "Complete",
+            "Overdue"
           ],
           "readOnly": true
         }
