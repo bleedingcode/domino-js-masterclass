@@ -25,11 +25,11 @@ spec:
     metadata:
       labels:
         app: agilite-node-red-docker
-        version: v012
+        version: v001
     spec:
       containers:
-      - name: anrd-012
-        image: agilite/node-red-docker:0.1.2
+      - name: anrd-001
+        image: agilite/node-red-docker:0.0.1
         imagePullPolicy: Never
         ports:
         - name: anrd-port
