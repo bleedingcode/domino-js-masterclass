@@ -1,0 +1,20 @@
+{
+  "name": "mockserver",
+  "version": "1.0.0",
+  "description": "Simple mockups to make API easy to use for front-end guys",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "mock",
+    "api",
+    "server"
+  ],
+  "author": "St. Wissel",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.14.1",
+    "swagger-express-middleware": "^1.0.0-alpha.12"
+  }
+}

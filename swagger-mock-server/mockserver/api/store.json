@@ -1,0 +1,14 @@
+[
+  {
+    "collection": "/api/store",
+    "name": "/store_1",
+    "modifiedOn": "2018-02-13T13:27:04.365Z",
+    "data": {
+      "title": "store_1",
+      "name": "store_1",
+      "type": "Team",
+      "replicaId": "1234567812345678"
+    },
+    "createdOn": "2018-02-13T13:24:07.486Z"
+  }
+]

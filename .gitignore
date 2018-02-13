@@ -1,3 +1,4 @@
 nodejs-api-quickstart/node_modules
+swagger-mock-server/mockserver/node_modules
 src/agilite-node-red-docker/node_modules
 src/agilite-node-red-docker/flows
