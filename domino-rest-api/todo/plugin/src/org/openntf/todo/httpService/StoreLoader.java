@@ -5,6 +5,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.openntf.domino.ACL;
 import org.openntf.domino.ACL.Level;
+import org.openntf.domino.ACLEntry;
 import org.openntf.domino.Database;
 import org.openntf.domino.Document;
 import org.openntf.domino.NoteCollection;
@@ -32,8 +33,13 @@ public class StoreLoader extends AbstractXotsCallable<Map<String, Store>> {
 				todoCatalog.setCategories("OpenNTF ToDo");
 				todoCatalog.setTitle("OpenNTF ToDo Master");
 				ACL acl = todoCatalog.getACL();
-				acl.addRole("Admin");
+
+				// Set ACL access
+				ACLEntry servers = acl.createACLEntry("LocalDomainServers", Level.MANAGER);
+				ACLEntry otherServers = acl.createACLEntry("OtherDomainServers", Level.NOACCESS);
+				ACLEntry admins = acl.createACLEntry("LocalDomainAdmins", Level.MANAGER);
 				acl.createACLEntry("Anonymous", Level.NOACCESS);
+				acl.createACLEntry("-Default-", Level.NOACCESS);
 				acl.save();
 				org.openntf.domino.View v = todoCatalog.createView("NONE");
 				v.setSelectionFormula("SELECT @False");

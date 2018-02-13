@@ -51,10 +51,10 @@ public class StoreResource {
 						.build();
 			}
 
+			// Create store
 			Store store = ToDoStoreFactory.getInstance().createToDoNSF(Factory.getSession(SessionType.NATIVE), title,
 					name, passedType);
 			RequestBuilder builder = new RequestBuilder(Store.class);
-
 			return Response.ok(builder.buildJson(store), MediaType.APPLICATION_JSON).build();
 		} catch (Exception e) {
 			e.printStackTrace();

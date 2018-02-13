@@ -6,6 +6,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
+import org.openntf.domino.ACL;
+import org.openntf.domino.ACL.Level;
+import org.openntf.domino.ACLEntry;
 import org.openntf.domino.Database;
 import org.openntf.domino.Session;
 import org.openntf.domino.design.DatabaseDesign.DbProperties;
@@ -13,9 +16,13 @@ import org.openntf.domino.design.DesignColumn;
 import org.openntf.domino.design.DesignColumn.SortOrder;
 import org.openntf.domino.design.DesignView;
 import org.openntf.domino.design.impl.DatabaseDesign;
+import org.openntf.domino.utils.Factory;
+import org.openntf.domino.utils.Factory.SessionType;
 import org.openntf.domino.xots.Xots;
 import org.openntf.todo.exceptions.DatabaseModuleException;
 import org.openntf.todo.httpService.StoreLoader;
+import org.openntf.todo.model.DatabaseAccess;
+import org.openntf.todo.model.DatabaseAccess.AccessLevel;
 import org.openntf.todo.model.Store;
 import org.openntf.todo.model.Store.StoreType;
 
@@ -192,10 +199,57 @@ public class ToDoStoreFactory {
 			col.setItemName("taskName");
 			byDueDate.save();
 
-			// TODO: Set ACL
+			// Set ACL access
+			ACL acl = db.getACL();
+			acl.addRole("Admin");
+			ACLEntry servers = acl.createACLEntry("LocalDomainServers", Level.MANAGER);
+			servers.setCanDeleteDocuments(true);
+			servers.enableRole("Admin");
+			acl.createACLEntry("OtherDomainServers", Level.NOACCESS);
+			ACLEntry admins = acl.createACLEntry("LocalDomainAdmins", Level.MANAGER);
+			admins.setCanDeleteDocuments(true);
+			admins.enableRole("Admin");
+			acl.createACLEntry("Anonymous", Level.NOACCESS);
+			acl.createACLEntry("-Default-", Level.NOACCESS);
+
+			// Add user to access
+			DatabaseAccess access = new DatabaseAccess();
+			access.setAllowDelete(true);
+			access.setDbName(db.getFilePath().toLowerCase());
+			access.setLevel(AccessLevel.ADMIN);
+			access.setReplicaId(db.getReplicaID());
+			addAccess(acl, Factory.getSession(SessionType.CURRENT).getEffectiveUserName(), access);
 
 			// Add to ConcurrentHashMap of stores
 			return addStore(db);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new DatabaseModuleException(e.getMessage());
+		}
+	}
+
+	public void addAccess(ACL acl, String username, DatabaseAccess access) throws DatabaseModuleException {
+		try {
+			ACLEntry user = acl.createACLEntry(username, Level.NOACCESS);
+			switch (access.getLevel()) {
+			case ADMIN:
+				user.setLevel(Level.EDITOR);
+				user.enableRole("Admin");
+			case EDITOR:
+				user.setLevel(Level.EDITOR);
+				break;
+			case READER:
+				user.setLevel(Level.READER);
+				break;
+			default:
+				// No access is fine
+			}
+			if (access.getAllowDelete()) {
+				user.setCanDeleteDocuments(true);
+			} else {
+				user.setCanDeleteDocuments(false);
+			}
+			acl.save();
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new DatabaseModuleException(e.getMessage());
