@@ -3,8 +3,12 @@ package org.openntf.todo;
 import java.util.Map;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -12,6 +16,7 @@ import javax.ws.rs.core.Response.Status;
 
 import org.openntf.domino.utils.Factory;
 import org.openntf.domino.utils.Factory.SessionType;
+import org.openntf.todo.exceptions.StoreNotFoundException;
 import org.openntf.todo.json.RequestBuilder;
 import org.openntf.todo.model.Store;
 import org.openntf.todo.model.Store.StoreType;
@@ -20,15 +25,22 @@ import com.ibm.commons.util.io.json.JsonJavaFactory;
 import com.ibm.commons.util.io.json.JsonJavaObject;
 import com.ibm.commons.util.io.json.JsonParser;
 
+@SuppressWarnings({ "unchecked", "rawtypes" })
 @Path("/store")
 public class StoreResource {
 
+	/**
+	 * Create a Store with the passed details
+	 * 
+	 * @param body
+	 *            String json object comprising title, name and type properties
+	 * @return Response containing created Store or error
+	 */
 	@POST
 	@Path("")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response createStore(final String body) {
 		try {
-			final JsonJavaObject jjo = new JsonJavaObject();
 			final Map<String, Object> bodyAsObj = (Map<String, Object>) JsonParser.fromJson(JsonJavaFactory.instance,
 					body);
 			if (!Utils.validateBody(bodyAsObj, "title", "name", "type")) {
@@ -56,6 +68,115 @@ public class StoreResource {
 					name, passedType);
 			RequestBuilder builder = new RequestBuilder(Store.class);
 			return Response.ok(builder.buildJson(store), MediaType.APPLICATION_JSON).build();
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new WebApplicationException(e, Status.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	/**
+	 * Change title for the passed Store
+	 * 
+	 * @param storeKey
+	 *            store id or name
+	 * @param newTitle
+	 *            new title for the store
+	 * @return Response containing updated store or error
+	 */
+	@PUT
+	@Path("/{store}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response changeTitle(final @PathParam(value = "store") String storeKey,
+			final @QueryParam(value = "newTitle") String newTitle) {
+		try {
+			Store store = ToDoStoreFactory.getInstance().getStore(Factory.getSession(SessionType.NATIVE), storeKey);
+			store.setTitle(newTitle);
+			store.serializeToCatalog();
+			RequestBuilder builder = new RequestBuilder(Store.class);
+			return Response.ok(builder.buildJson(store), MediaType.APPLICATION_JSON).build();
+		} catch (StoreNotFoundException se) {
+			se.printStackTrace();
+			throw new WebApplicationException(Response.status(Status.BAD_REQUEST)
+					.entity("The store could not be found with the name or replicaId passed").build());
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new WebApplicationException(e, Status.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	/**
+	 * Get Store object corresponding to a given store
+	 * 
+	 * @param storeKey
+	 *            store id or name
+	 * @return Response containing updated store or error
+	 */
+	@GET
+	@Path("/{store}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response getStoreInfo(final @PathParam(value = "store") String storeKey) {
+		try {
+			Store store = ToDoStoreFactory.getInstance().getStore(Factory.getSession(SessionType.CURRENT), storeKey);
+			RequestBuilder builder = new RequestBuilder(Store.class);
+			return Response.ok(builder.buildJson(store), MediaType.APPLICATION_JSON).build();
+		} catch (StoreNotFoundException se) {
+			se.printStackTrace();
+			throw new WebApplicationException(Response.status(Status.BAD_REQUEST)
+					.entity(ToDoStoreFactory.STORE_NOT_FOUND_OR_ACCESS_ERROR).build());
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new WebApplicationException(e, Status.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	/**
+	 * Queries access for the current user
+	 * 
+	 * @param storeKey
+	 *            store id or name
+	 * @return User object corresponding to current username and access level to queried store
+	 */
+	@GET
+	@Path("/{store}/access")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response queryAccess(final @PathParam(value = "store") String storeKey) {
+		try {
+			Store store = ToDoStoreFactory.getInstance().getStore(Factory.getSession(SessionType.NATIVE), storeKey);
+
+			// TODO: Create a User object corresponding to the username and access level
+
+			// TODO: Return User object
+			RequestBuilder builder = new RequestBuilder(Store.class);
+			return Response.ok(builder.buildJson(store), MediaType.APPLICATION_JSON).build();
+		} catch (StoreNotFoundException se) {
+			se.printStackTrace();
+			throw new WebApplicationException(Response.status(Status.BAD_REQUEST)
+					.entity(ToDoStoreFactory.STORE_NOT_FOUND_OR_ACCESS_ERROR).build());
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new WebApplicationException(e, Status.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@PUT
+	@Path("/{store}/access")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response updateAccess(final @PathParam(value = "store") String storeKey, final String body) {
+		try {
+			Store store = ToDoStoreFactory.getInstance().getStore(Factory.getSession(SessionType.CURRENT), storeKey);
+			// TODO: Check current user has Admin role access
+
+			// TODO: Extract users to update from body and validate
+
+			// TODO: Update ACL
+
+			JsonJavaObject jjo = new JsonJavaObject();
+			jjo.put("success", true);
+			return Response.ok(jjo.toString(), MediaType.APPLICATION_JSON).build();
+		} catch (StoreNotFoundException se) {
+			se.printStackTrace();
+			throw new WebApplicationException(Response.status(Status.BAD_REQUEST)
+					.entity(ToDoStoreFactory.STORE_NOT_FOUND_OR_ACCESS_ERROR).build());
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new WebApplicationException(e, Status.INTERNAL_SERVER_ERROR);

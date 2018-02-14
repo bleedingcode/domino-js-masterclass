@@ -20,6 +20,7 @@ import org.openntf.domino.utils.Factory;
 import org.openntf.domino.utils.Factory.SessionType;
 import org.openntf.domino.xots.Xots;
 import org.openntf.todo.exceptions.DatabaseModuleException;
+import org.openntf.todo.exceptions.StoreNotFoundException;
 import org.openntf.todo.httpService.StoreLoader;
 import org.openntf.todo.model.DatabaseAccess;
 import org.openntf.todo.model.DatabaseAccess.AccessLevel;
@@ -28,6 +29,7 @@ import org.openntf.todo.model.Store.StoreType;
 
 public class ToDoStoreFactory {
 	private Map<String, Store> stores = new ConcurrentHashMap<String, Store>();
+	public static String STORE_NOT_FOUND_OR_ACCESS_ERROR = "The store could not be found with the name or replicaId passed, or you do not have access to that store";
 	private static ToDoStoreFactory INSTANCE;
 
 	public static ToDoStoreFactory getInstance() {
@@ -72,7 +74,7 @@ public class ToDoStoreFactory {
 	 *            ReplicaID or filepath
 	 * @return Store object for the NSF or null
 	 */
-	public Store getStore(Session sess, String key) {
+	public Store getStoreUnchecked(Session sess, String key) {
 		if (getStores().containsKey(key)) {
 			return getStores().get(key);
 		} else {
@@ -88,6 +90,14 @@ public class ToDoStoreFactory {
 				return getStores().get(repId);
 			}
 		}
+	}
+
+	public Store getStore(Session sess, String key) throws StoreNotFoundException {
+		Store store = getStoreUnchecked(sess, key);
+		if (null == store) {
+			throw new StoreNotFoundException();
+		}
+		return store;
 	}
 
 	/**
