@@ -425,6 +425,34 @@ paths:
         - application_auth: []
           user_auth: []
   '/todo/{key}':
+    get:
+      tags:
+        - todo
+      description: add a todo to the store
+      operationId: getToDo
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: key
+          description: metaversalId of the ToDo
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Returned ToDo
+          schema:
+            $ref: '#/definitions/ToDo'
+        '400':
+          description: Invalid id supplied
+        '401':
+          description: Not authorised
+      security:
+        - domino_auth: []
+        - application_auth: []
+          user_auth: []
     post:
       tags:
         - todo
@@ -452,7 +480,7 @@ paths:
           schema:
             $ref: '#/definitions/ToDo'
         '400':
-          description: Invalid store name or id supplied
+          description: Invalid id supplied
         '401':
           description: Not authorised
       security:
@@ -486,7 +514,7 @@ paths:
           schema:
             $ref: '#/definitions/ToDo'
         '400':
-          description: Invalid store name or id supplied
+          description: Invalid id supplied
         '401':
           description: Not authorised
       security:
@@ -508,12 +536,6 @@ paths:
           in: path
           required: true
           type: string
-        - name: body
-          in: body
-          description: ToDo to update in the store
-          required: true
-          schema:
-            $ref: '#/definitions/ToDo'
       responses:
         '200':
           description: boolean success
@@ -521,7 +543,7 @@ paths:
             type: boolean
             description: boolean success or failure
         '400':
-          description: Invalid store name or id supplied
+          description: Invalid id supplied
         '401':
           description: Not authorised
       security:
@@ -557,7 +579,7 @@ paths:
             type: boolean
             description: boolean success or failure
         '400':
-          description: Invalid store name or id supplied
+          description: Invalid id supplied
         '401':
           description: Not authorised
       security:
@@ -569,7 +591,7 @@ paths:
       tags:
         - todo
       description: Complete a todo
-      operationId: complete
+      operationId: completeToDo
       consumes:
         - application/json
       produces:
@@ -587,7 +609,7 @@ paths:
             type: boolean
             description: boolean success or failure
         '400':
-          description: Invalid store name or id supplied
+          description: Invalid id supplied
         '401':
           description: Not authorised
       security:
@@ -599,7 +621,7 @@ paths:
       tags:
         - todo
       description: Reopen a todo
-      operationId: reopen
+      operationId: reopenToDo
       consumes:
         - application/json
       produces:
