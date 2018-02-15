@@ -1,4 +1,4 @@
-package org.openntf.todo.httpService;
+package org.openntf.todo.domino;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -49,7 +49,7 @@ public class StoreLoader extends AbstractXotsCallable<Map<String, Store>> {
 				nc.buildCollection();
 				for (int noteid : nc.getNoteIDs()) {
 					Document doc = todoCatalog.getDocumentByID(noteid);
-					Store store = new Store(doc);
+					Store store = ToDoStoreFactory.getInstance().createStoreFromDoc(doc);
 					retVal.put(store.getReplicaId(), store);
 				}
 			}

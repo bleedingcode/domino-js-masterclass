@@ -47,10 +47,10 @@
         "description": "",
         "operationId": "getStores",
         "consumes": [
-          "application/json"
+          "application/json; utf-8"
         ],
         "produces": [
-          "application/json"
+          "application/json; utf-8"
         ],
         "responses": {
           "200": {
@@ -175,6 +175,7 @@
         "parameters": [
           {
             "name": "store",
+            "description": "store id or name",
             "in": "path",
             "required": true,
             "type": "string"
@@ -364,7 +365,7 @@
           "todo"
         ],
         "description": "get all todos in a store for a particular status, sorted by due date ascending. If no status is passed, default will be incomplete",
-        "operationId": "getStoresByStatus",
+        "operationId": "getToDosByStatus",
         "consumes": [
           "application/json"
         ],
@@ -428,7 +429,7 @@
           "todo"
         ],
         "description": "get all todos in a store assigned to a particular user for a particular status, sorted by due date ascending. If no username or status is passed, current user and incomplete status will be used",
-        "operationId": "getStoresByAssigneeAndStatus",
+        "operationId": "getToDosByAssigneeAndStatus",
         "consumes": [
           "application/json"
         ],
@@ -498,8 +499,8 @@
         "tags": [
           "todo"
         ],
-        "description": "get all todos in a store for a particular priority and status, sorted by due date ascending. If no priority and status areis passed, high and unassigned will be used",
-        "operationId": "getStoresByPriorityAndStatus",
+        "description": "get all todos in a store for a particular priority and status, sorted by due date ascending. If no priority and status are passed, high and unassigned will be used",
+        "operationId": "getToDosByPriorityAndStatus",
         "consumes": [
           "application/json"
         ],
@@ -575,7 +576,7 @@
           "todo"
         ],
         "description": "get all todos in a store after or between dates",
-        "operationId": "getStoresByDate",
+        "operationId": "getToDosByDate",
         "consumes": [
           "application/json"
         ],
@@ -636,7 +637,7 @@
         ]
       }
     },
-    "/todo/{store}": {
+    "/todo/{key}": {
       "post": {
         "tags": [
           "todo"
@@ -651,7 +652,7 @@
         ],
         "parameters": [
           {
-            "name": "store",
+            "name": "key",
             "description": "store id or name in which to post the ToDo",
             "in": "path",
             "required": true,
@@ -690,9 +691,7 @@
             "user_auth": []
           }
         ]
-      }
-    },
-    "/todo/{store}/{toDoId}": {
+      },
       "put": {
         "tags": [
           "todo"
@@ -707,15 +706,8 @@
         ],
         "parameters": [
           {
-            "name": "store",
-            "description": "store id or name in which the ToDo resides",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "toDoId",
-            "description": "id of the ToDo",
+            "name": "key",
+            "description": "metaversalId of the ToDo",
             "in": "path",
             "required": true,
             "type": "string"
@@ -768,15 +760,8 @@
         ],
         "parameters": [
           {
-            "name": "store",
-            "description": "store id or name in which the ToDo resides",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "toDoId",
-            "description": "id of the ToDo",
+            "name": "key",
+            "description": "metaversalId of the ToDo",
             "in": "path",
             "required": true,
             "type": "string"
@@ -817,7 +802,7 @@
         ]
       }
     },
-    "/todo/{store}/{toDoId}/reassign": {
+    "/todo/{toDoId}/reassign": {
       "put": {
         "tags": [
           "todo"
@@ -832,15 +817,8 @@
         ],
         "parameters": [
           {
-            "name": "store",
-            "description": "store id or name in which the ToDo resides",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
             "name": "toDoId",
-            "description": "id of the ToDo",
+            "description": "metaversalId of the ToDo",
             "in": "path",
             "required": true,
             "type": "string"
@@ -881,7 +859,7 @@
         ]
       }
     },
-    "/todo/{store}/{toDoId}/complete": {
+    "/todo/{toDoId}/complete": {
       "put": {
         "tags": [
           "todo"
@@ -896,15 +874,8 @@
         ],
         "parameters": [
           {
-            "name": "store",
-            "description": "store id or name in which the ToDo resides",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
             "name": "toDoId",
-            "description": "id of the ToDo",
+            "description": "metaversalId of the ToDo",
             "in": "path",
             "required": true,
             "type": "string"
@@ -936,7 +907,7 @@
         ]
       }
     },
-    "/todo/{store}/{toDoId}/reopen": {
+    "/todo/{toDoId}/reopen": {
       "put": {
         "tags": [
           "todo"
@@ -951,15 +922,8 @@
         ],
         "parameters": [
           {
-            "name": "store",
-            "description": "store id or name in which the ToDo resides",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
             "name": "toDoId",
-            "description": "id of the ToDo",
+            "description": "metaversalId of the ToDo",
             "in": "path",
             "required": true,
             "type": "string"
@@ -1284,9 +1248,9 @@
       "properties": {
         "unid": {
           "type": "string",
-          "description": "Unique ID across all replicas",
-          "minLength": 32,
-          "maxLength": 32,
+          "description": "MetaversalID to access this ToDo from just a Domino Session. First 16 chars are replicaId, rest is UNID",
+          "minLength": 48,
+          "maxLength": 48,
           "format": "hex",
           "readOnly": true
         },

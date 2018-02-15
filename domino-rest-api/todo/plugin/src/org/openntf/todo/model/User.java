@@ -3,9 +3,7 @@ package org.openntf.todo.model;
 import java.io.Serializable;
 import java.util.Objects;
 
-import org.apache.commons.lang3.StringUtils;
-import org.openntf.domino.utils.Factory;
-import org.openntf.domino.utils.Factory.SessionType;
+import org.openntf.todo.domino.Utils;
 
 public class User implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -30,12 +28,7 @@ public class User implements Serializable {
 
 	public void setUsername(String username) {
 		// Modified from Swagger, to handle different authentication factories
-		if (StringUtils.contains(username, "/")) {
-			this.username = username;
-		} else {
-			String currName = Factory.getSession(SessionType.CURRENT).getEffectiveUserName();
-			this.username = "CN=" + username + "/" + StringUtils.substringAfter(currName, "/");
-		}
+		this.username = Utils.getAsUsername(username);
 	}
 
 	/**

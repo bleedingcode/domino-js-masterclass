@@ -14,8 +14,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import org.openntf.domino.utils.Factory;
-import org.openntf.domino.utils.Factory.SessionType;
+import org.openntf.todo.domino.ToDoStoreFactory;
+import org.openntf.todo.domino.Utils;
 import org.openntf.todo.exceptions.StoreNotFoundException;
 import org.openntf.todo.json.RequestBuilder;
 import org.openntf.todo.model.Store;
@@ -43,11 +43,11 @@ public class StoreResource {
 		try {
 			final Map<String, Object> bodyAsObj = (Map<String, Object>) JsonParser.fromJson(JsonJavaFactory.instance,
 					body);
-			if (!Utils.validateBody(bodyAsObj, "title", "name", "type")) {
+			if (!ToDoUtils.validateBody(bodyAsObj, "title", "name", "type")) {
 				Response.status(Status.BAD_REQUEST).entity("Expected title, name and type in body").build();
 			}
 
-			StoreType passedType = Utils.validateStoreType((String) bodyAsObj.get("type"));
+			StoreType passedType = ToDoUtils.validateStoreType((String) bodyAsObj.get("type"));
 			if (null == passedType) {
 				Response.status(Status.BAD_REQUEST).entity("type should be 'Personal' or 'Team'").build();
 			}
@@ -55,16 +55,16 @@ public class StoreResource {
 			String title = (String) bodyAsObj.get("title");
 			String name = (String) bodyAsObj.get("name");
 			if (passedType.equals(StoreType.PERSONAL)) {
-				name = Utils.getPersonalStoreName(Factory.getSession(SessionType.CURRENT));
+				name = Utils.getPersonalStoreName();
 			}
-			if (null != ToDoStoreFactory.getInstance().getStore(Factory.getSession(SessionType.NATIVE), name)) {
+			if (null != ToDoStoreFactory.getInstance().getStoreAsNative(name)) {
 				Response.status(Status.CONFLICT).entity(
 						"A store already exists with the name. (For personal stores, the username overrides the name passed)")
 						.build();
 			}
 
 			// Create store
-			Store store = ToDoStoreFactory.getInstance().createToDoNSF(Factory.getSession(SessionType.NATIVE), title,
+			Store store = ToDoStoreFactory.getInstance().createToDoNSF(title,
 					name, passedType);
 			RequestBuilder builder = new RequestBuilder(Store.class);
 			return Response.ok(builder.buildJson(store), MediaType.APPLICATION_JSON).build();
@@ -89,7 +89,7 @@ public class StoreResource {
 	public Response changeTitle(final @PathParam(value = "store") String storeKey,
 			final @QueryParam(value = "newTitle") String newTitle) {
 		try {
-			Store store = ToDoStoreFactory.getInstance().getStore(Factory.getSession(SessionType.NATIVE), storeKey);
+			Store store = ToDoStoreFactory.getInstance().getStoreAsNative(storeKey);
 			store.setTitle(newTitle);
 			store.serializeToCatalog();
 			RequestBuilder builder = new RequestBuilder(Store.class);
@@ -116,7 +116,7 @@ public class StoreResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response getStoreInfo(final @PathParam(value = "store") String storeKey) {
 		try {
-			Store store = ToDoStoreFactory.getInstance().getStore(Factory.getSession(SessionType.CURRENT), storeKey);
+			Store store = ToDoStoreFactory.getInstance().getStore(storeKey);
 			RequestBuilder builder = new RequestBuilder(Store.class);
 			return Response.ok(builder.buildJson(store), MediaType.APPLICATION_JSON).build();
 		} catch (StoreNotFoundException se) {
@@ -141,7 +141,7 @@ public class StoreResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response queryAccess(final @PathParam(value = "store") String storeKey) {
 		try {
-			Store store = ToDoStoreFactory.getInstance().getStore(Factory.getSession(SessionType.NATIVE), storeKey);
+			Store store = ToDoStoreFactory.getInstance().getStoreAsNative(storeKey);
 
 			// TODO: Create a User object corresponding to the username and access level
 
@@ -163,7 +163,7 @@ public class StoreResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response updateAccess(final @PathParam(value = "store") String storeKey, final String body) {
 		try {
-			Store store = ToDoStoreFactory.getInstance().getStore(Factory.getSession(SessionType.CURRENT), storeKey);
+			Store store = ToDoStoreFactory.getInstance().getStoreAsNative(storeKey);
 			// TODO: Check current user has Admin role access
 
 			// TODO: Extract users to update from body and validate

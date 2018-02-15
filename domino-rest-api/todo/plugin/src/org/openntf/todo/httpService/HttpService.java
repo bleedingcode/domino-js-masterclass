@@ -5,8 +5,8 @@ import java.util.List;
 
 import javax.servlet.ServletException;
 
-import org.openntf.todo.ToDoStoreFactory;
-import org.openntf.todo.Utils;
+import org.openntf.todo.ToDoUtils;
+import org.openntf.todo.domino.ToDoStoreFactory;
 
 import com.ibm.designer.runtime.domino.adapter.ComponentModule;
 import com.ibm.designer.runtime.domino.adapter.LCDEnvironment;
@@ -39,14 +39,14 @@ public class HttpService extends com.ibm.designer.runtime.domino.adapter.HttpSer
 	public void checkTimeout(final long arg0) {
 		if (!hasRun) {
 			hasRun = true;
-			Utils.toggleProfiling();
-			long startTimer = Utils.startTimer();
+			ToDoUtils.toggleProfiling();
+			long startTimer = ToDoUtils.startTimer();
 			try {
 				ToDoStoreFactory.getInstance().loadStores();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			Utils.debugTimer(startTimer, "Timeout run");
+			ToDoUtils.debugTimer(startTimer, "Timeout run");
 		}
 		super.checkTimeout(arg0);
 	}

@@ -1,4 +1,4 @@
-package org.openntf.todo;
+package org.openntf.todo.domino;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -6,22 +6,24 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
+import org.apache.commons.lang3.StringUtils;
 import org.openntf.domino.ACL;
 import org.openntf.domino.ACL.Level;
 import org.openntf.domino.ACLEntry;
 import org.openntf.domino.Database;
+import org.openntf.domino.Document;
 import org.openntf.domino.Session;
 import org.openntf.domino.design.DatabaseDesign.DbProperties;
 import org.openntf.domino.design.DesignColumn;
 import org.openntf.domino.design.DesignColumn.SortOrder;
 import org.openntf.domino.design.DesignView;
 import org.openntf.domino.design.impl.DatabaseDesign;
+import org.openntf.domino.utils.DominoUtils;
 import org.openntf.domino.utils.Factory;
 import org.openntf.domino.utils.Factory.SessionType;
 import org.openntf.domino.xots.Xots;
 import org.openntf.todo.exceptions.DatabaseModuleException;
 import org.openntf.todo.exceptions.StoreNotFoundException;
-import org.openntf.todo.httpService.StoreLoader;
 import org.openntf.todo.model.DatabaseAccess;
 import org.openntf.todo.model.DatabaseAccess.AccessLevel;
 import org.openntf.todo.model.Store;
@@ -58,9 +60,62 @@ public class ToDoStoreFactory {
 	 *            NSF to add
 	 */
 	public Store addStore(Database db) {
-		Store store = new Store(db);
+		Store store = createStoreFromDatabase(db);
 		synchronized (stores) {
 			stores.put(store.getReplicaId(), store);
+		}
+		return store;
+	}
+
+	/**
+	 * Converts NSF to a Store object, serializing to ToDo catalog
+	 * 
+	 * @param db
+	 */
+	public Store createStoreFromDatabase(Database db) {
+		Store store = new Store();
+		store.setName(db.getFilePath().toLowerCase());
+		store.setTitle(db.getTitle());
+		store.setReplicaId(db.getReplicaID());
+		String[] cats = StringUtils.split(db.getCategories(), ",");
+		for (String cat : cats) {
+			for (StoreType type : StoreType.values()) {
+				if (StringUtils.equalsIgnoreCase(type.getValue(), cat)) {
+					store.setType(type);
+					break;
+				}
+			}
+		}
+		serializeStoreToCatalog(store);
+		return store;
+	}
+
+	public void serializeStoreToCatalog(Store store) {
+		Session sess = Factory.getSession(SessionType.NATIVE);
+		Database todoCatalog = sess.getDatabase(Store.TODO_PATH + "catalog.nsf");
+		Document doc = todoCatalog.getDocumentByUNID(DominoUtils.toUnid(store.getReplicaId()));
+		if (null == doc) {
+			doc = todoCatalog.createDocument();
+			doc.setUniversalID(DominoUtils.toUnid(store.getReplicaId()));
+		}
+		doc.replace("replicaId", store.getReplicaId());
+		doc.replace("name", store.getName());
+		doc.replace("title", store.getTitle());
+		doc.replace("type", store.getType().getValue());
+		doc.save();
+	}
+
+	public Store createStoreFromDoc(Document doc) {
+		Store store = new Store();
+		store.setReplicaId(doc.getItemValueString("replicaId"));
+		store.setName(doc.getItemValueString("name"));
+		store.setTitle(doc.getItemValueString("title"));
+		String typeFromDoc = doc.getItemValueString("type");
+		for (StoreType type : StoreType.values()) {
+			if (type.getValue().equals(typeFromDoc)) {
+				store.setType(type);
+				break;
+			}
 		}
 		return store;
 	}
@@ -92,8 +147,16 @@ public class ToDoStoreFactory {
 		}
 	}
 
-	public Store getStore(Session sess, String key) throws StoreNotFoundException {
-		Store store = getStoreUnchecked(sess, key);
+	public Store getStore(String key) throws StoreNotFoundException {
+		Store store = getStoreUnchecked(Factory.getSession(SessionType.CURRENT), key);
+		if (null == store) {
+			throw new StoreNotFoundException();
+		}
+		return store;
+	}
+
+	public Store getStoreAsNative(String key) throws StoreNotFoundException {
+		Store store = getStoreUnchecked(Factory.getSession(SessionType.NATIVE), key);
 		if (null == store) {
 			throw new StoreNotFoundException();
 		}
@@ -120,13 +183,14 @@ public class ToDoStoreFactory {
 		}
 	}
 
-	public Store createToDoNSF(Session sess, String title, String name, StoreType type) throws DatabaseModuleException {
+	public Store createToDoNSF(String title, String name, StoreType type) throws DatabaseModuleException {
 		try {
 			// Create database using name or user's name if a Personal store
 			if (StoreType.PERSONAL.equals(type)) {
-				name = Utils.getPersonalStoreName(sess);
+				name = Utils.getPersonalStoreName();
 			}
-			Database db = sess.createBlankDatabase(Store.TODO_PATH + type.getValue() + "/" + name);
+			Database db = Factory.getSession(SessionType.NATIVE)
+					.createBlankDatabase(Store.TODO_PATH + type.getValue() + "/" + name);
 			DatabaseDesign dbDesign = (DatabaseDesign) db.getDesign();
 			HashMap<DbProperties, Boolean> props = new HashMap<DbProperties, Boolean>();
 			props.put(DbProperties.USE_JS, false);

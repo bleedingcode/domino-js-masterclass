@@ -10,8 +10,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import org.openntf.domino.utils.Factory;
-import org.openntf.domino.utils.Factory.SessionType;
+import org.openntf.todo.domino.ToDoStoreFactory;
 import org.openntf.todo.exceptions.StoreNotFoundException;
 import org.openntf.todo.json.RequestBuilder;
 import org.openntf.todo.model.Store;
@@ -35,7 +34,7 @@ public class ToDosResource {
 	public Response getToDosByStatus(@PathParam(value = "store") String storeKey,
 			@QueryParam(value = "status") String status) {
 		try {
-			Store store = ToDoStoreFactory.getInstance().getStore(Factory.getSession(SessionType.CURRENT), storeKey);
+			Store store = ToDoStoreFactory.getInstance().getStore(storeKey);
 			// TODO: Get ToDos for this Store for the passed status
 
 			// TODO: Build collection
@@ -68,7 +67,7 @@ public class ToDosResource {
 	public Response getToDosByAssigneeAndStatus(@PathParam(value = "store") String storeKey,
 			@QueryParam(value = "username") String username, @QueryParam(value = "status") String status) {
 		try {
-			Store store = ToDoStoreFactory.getInstance().getStore(Factory.getSession(SessionType.CURRENT), storeKey);
+			Store store = ToDoStoreFactory.getInstance().getStore(storeKey);
 			// TODO: Get ToDos for this Store for the user (or current) and passed status
 
 			// TODO: Build collection
@@ -101,7 +100,7 @@ public class ToDosResource {
 	public Response getToDosByPriorityAndStatus(@PathParam(value = "store") String storeKey,
 			@QueryParam(value = "priority") String priority, @QueryParam(value = "status") String status) {
 		try {
-			Store store = ToDoStoreFactory.getInstance().getStore(Factory.getSession(SessionType.CURRENT), storeKey);
+			Store store = ToDoStoreFactory.getInstance().getStore(storeKey);
 			// TODO: Get ToDos for this Store for the priority (or High) and passed status
 
 			// TODO: Build collection
@@ -134,7 +133,7 @@ public class ToDosResource {
 	public Response getToDosByDate(@PathParam(value = "store") String storeKey,
 			@QueryParam(value = "startDate") String startDate, @QueryParam(value = "endDate") String endDate) {
 		try {
-			Store store = ToDoStoreFactory.getInstance().getStore(Factory.getSession(SessionType.CURRENT), storeKey);
+			Store store = ToDoStoreFactory.getInstance().getStore(storeKey);
 			// TODO: Get ToDos for this Store between dates passed
 
 			// TODO: Build collection

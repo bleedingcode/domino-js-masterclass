@@ -34,9 +34,9 @@ paths:
       description: ''
       operationId: getStores
       consumes:
-        - application/json
+        - application/json; utf-8
       produces:
-        - application/json
+        - application/json; utf-8
       responses:
         '200':
           description: successful operation
@@ -116,6 +116,7 @@ paths:
         - application/json
       parameters:
         - name: store
+          description: store id or name
           in: path
           required: true
           type: string
@@ -238,7 +239,7 @@ paths:
       description: >-
         get all todos in a store for a particular status, sorted by due date
         ascending. If no status is passed, default will be incomplete
-      operationId: getStoresByStatus
+      operationId: getToDosByStatus
       consumes:
         - application/json
       produces:
@@ -283,7 +284,7 @@ paths:
         get all todos in a store assigned to a particular user for a particular
         status, sorted by due date ascending. If no username or status is
         passed, current user and incomplete status will be used
-      operationId: getStoresByAssigneeAndStatus
+      operationId: getToDosByAssigneeAndStatus
       consumes:
         - application/json
       produces:
@@ -331,9 +332,9 @@ paths:
         - todo
       description: >-
         get all todos in a store for a particular priority and status, sorted by
-        due date ascending. If no priority and status areis passed, high and
+        due date ascending. If no priority and status are passed, high and
         unassigned will be used
-      operationId: getStoresByPriorityAndStatus
+      operationId: getToDosByPriorityAndStatus
       consumes:
         - application/json
       produces:
@@ -384,7 +385,7 @@ paths:
       tags:
         - todo
       description: get all todos in a store after or between dates
-      operationId: getStoresByDate
+      operationId: getToDosByDate
       consumes:
         - application/json
       produces:
@@ -423,7 +424,7 @@ paths:
         - domino_auth: []
         - application_auth: []
           user_auth: []
-  '/todo/{store}':
+  '/todo/{key}':
     post:
       tags:
         - todo
@@ -434,7 +435,7 @@ paths:
       produces:
         - application/json
       parameters:
-        - name: store
+        - name: key
           description: store id or name in which to post the ToDo
           in: path
           required: true
@@ -458,7 +459,6 @@ paths:
         - domino_auth: []
         - application_auth: []
           user_auth: []
-  '/todo/{store}/{toDoId}':
     put:
       tags:
         - todo
@@ -469,13 +469,8 @@ paths:
       produces:
         - application/json
       parameters:
-        - name: store
-          description: store id or name in which the ToDo resides
-          in: path
-          required: true
-          type: string
-        - name: toDoId
-          description: id of the ToDo
+        - name: key
+          description: metaversalId of the ToDo
           in: path
           required: true
           type: string
@@ -508,13 +503,8 @@ paths:
       produces:
         - application/json
       parameters:
-        - name: store
-          description: store id or name in which the ToDo resides
-          in: path
-          required: true
-          type: string
-        - name: toDoId
-          description: id of the ToDo
+        - name: key
+          description: metaversalId of the ToDo
           in: path
           required: true
           type: string
@@ -538,7 +528,7 @@ paths:
         - domino_auth: []
         - application_auth: []
           user_auth: []
-  '/todo/{store}/{toDoId}/reassign':
+  '/todo/{toDoId}/reassign':
     put:
       tags:
         - todo
@@ -549,13 +539,8 @@ paths:
       produces:
         - application/json
       parameters:
-        - name: store
-          description: store id or name in which the ToDo resides
-          in: path
-          required: true
-          type: string
         - name: toDoId
-          description: id of the ToDo
+          description: metaversalId of the ToDo
           in: path
           required: true
           type: string
@@ -579,7 +564,7 @@ paths:
         - domino_auth: []
         - application_auth: []
           user_auth: []
-  '/todo/{store}/{toDoId}/complete':
+  '/todo/{toDoId}/complete':
     put:
       tags:
         - todo
@@ -590,13 +575,8 @@ paths:
       produces:
         - application/json
       parameters:
-        - name: store
-          description: store id or name in which the ToDo resides
-          in: path
-          required: true
-          type: string
         - name: toDoId
-          description: id of the ToDo
+          description: metaversalId of the ToDo
           in: path
           required: true
           type: string
@@ -614,7 +594,7 @@ paths:
         - domino_auth: []
         - application_auth: []
           user_auth: []
-  '/todo/{store}/{toDoId}/reopen':
+  '/todo/{toDoId}/reopen':
     put:
       tags:
         - todo
@@ -625,13 +605,8 @@ paths:
       produces:
         - application/json
       parameters:
-        - name: store
-          description: store id or name in which the ToDo resides
-          in: path
-          required: true
-          type: string
         - name: toDoId
-          description: id of the ToDo
+          description: metaversalId of the ToDo
           in: path
           required: true
           type: string
@@ -854,9 +829,11 @@ definitions:
     properties:
       unid:
         type: string
-        description: Unique ID across all replicas
-        minLength: 32
-        maxLength: 32
+        description: >-
+          MetaversalID to access this ToDo from just a Domino Session. First 16
+          chars are replicaId, rest is UNID
+        minLength: 48
+        maxLength: 48
         format: hex
         readOnly: true
       author:

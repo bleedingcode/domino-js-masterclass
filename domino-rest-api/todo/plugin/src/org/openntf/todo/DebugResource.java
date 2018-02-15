@@ -11,8 +11,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.openntf.domino.utils.Factory;
-import org.openntf.domino.utils.Factory.SessionType;
+import org.openntf.todo.domino.Utils;
 
 import com.ibm.commons.util.io.json.JsonException;
 import com.ibm.commons.util.io.json.JsonJavaFactory;
@@ -30,7 +29,7 @@ public class DebugResource {
 			return Response.status(401).build();
 		}
 		JsonJavaObject jjo = new JsonJavaObject();
-		jjo.put("profiling", Utils.toggleProfiling());
+		jjo.put("profiling", ToDoUtils.toggleProfiling());
 		return Response.ok(jjo.toString(), MediaType.APPLICATION_JSON).build();
 	}
 
@@ -41,8 +40,8 @@ public class DebugResource {
 			return Response.status(401).build();
 		}
 		JsonJavaObject jjo = new JsonJavaObject();
-		jjo.put("username", Factory.getSession(SessionType.CURRENT).getEffectiveUserName());
-		jjo.put("storename", Utils.getPersonalStoreName(Factory.getSession(SessionType.CURRENT)));
+		jjo.put("username", Utils.getCurrentUsername());
+		jjo.put("storename", Utils.getPersonalStoreName());
 		return Response.ok(jjo.toString(), MediaType.APPLICATION_JSON).build();
 	}
 
