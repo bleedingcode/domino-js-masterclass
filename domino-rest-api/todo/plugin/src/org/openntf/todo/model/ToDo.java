@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.Objects;
 
 public class ToDo implements Serializable {
-	private String unid = null;
+	private String metaversalId = null;
 
 	private String author = null;
 
@@ -70,8 +70,8 @@ public class ToDo implements Serializable {
 	 * 
 	 * @return unid
 	 **/
-	public String getUnid() {
-		return unid;
+	public String getMetaversalId() {
+		return metaversalId;
 	}
 
 	/**
@@ -209,7 +209,7 @@ public class ToDo implements Serializable {
 			return false;
 		}
 		ToDo toDo = (ToDo) o;
-		return Objects.equals(this.unid, toDo.unid) && Objects.equals(this.author, toDo.author)
+		return Objects.equals(this.metaversalId, toDo.metaversalId) && Objects.equals(this.author, toDo.author)
 				&& Objects.equals(this.currentUser, toDo.currentUser) && Objects.equals(this.taskName, toDo.taskName)
 				&& Objects.equals(this.description, toDo.description) && Objects.equals(this.dueDate, toDo.dueDate)
 				&& Objects.equals(this.priority, toDo.priority) && Objects.equals(this.assignedTo, toDo.assignedTo)
@@ -218,7 +218,8 @@ public class ToDo implements Serializable {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(unid, author, currentUser, taskName, description, dueDate, priority, assignedTo, status);
+		return Objects.hash(metaversalId, author, currentUser, taskName, description, dueDate, priority, assignedTo,
+				status);
 	}
 
 	@Override
@@ -226,7 +227,7 @@ public class ToDo implements Serializable {
 		StringBuilder sb = new StringBuilder();
 		sb.append("class ToDo {\n");
 
-		sb.append("    unid: ").append(toIndentedString(unid)).append("\n");
+		sb.append("    unid: ").append(toIndentedString(metaversalId)).append("\n");
 		sb.append("    author: ").append(toIndentedString(author)).append("\n");
 		sb.append("    currentUser: ").append(toIndentedString(currentUser)).append("\n");
 		sb.append("    taskName: ").append(toIndentedString(taskName)).append("\n");

@@ -827,7 +827,7 @@ definitions:
   ToDo:
     type: object
     properties:
-      unid:
+      metaversalId:
         type: string
         description: >-
           MetaversalID to access this ToDo from just a Domino Session. First 16
