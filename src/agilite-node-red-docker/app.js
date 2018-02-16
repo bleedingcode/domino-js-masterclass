@@ -39,7 +39,7 @@ app.use(settings.httpAdminRoot,RED.httpAdmin);
 app.use(settings.httpNodeRoot,RED.httpNode);
 
 //Server Setup
-const port = 6050;
+const port = 6011;
 
 Utils.loadConfig(function(){
   http.listen(port, function() {
