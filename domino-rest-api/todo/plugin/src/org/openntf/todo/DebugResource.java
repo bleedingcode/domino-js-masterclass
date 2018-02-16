@@ -1,7 +1,5 @@
 package org.openntf.todo;
 
-import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -12,11 +10,11 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.openntf.todo.domino.Utils;
+import org.openntf.todo.model.User;
 
+import com.google.gson.Gson;
 import com.ibm.commons.util.io.json.JsonException;
-import com.ibm.commons.util.io.json.JsonJavaFactory;
 import com.ibm.commons.util.io.json.JsonJavaObject;
-import com.ibm.commons.util.io.json.JsonParser;
 
 @Path("/debug")
 public class DebugResource {
@@ -52,16 +50,15 @@ public class DebugResource {
 		// TODO: Get the store matching the key or return error
 
 		// TODO: Validate body
-		final JsonJavaObject jjo = new JsonJavaObject();
-		final Map<String, Object> bodyAsObj = (Map<String, Object>) JsonParser.fromJson(JsonJavaFactory.instance, body);
-		// Expecting an array, so the above code may not work
+		Gson gson = new Gson();
+		User[] users = gson.fromJson(body, User[].class);
 
 		// TODO: Delete all data from said database and recreate as dummy data
 		return null;
 	}
 
 	private boolean validateKey(HttpServletRequest request) {
-		String verificationKey = request.getHeader("X-TODO-USER-KEY");
+		String verificationKey = request.getHeader("X-DEBUG-KEY");
 		return DEBUG_KEY.equals(verificationKey);
 	}
 

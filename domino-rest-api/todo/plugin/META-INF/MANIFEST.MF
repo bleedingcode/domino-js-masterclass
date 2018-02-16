@@ -5,28 +5,6 @@ Bundle-SymbolicName: org.openntf.todo;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: ODA
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Import-Package: com.google.gson,
- com.google.gson.annotations,
- com.google.gson.internal,
- com.google.gson.internal.bind,
- com.google.gson.internal.bind.util,
- com.google.gson.reflect,
- com.google.gson.stream,
- javax.servlet;version="2.5.0",
- javax.servlet.http;version="2.5.0",
- org.apache.commons.lang3,
- org.apache.commons.lang3.builder,
- org.apache.commons.lang3.concurrent,
- org.apache.commons.lang3.event,
- org.apache.commons.lang3.exception,
- org.apache.commons.lang3.math,
- org.apache.commons.lang3.mutable,
- org.apache.commons.lang3.reflect,
- org.apache.commons.lang3.text,
- org.apache.commons.lang3.text.translate,
- org.apache.commons.lang3.time,
- org.apache.commons.lang3.tuple,
- org.eclipse.core.runtime
 Require-Bundle: com.ibm.wink;bundle-version="9.0.1",
  com.ibm.commons;bundle-version="9.0.1",
  com.ibm.pvc.webcontainer;bundle-version="9.0.1",
@@ -37,4 +15,12 @@ Require-Bundle: com.ibm.wink;bundle-version="9.0.1",
  com.ibm.domino.das;bundle-version="9.0.1",
  com.ibm.domino.xsp.adapter,
  com.ibm.domino.xsp.bootstrap
+Bundle-ClassPath: .,
+ lib/commons-lang3.jar,
+ lib/gson.jar,
+ lib/guava.jar
+Import-Package: javax.servlet;version="2.5.0",
+ javax.servlet.http;version="2.5.0",
+ org.eclipse.core.runtime
 Bundle-Activator: org.openntf.todo.Activator
+Bundle-ActivationPolicy: lazy

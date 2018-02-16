@@ -9,13 +9,17 @@ public class ToDo implements Serializable {
 
 	private String author = null;
 
-	private User currentUser = null;
-
 	private String taskName = null;
 
 	private String description = null;
 
 	private Date dueDate = null;
+
+	private Priority priority = null;
+
+	private String assignedTo = null;
+
+	private Status status = null;
 
 	/**
 	 * Priority for the ToDo, see enum
@@ -38,10 +42,6 @@ public class ToDo implements Serializable {
 		}
 	}
 
-	private Priority priority = null;
-
-	private String assignedTo = null;
-
 	/**
 	 * Current status of the ToDo. Set via workflow actions, defaulting to New
 	 */
@@ -63,8 +63,6 @@ public class ToDo implements Serializable {
 		}
 	}
 
-	private Status status = null;
-
 	/**
 	 * Unique ID across all replicas
 	 * 
@@ -72,6 +70,10 @@ public class ToDo implements Serializable {
 	 **/
 	public String getMetaversalId() {
 		return metaversalId;
+	}
+
+	public void setMetaversalId(String metaversalId) {
+		this.metaversalId = metaversalId;
 	}
 
 	/**
@@ -83,22 +85,8 @@ public class ToDo implements Serializable {
 		return author;
 	}
 
-	public ToDo currentUser(User currentUser) {
-		this.currentUser = currentUser;
-		return this;
-	}
-
-	/**
-	 * Get currentUser
-	 * 
-	 * @return currentUser
-	 **/
-	public User getCurrentUser() {
-		return currentUser;
-	}
-
-	public void setCurrentUser(User currentUser) {
-		this.currentUser = currentUser;
+	public void setAuthor(String author) {
+		this.author = author;
 	}
 
 	public ToDo taskName(String taskName) {
@@ -200,6 +188,10 @@ public class ToDo implements Serializable {
 		return status;
 	}
 
+	public void setStatus(Status status) {
+		this.status = status;
+	}
+
 	@Override
 	public boolean equals(java.lang.Object o) {
 		if (this == o) {
@@ -210,7 +202,7 @@ public class ToDo implements Serializable {
 		}
 		ToDo toDo = (ToDo) o;
 		return Objects.equals(this.metaversalId, toDo.metaversalId) && Objects.equals(this.author, toDo.author)
-				&& Objects.equals(this.currentUser, toDo.currentUser) && Objects.equals(this.taskName, toDo.taskName)
+				&& Objects.equals(this.taskName, toDo.taskName)
 				&& Objects.equals(this.description, toDo.description) && Objects.equals(this.dueDate, toDo.dueDate)
 				&& Objects.equals(this.priority, toDo.priority) && Objects.equals(this.assignedTo, toDo.assignedTo)
 				&& Objects.equals(this.status, toDo.status);
@@ -218,7 +210,7 @@ public class ToDo implements Serializable {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(metaversalId, author, currentUser, taskName, description, dueDate, priority, assignedTo,
+		return Objects.hash(metaversalId, author, taskName, description, dueDate, priority, assignedTo,
 				status);
 	}
 
@@ -229,7 +221,6 @@ public class ToDo implements Serializable {
 
 		sb.append("    unid: ").append(toIndentedString(metaversalId)).append("\n");
 		sb.append("    author: ").append(toIndentedString(author)).append("\n");
-		sb.append("    currentUser: ").append(toIndentedString(currentUser)).append("\n");
 		sb.append("    taskName: ").append(toIndentedString(taskName)).append("\n");
 		sb.append("    description: ").append(toIndentedString(description)).append("\n");
 		sb.append("    dueDate: ").append(toIndentedString(dueDate)).append("\n");
@@ -249,5 +240,6 @@ public class ToDo implements Serializable {
 		}
 		return o.toString().replace("\n", "\n    ");
 	}
+
 
 }

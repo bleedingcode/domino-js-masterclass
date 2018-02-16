@@ -18,15 +18,19 @@
  */
 package org.openntf.todo;
 
+import java.util.List;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.Response.Status;
 
-import com.ibm.commons.util.io.json.JsonJavaObject;
+import org.openntf.todo.domino.ToDoStoreFactory;
+import org.openntf.todo.json.RequestBuilder;
+import org.openntf.todo.model.Store;
+
 import com.ibm.domino.osgi.core.context.ContextInfo;
 
 /**
@@ -55,14 +59,14 @@ public class StoresResource {
 	 * @return Json response with "Hello World " + current user + current
 	 *         database path; or error
 	 */
-	@SuppressWarnings("restriction")
 	@GET
 	public Response getStores() {
-		final JsonJavaObject jjo = new JsonJavaObject();
 		try {
+			List<Store> stores = ToDoStoreFactory.getInstance().getStoresForCurrentUser();
 
-			final ResponseBuilder builder = Response.ok(jjo.toString(), MediaType.APPLICATION_JSON);
-			return builder.build();
+			// Build JsonObject
+			RequestBuilder<List<Store>> builder = new RequestBuilder(Store.class);
+			return Response.ok(builder.buildJson(stores), MediaType.APPLICATION_JSON).build();
 		} catch (final Exception e) {
 			throw new WebApplicationException(e, Status.INTERNAL_SERVER_ERROR);
 		}

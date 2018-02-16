@@ -1,6 +1,7 @@
 package org.openntf.todo.domino;
 
 import org.apache.commons.lang3.StringUtils;
+import org.openntf.domino.Database;
 import org.openntf.domino.Name;
 import org.openntf.domino.Session;
 import org.openntf.domino.utils.Factory;
@@ -13,6 +14,13 @@ public class Utils {
 		return Factory.getSession(SessionType.CURRENT).getEffectiveUserName();
 	}
 
+	/**
+	 * Converts passed username to username format used by the application
+	 * 
+	 * @param username
+	 *            passed in, may be hierarchical username or just a name like "Fred Bloggs"
+	 * @return
+	 */
 	public static String getAsUsername(String username) {
 		if (StringUtils.contains(username, "/")) {
 			return username;
@@ -22,6 +30,11 @@ public class Utils {
 		}
 	}
 
+	/**
+	 * Converts username to store name
+	 * 
+	 * @return store in filename format, e.g. for "Paul Withers/Intec" returns paul_withers
+	 */
 	public static String getPersonalStoreName() {
 		String name;
 		Session sess = Factory.getSession(SessionType.CURRENT);
@@ -33,6 +46,10 @@ public class Utils {
 			name = StringUtils.replace(StringUtils.replace(name, "/", "_"), " ", "_");
 		}
 		return name.toLowerCase();
+	}
+
+	public static String getDbName(Database db) {
+		return db.getFilePath().toLowerCase();
 	}
 
 }

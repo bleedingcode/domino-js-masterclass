@@ -46,8 +46,11 @@ public class ToDoApplication extends RestService {
 		final Set<Class<?>> classes = new HashSet<Class<?>>();
 		classes.add(StoresResource.class);
 		classes.add(StoreResource.class);
+		classes.add(ToDoResource.class);
+		classes.add(ToDosResource.class);
 		classes.add(UserResource.class);
 		classes.add(DebugResource.class);
+		classes.add(UnitTestResource.class);
 		return classes;
 	}
 

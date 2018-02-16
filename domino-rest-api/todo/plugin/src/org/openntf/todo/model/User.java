@@ -3,7 +3,9 @@ package org.openntf.todo.model;
 import java.io.Serializable;
 import java.util.Objects;
 
+import org.apache.commons.lang3.StringUtils;
 import org.openntf.todo.domino.Utils;
+import org.openntf.todo.exceptions.DataNotAcceptableException;
 
 public class User implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -80,6 +82,19 @@ public class User implements Serializable {
 			return "null";
 		}
 		return o.toString().replace("\n", "\n    ");
+	}
+
+	public boolean isVaidForUpdate() throws DataNotAcceptableException {
+		if (StringUtils.isNotEmpty(getUsername())) {
+			throw new DataNotAcceptableException("Username is missing");
+		}
+		if (null == getAccess()) {
+			throw new DataNotAcceptableException("No database access has been provided for " + getUsername());
+		}
+		if (null == getAccess().getLevel()) {
+			throw new DataNotAcceptableException("No database access level has been requested for " + getUsername());
+		}
+		return true;
 	}
 
 }

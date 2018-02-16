@@ -1,7 +1,5 @@
 package org.openntf.todo;
 
-import java.util.Map;
-
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -18,12 +16,14 @@ import org.openntf.todo.domino.ToDoStoreFactory;
 import org.openntf.todo.domino.Utils;
 import org.openntf.todo.exceptions.StoreNotFoundException;
 import org.openntf.todo.json.RequestBuilder;
+import org.openntf.todo.json.ResultParser;
+import org.openntf.todo.model.DatabaseAccess;
 import org.openntf.todo.model.Store;
 import org.openntf.todo.model.Store.StoreType;
+import org.openntf.todo.model.User;
 
-import com.ibm.commons.util.io.json.JsonJavaFactory;
+import com.google.gson.Gson;
 import com.ibm.commons.util.io.json.JsonJavaObject;
-import com.ibm.commons.util.io.json.JsonParser;
 
 @SuppressWarnings({ "unchecked", "rawtypes" })
 @Path("/store")
@@ -41,31 +41,31 @@ public class StoreResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response createStore(final String body) {
 		try {
-			final Map<String, Object> bodyAsObj = (Map<String, Object>) JsonParser.fromJson(JsonJavaFactory.instance,
-					body);
-			if (!ToDoUtils.validateBody(bodyAsObj, "title", "name", "type")) {
-				Response.status(Status.BAD_REQUEST).entity("Expected title, name and type in body").build();
+			Store passedStore = new ResultParser<Store>(Store.class).parse(body);
+			if (null == passedStore.getTitle()) {
+				Response.status(Status.BAD_REQUEST).entity("Expected title in body").build();
 			}
 
-			StoreType passedType = ToDoUtils.validateStoreType((String) bodyAsObj.get("type"));
-			if (null == passedType) {
+			if (null == passedStore.getType()) {
 				Response.status(Status.BAD_REQUEST).entity("type should be 'Personal' or 'Team'").build();
+			} else if (StoreType.TEAM.equals(passedStore.getType())) {
+				if (null == passedStore.getName()) {
+					Response.status(Status.BAD_REQUEST).entity("Expected name in body").build();
+				}
+				passedStore.setName(ToDoUtils.getStoreFilePath(passedStore.getName(), StoreType.TEAM));
+			} else {
+				passedStore.setName(ToDoUtils.getStoreFilePath(Utils.getPersonalStoreName(), StoreType.PERSONAL));
 			}
 
-			String title = (String) bodyAsObj.get("title");
-			String name = (String) bodyAsObj.get("name");
-			if (passedType.equals(StoreType.PERSONAL)) {
-				name = Utils.getPersonalStoreName();
-			}
-			if (null != ToDoStoreFactory.getInstance().getStoreAsNative(name)) {
+			if (null != ToDoStoreFactory.getInstance().getStoreAsNative(passedStore.getName())) {
 				Response.status(Status.CONFLICT).entity(
 						"A store already exists with the name. (For personal stores, the username overrides the name passed)")
 						.build();
 			}
 
 			// Create store
-			Store store = ToDoStoreFactory.getInstance().createToDoNSF(title,
-					name, passedType);
+			Store store = ToDoStoreFactory.getInstance().createToDoNSF(passedStore.getTitle(),
+					passedStore.getName(), passedStore.getType());
 			RequestBuilder builder = new RequestBuilder(Store.class);
 			return Response.ok(builder.buildJson(store), MediaType.APPLICATION_JSON).build();
 		} catch (Exception e) {
@@ -143,11 +143,11 @@ public class StoreResource {
 		try {
 			Store store = ToDoStoreFactory.getInstance().getStoreAsNative(storeKey);
 
-			// TODO: Create a User object corresponding to the username and access level
+			User user = new User(Utils.getCurrentUsername());
+			user.setAccess(ToDoStoreFactory.getInstance().queryAccess(store, user.getUsername()));
 
-			// TODO: Return User object
-			RequestBuilder builder = new RequestBuilder(Store.class);
-			return Response.ok(builder.buildJson(store), MediaType.APPLICATION_JSON).build();
+			RequestBuilder builder = new RequestBuilder(User.class);
+			return Response.ok(builder.buildJson(user), MediaType.APPLICATION_JSON).build();
 		} catch (StoreNotFoundException se) {
 			se.printStackTrace();
 			throw new WebApplicationException(Response.status(Status.BAD_REQUEST)
@@ -164,11 +164,25 @@ public class StoreResource {
 	public Response updateAccess(final @PathParam(value = "store") String storeKey, final String body) {
 		try {
 			Store store = ToDoStoreFactory.getInstance().getStoreAsNative(storeKey);
-			// TODO: Check current user has Admin role access
+			User currUser = new User(Utils.getCurrentUsername());
+			if (!ToDoStoreFactory.getInstance().userIsAdmin(store, currUser.getUsername())) {
+				throw new WebApplicationException(
+						Response.status(Status.FORBIDDEN).entity(ToDoStoreFactory.USER_NOT_AUTHORIZED_ERROR).build());
+			}
 
-			// TODO: Extract users to update from body and validate
-
-			// TODO: Update ACL
+			// Extract users to update from body and validate
+			Gson gson = new Gson();
+			User[] newUsers = gson.fromJson(body, User[].class);
+			for (User user : newUsers) {
+				if (user.isVaidForUpdate()) {
+					// Update ACL if required
+					DatabaseAccess currAccess = ToDoStoreFactory.getInstance().queryAccess(store, user.getUsername());
+					if (!currAccess.getLevel().equals(user.getAccess().getLevel())
+							&& !currAccess.getAllowDelete().equals(user.getAccess().getAllowDelete())) {
+						ToDoStoreFactory.getInstance().updateAccess(store, user);
+					}
+				}
+			}
 
 			JsonJavaObject jjo = new JsonJavaObject();
 			jjo.put("success", true);

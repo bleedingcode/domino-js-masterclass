@@ -1,16 +1,25 @@
 package org.openntf.todo.domino;
 
+import java.sql.Date;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response.Status;
 
 import org.apache.commons.lang3.StringUtils;
 import org.openntf.domino.ACL;
 import org.openntf.domino.ACL.Level;
 import org.openntf.domino.ACLEntry;
 import org.openntf.domino.Database;
+import org.openntf.domino.Database.DBPrivilege;
 import org.openntf.domino.Document;
 import org.openntf.domino.Session;
 import org.openntf.domino.design.DatabaseDesign.DbProperties;
@@ -22,16 +31,23 @@ import org.openntf.domino.utils.DominoUtils;
 import org.openntf.domino.utils.Factory;
 import org.openntf.domino.utils.Factory.SessionType;
 import org.openntf.domino.xots.Xots;
+import org.openntf.todo.ToDoUtils;
 import org.openntf.todo.exceptions.DatabaseModuleException;
+import org.openntf.todo.exceptions.DocumentNotFoundException;
 import org.openntf.todo.exceptions.StoreNotFoundException;
 import org.openntf.todo.model.DatabaseAccess;
 import org.openntf.todo.model.DatabaseAccess.AccessLevel;
 import org.openntf.todo.model.Store;
 import org.openntf.todo.model.Store.StoreType;
+import org.openntf.todo.model.ToDo;
+import org.openntf.todo.model.ToDo.Priority;
+import org.openntf.todo.model.User;
 
 public class ToDoStoreFactory {
 	private Map<String, Store> stores = new ConcurrentHashMap<String, Store>();
 	public static String STORE_NOT_FOUND_OR_ACCESS_ERROR = "The store could not be found with the name or replicaId passed, or you do not have access to that store";
+	public static String DOCUMENT_NOT_FOUND_ERROR = "The ToDo with that ID could not be found";
+	public static String USER_NOT_AUTHORIZED_ERROR = "You are not authorized to perform this operation";
 	private static ToDoStoreFactory INSTANCE;
 
 	public static ToDoStoreFactory getInstance() {
@@ -51,6 +67,22 @@ public class ToDoStoreFactory {
 			stores = new ConcurrentHashMap<String, Store>();
 		}
 		return stores;
+	}
+
+	public List<Store> getStoresForCurrentUser() {
+		String username = Factory.getSession(SessionType.CURRENT).getEffectiveUserName();
+
+		List<Store> userStores = new ArrayList<Store>();
+		Map<String, Store> stores = ToDoStoreFactory.getInstance().getStores();
+		for (String key : stores.keySet()) {
+			Store store = stores.get(key);
+			DatabaseAccess access = queryAccess(store, username);
+			if (!access.getLevel().equals(AccessLevel.NO_ACCESS)) {
+				userStores.add(store);
+			}
+		}
+
+		return userStores;
 	}
 
 	/**
@@ -74,7 +106,7 @@ public class ToDoStoreFactory {
 	 */
 	public Store createStoreFromDatabase(Database db) {
 		Store store = new Store();
-		store.setName(db.getFilePath().toLowerCase());
+		store.setName(Utils.getDbName(db));
 		store.setTitle(db.getTitle());
 		store.setReplicaId(db.getReplicaID());
 		String[] cats = StringUtils.split(db.getCategories(), ",");
@@ -163,6 +195,44 @@ public class ToDoStoreFactory {
 		return store;
 	}
 
+	public ToDo getToDoFromDoc(String metaversalId) throws StoreNotFoundException, DocumentNotFoundException {
+		Document doc = getToDoDoc(metaversalId);
+		ToDo todo = new ToDo();
+		todo.setMetaversalId(metaversalId);
+		todo.setAuthor(doc.getAuthors().get(0));
+		todo.setTaskName(doc.getItemValueString("taskName"));
+		todo.setDescription(doc.getItemValueString("description"));
+		todo.setDueDate(doc.getItemValue("dueDate", Date.class));
+		todo.setAssignedTo(doc.getItemValueString("assignedTo"));
+		String storedPriority = doc.getItemValueString("priority");
+		for (Priority priority : Priority.values()) {
+			if (priority.getValue().equals(storedPriority)) {
+				todo.setPriority(priority);
+				break;
+			}
+		}
+		String storedStatus = doc.getItemValueString("status");
+		for (ToDo.Status status : ToDo.Status.values()) {
+			if (status.getValue().equals(storedStatus)) {
+				todo.setStatus(status);
+				break;
+			}
+		}
+		return todo;
+	}
+
+	public Document getToDoDoc(String metaversalId) throws StoreNotFoundException, DocumentNotFoundException {
+		try {
+			Document doc = Factory.getSession(SessionType.CURRENT).getDocumentByMetaversalID(metaversalId);
+			return doc;
+		} catch (Exception e) {
+			if (null != getStoreAsNative(StringUtils.substring(metaversalId, 16))) {
+				throw new DocumentNotFoundException();
+			}
+			throw new WebApplicationException(e, Status.INTERNAL_SERVER_ERROR);
+		}
+	}
+
 	/**
 	 * Load all stores from ToDo Catalog or creates ToDo Catalog database, done via HttpService 30 seconds after server
 	 * starts
@@ -190,7 +260,7 @@ public class ToDoStoreFactory {
 				name = Utils.getPersonalStoreName();
 			}
 			Database db = Factory.getSession(SessionType.NATIVE)
-					.createBlankDatabase(Store.TODO_PATH + type.getValue() + "/" + name);
+					.createBlankDatabase(ToDoUtils.getStoreFilePath(name, type));
 			DatabaseDesign dbDesign = (DatabaseDesign) db.getDesign();
 			HashMap<DbProperties, Boolean> props = new HashMap<DbProperties, Boolean>();
 			props.put(DbProperties.USE_JS, false);
@@ -302,6 +372,12 @@ public class ToDoStoreFactory {
 		}
 	}
 
+	public void updateAccess(Store store, User user) throws DatabaseModuleException {
+		Database db = Factory.getSession(SessionType.NATIVE).getDatabase(store.getReplicaId());
+		ACL acl = db.getACL();
+		addAccess(acl, user.getUsername(), user.getAccess());
+	}
+
 	public void addAccess(ACL acl, String username, DatabaseAccess access) throws DatabaseModuleException {
 		try {
 			ACLEntry user = acl.createACLEntry(username, Level.NOACCESS);
@@ -328,6 +404,37 @@ public class ToDoStoreFactory {
 			e.printStackTrace();
 			throw new DatabaseModuleException(e.getMessage());
 		}
+	}
+
+	public DatabaseAccess queryAccess(Store store, String username) {
+		Database db = Factory.getSession(SessionType.NATIVE).getDatabase(store.getReplicaId());
+		Vector<String> roles = db.queryAccessRoles(username);
+		int level = db.queryAccess(username);
+		Set<DBPrivilege> priv = db.queryAccessPrivilegesEx(username);
+		DatabaseAccess dbAccess = new DatabaseAccess();
+		dbAccess.setReplicaId(store.getReplicaId());
+		dbAccess.setDbName(store.getName());
+		if (roles.contains("[Admin]")) {
+			dbAccess.setLevel(AccessLevel.ADMIN);
+		} else if (level == Level.EDITOR.getValue()) {
+			dbAccess.setLevel(AccessLevel.EDITOR);
+		} else if (level == Level.READER.getValue()) {
+			dbAccess.setLevel(AccessLevel.READER);
+		} else {
+			dbAccess.setLevel(AccessLevel.NO_ACCESS);
+		}
+		if (priv.contains(DBPrivilege.DELETE_DOCS)) {
+			dbAccess.setAllowDelete(true);
+		} else {
+			dbAccess.setAllowDelete(false);
+		}
+		return dbAccess;
+	}
+
+	public boolean userIsAdmin(Store store, String username) {
+		Database db = Factory.getSession(SessionType.NATIVE).getDatabase(store.getReplicaId());
+		Vector<String> roles = db.queryAccessRoles(username);
+		return roles.contains("[Admin]");
 	}
 
 }

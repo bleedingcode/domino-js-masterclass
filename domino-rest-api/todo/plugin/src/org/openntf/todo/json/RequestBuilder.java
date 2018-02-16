@@ -37,9 +37,6 @@ public class RequestBuilder<T> {
 			if ("dbName".equals(fieldAttributes.getName())) {
 				return true;
 			}
-			if ("replicaId".equals(fieldAttributes.getName())) {
-				return true;
-			}
 			return false;
 		}
 
@@ -57,7 +54,7 @@ public class RequestBuilder<T> {
 	 * @return String, JSON conversion of the parameter passed
 	 */
 	public String buildJson(T object) {
-		return gson.toJson(object, clazz);
+		return gson.toJson(object);
 	}
 
 }

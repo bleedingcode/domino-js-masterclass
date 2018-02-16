@@ -16,5 +16,4 @@ public class StatusSerializer implements JsonSerializer<Status> {
 	public JsonElement serialize(Status status, Type typeOfT, JsonSerializationContext context) {
 		return new JsonPrimitive(status.getValue());
 	}
-
 }

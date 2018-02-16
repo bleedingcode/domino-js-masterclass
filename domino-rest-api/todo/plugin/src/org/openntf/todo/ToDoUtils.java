@@ -1,8 +1,7 @@
 package org.openntf.todo;
 
-import java.util.Map;
-
 import org.apache.commons.lang3.StringUtils;
+import org.openntf.todo.model.Store;
 import org.openntf.todo.model.Store.StoreType;
 
 public class ToDoUtils {
@@ -30,22 +29,9 @@ public class ToDoUtils {
 		}
 	}
 
-	public static boolean validateBody(Map<String, Object> body, String... keys) {
-		for (String key : keys) {
-			if (!body.containsKey(key)) {
-				return false;
-			}
-		}
-		return true;
-	}
-
-	public static StoreType validateStoreType(String type) {
-		for (StoreType st : StoreType.values()) {
-			if (StringUtils.equalsIgnoreCase(st.getValue(), type)) {
-				return st;
-			}
-		}
-		return null;
+	public static String getStoreFilePath(String name, StoreType type) {
+		name = StringUtils.replace(StringUtils.replace(name, "/", "_"), " ", "_");
+		return StringUtils.lowerCase(Store.TODO_PATH + type.getValue() + "/" + name + ".nsf");
 	}
 
 }
