@@ -1,8 +1,18 @@
 package org.openntf.todo;
 
 import org.apache.commons.lang3.StringUtils;
+import org.openntf.todo.json.AccessLevelDeserializer;
+import org.openntf.todo.json.PriorityDeserializer;
+import org.openntf.todo.json.StatusDeserializer;
+import org.openntf.todo.json.StoreTypeDeserializer;
+import org.openntf.todo.model.DatabaseAccess.AccessLevel;
 import org.openntf.todo.model.Store;
 import org.openntf.todo.model.Store.StoreType;
+import org.openntf.todo.model.ToDo.Priority;
+import org.openntf.todo.model.ToDo.Status;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 public class ToDoUtils {
 	public static String DEBUG_PREFIX = "[TODO_APP]: ";
@@ -32,6 +42,16 @@ public class ToDoUtils {
 	public static String getStoreFilePath(String name, StoreType type) {
 		name = StringUtils.replace(StringUtils.replace(name, "/", "_"), " ", "_");
 		return StringUtils.lowerCase(Store.TODO_PATH + type.getValue() + "/" + name + ".nsf");
+	}
+
+	public static Gson getGson() {
+		GsonBuilder builder = new GsonBuilder();
+		builder.setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSZ");
+		builder.registerTypeAdapter(AccessLevel.class, new AccessLevelDeserializer());
+		builder.registerTypeAdapter(Priority.class, new PriorityDeserializer());
+		builder.registerTypeAdapter(Status.class, new StatusDeserializer());
+		builder.registerTypeAdapter(StoreType.class, new StoreTypeDeserializer());
+		return builder.create();
 	}
 
 }

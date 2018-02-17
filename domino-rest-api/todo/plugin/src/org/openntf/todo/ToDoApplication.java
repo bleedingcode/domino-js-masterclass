@@ -21,6 +21,14 @@ package org.openntf.todo;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.openntf.todo.v1.DebugResource;
+import org.openntf.todo.v1.StoreResource;
+import org.openntf.todo.v1.StoresResource;
+import org.openntf.todo.v1.ToDoResource;
+import org.openntf.todo.v1.ToDosResource;
+import org.openntf.todo.v1.UnitTestResource;
+import org.openntf.todo.v1.UserResource;
+
 import com.ibm.domino.das.service.RestService;
 
 /**

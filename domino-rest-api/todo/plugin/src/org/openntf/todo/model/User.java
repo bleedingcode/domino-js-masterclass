@@ -84,8 +84,8 @@ public class User implements Serializable {
 		return o.toString().replace("\n", "\n    ");
 	}
 
-	public boolean isVaidForUpdate() throws DataNotAcceptableException {
-		if (StringUtils.isNotEmpty(getUsername())) {
+	public boolean isValidForUpdate() throws DataNotAcceptableException {
+		if (StringUtils.isEmpty(getUsername())) {
 			throw new DataNotAcceptableException("Username is missing");
 		}
 		if (null == getAccess()) {

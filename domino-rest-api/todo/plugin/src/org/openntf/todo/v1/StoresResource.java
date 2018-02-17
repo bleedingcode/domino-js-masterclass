@@ -16,7 +16,7 @@
  * permissions and limitations under the License.
  *
  */
-package org.openntf.todo;
+package org.openntf.todo.v1;
 
 import java.util.List;
 
@@ -50,7 +50,7 @@ import com.ibm.domino.osgi.core.context.ContextInfo;
  *        <li>* is @Path added to everything in this class</li>
  *
  */
-@Path("/stores")
+@Path("/v1/stores")
 public class StoresResource {
 
 	/**

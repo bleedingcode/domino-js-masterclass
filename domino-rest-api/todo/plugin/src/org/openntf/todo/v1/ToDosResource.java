@@ -1,4 +1,4 @@
-package org.openntf.todo;
+package org.openntf.todo.v1;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -16,7 +16,7 @@ import org.openntf.todo.json.RequestBuilder;
 import org.openntf.todo.model.Store;
 
 @SuppressWarnings({ "unchecked", "rawtypes" })
-@Path("/todos")
+@Path("/v1/todos")
 public class ToDosResource {
 
 	/**

@@ -1,4 +1,4 @@
-package org.openntf.todo;
+package org.openntf.todo.v1;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -19,7 +19,7 @@ import org.openntf.todo.json.RequestBuilder;
 import org.openntf.todo.model.Store;
 import org.openntf.todo.model.ToDo;
 
-@Path("/todo")
+@Path("/v1/todo")
 public class ToDoResource {
 
 	/**

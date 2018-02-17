@@ -1,14 +1,10 @@
 package org.openntf.todo.json;
 
-import org.openntf.todo.model.DatabaseAccess.AccessLevel;
-import org.openntf.todo.model.Store.StoreType;
-import org.openntf.todo.model.ToDo.Priority;
-import org.openntf.todo.model.ToDo.Status;
+import org.openntf.todo.ToDoUtils;
 
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 public class RequestBuilder<T> {
 	private Class<T> clazz;
@@ -21,13 +17,7 @@ public class RequestBuilder<T> {
 	@SuppressWarnings("restriction")
 	public RequestBuilder(Class<T> clazz) {
 		super();
-		GsonBuilder builder = new GsonBuilder();
-		builder.setExclusionStrategies(dbAccessExclusionStrategy);
-		builder.registerTypeAdapter(AccessLevel.class, new AccessLevelSerializer());
-		builder.registerTypeAdapter(StoreType.class, new StoreTypeSerializer());
-		builder.registerTypeAdapter(Priority.class, new PrioritySerializer());
-		builder.registerTypeAdapter(Status.class, new StatusSerializer());
-		this.gson = builder.create();
+		this.gson = ToDoUtils.getGson();
 		this.clazz = clazz;
 	}
 

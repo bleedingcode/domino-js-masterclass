@@ -1,4 +1,4 @@
-package org.openntf.todo;
+package org.openntf.todo.v1;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,13 +14,19 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.openntf.todo.ToDoUtils;
 import org.openntf.todo.domino.Utils;
+import org.openntf.todo.exceptions.DataNotAcceptableException;
 import org.openntf.todo.json.RequestBuilder;
-import org.openntf.todo.json.ResultParser;
+import org.openntf.todo.model.DatabaseAccess;
+import org.openntf.todo.model.DatabaseAccess.AccessLevel;
 import org.openntf.todo.model.Store;
 import org.openntf.todo.model.Store.StoreType;
+import org.openntf.todo.model.User;
 
-@Path("/unitTests")
+import com.google.gson.Gson;
+
+@Path("/v1/unitTests")
 public class UnitTestResource {
 	private final String DEBUG_KEY = "sseqdcof4fq472so10us7ck7r0";
 
@@ -46,8 +52,7 @@ public class UnitTestResource {
 			stores.add(store2);
 
 			// Build JsonObject
-			RequestBuilder builder = new RequestBuilder(Store.class);
-			String json = builder.buildJson(stores);
+			String json = ToDoUtils.getGson().toJson(stores);
 			return Response.ok(json, MediaType.APPLICATION_JSON).build();
 		} catch (final Exception e) {
 			e.printStackTrace();
@@ -63,7 +68,7 @@ public class UnitTestResource {
 			if (!validateKey(request)) {
 				return Response.status(401).build();
 			}
-			Store passedStore = new ResultParser<Store>(Store.class).parse(body);
+			Store passedStore = ToDoUtils.getGson().fromJson(body, Store.class);
 			if (null == passedStore.getTitle()) {
 				Response.status(Status.BAD_REQUEST).entity("Expected title in body").build();
 			}
@@ -82,9 +87,63 @@ public class UnitTestResource {
 			passedStore.setReplicaId("12345678123456781234567812345678");
 
 			// Build JsonObject
-			RequestBuilder builder = new RequestBuilder(Store.class);
-			String json = builder.buildJson(passedStore);
+			String json = ToDoUtils.getGson().toJson(passedStore);
 			return Response.ok(json, MediaType.APPLICATION_JSON).build();
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new WebApplicationException(e, Status.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@Path("/userTest")
+	@GET
+	public Response testUser(@Context HttpServletRequest request) {
+		try {
+			if (!validateKey(request)) {
+				return Response.status(401).build();
+			}
+
+			User user = new User(Utils.getCurrentUsername());
+			DatabaseAccess access = new DatabaseAccess();
+			access.setDbName(Utils.getPersonalStoreName());
+			access.setAllowDelete(true);
+			access.setLevel(AccessLevel.ADMIN);
+			access.setReplicaId("12345678123456781234567812345678");
+			user.setAccess(access);
+
+			// Build JsonObject
+			String json = ToDoUtils.getGson().toJson(user);
+			return Response.ok(json, MediaType.APPLICATION_JSON).build();
+		} catch (final Exception e) {
+			e.printStackTrace();
+			throw new WebApplicationException(e, Status.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@POST
+	@Path("/receiveUsers")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response receiveUsersTest(@Context HttpServletRequest request, final String body) {
+		try {
+			if (!validateKey(request)) {
+				return Response.status(401).build();
+			}
+			Gson gson = ToDoUtils.getGson();
+			User[] passedUsers = gson.fromJson(body, User[].class);
+			for (User user : passedUsers) {
+				if (user.isValidForUpdate()) {
+					System.out.println("Valid - " + user.getUsername());
+				} else {
+					System.out.println("Not valid - " + user.getUsername());
+				}
+			}
+
+			// Build JsonObject
+			RequestBuilder builder = new RequestBuilder(User.class);
+			String json = builder.buildJson(passedUsers);
+			return Response.ok(json, MediaType.APPLICATION_JSON).build();
+		} catch (DataNotAcceptableException d) {
+			throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity(d.getMessage()).build());
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new WebApplicationException(e, Status.INTERNAL_SERVER_ERROR);

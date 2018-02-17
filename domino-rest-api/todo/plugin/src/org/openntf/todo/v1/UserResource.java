@@ -1,4 +1,4 @@
-package org.openntf.todo;
+package org.openntf.todo.v1;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -11,7 +11,7 @@ import org.openntf.todo.model.User;
 
 import com.ibm.commons.util.io.json.JsonException;
 
-@Path("/user")
+@Path("/v1/user")
 public class UserResource {
 
 	/**

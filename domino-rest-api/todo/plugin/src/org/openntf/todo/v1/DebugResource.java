@@ -1,4 +1,4 @@
-package org.openntf.todo;
+package org.openntf.todo.v1;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
@@ -9,6 +9,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.openntf.todo.ToDoUtils;
 import org.openntf.todo.domino.Utils;
 import org.openntf.todo.model.User;
 
@@ -16,7 +17,7 @@ import com.google.gson.Gson;
 import com.ibm.commons.util.io.json.JsonException;
 import com.ibm.commons.util.io.json.JsonJavaObject;
 
-@Path("/debug")
+@Path("/v1/debug")
 public class DebugResource {
 	private final String DEBUG_KEY = "sseqdcof4fq472so10us7ck7r0";
 

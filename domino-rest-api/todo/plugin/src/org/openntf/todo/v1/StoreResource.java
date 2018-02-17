@@ -1,4 +1,4 @@
-package org.openntf.todo;
+package org.openntf.todo.v1;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -12,6 +12,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.openntf.todo.ToDoUtils;
 import org.openntf.todo.domino.ToDoStoreFactory;
 import org.openntf.todo.domino.Utils;
 import org.openntf.todo.exceptions.StoreNotFoundException;
@@ -26,7 +27,7 @@ import com.google.gson.Gson;
 import com.ibm.commons.util.io.json.JsonJavaObject;
 
 @SuppressWarnings({ "unchecked", "rawtypes" })
-@Path("/store")
+@Path("/v1/store")
 public class StoreResource {
 
 	/**
@@ -174,7 +175,7 @@ public class StoreResource {
 			Gson gson = new Gson();
 			User[] newUsers = gson.fromJson(body, User[].class);
 			for (User user : newUsers) {
-				if (user.isVaidForUpdate()) {
+				if (user.isValidForUpdate()) {
 					// Update ACL if required
 					DatabaseAccess currAccess = ToDoStoreFactory.getInstance().queryAccess(store, user.getUsername());
 					if (!currAccess.getLevel().equals(user.getAccess().getLevel())

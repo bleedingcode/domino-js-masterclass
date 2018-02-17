@@ -3,6 +3,7 @@ package org.openntf.todo.json;
 import java.lang.reflect.Type;
 import java.util.Date;
 
+import org.openntf.todo.ToDoUtils;
 import org.openntf.todo.model.DatabaseAccess.AccessLevel;
 import org.openntf.todo.model.Store.StoreType;
 import org.openntf.todo.model.ToDo.Priority;
@@ -36,13 +37,7 @@ public class ResultParser<T> {
 	 */
 	public ResultParser(Class<T> clazz) {
 		this.clazz = clazz;
-		GsonBuilder builder = new GsonBuilder();
-		builder.setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSZ");
-		builder.registerTypeAdapter(AccessLevel.class, new AccessLevelDeserializer());
-		builder.registerTypeAdapter(Priority.class, new PriorityDeserializer());
-		builder.registerTypeAdapter(Status.class, new StatusDeserializer());
-		builder.registerTypeAdapter(StoreType.class, new StoreTypeDeserializer());
-		this.gson = builder.create();
+		this.gson = ToDoUtils.getGson();
 	}
 
 	/**
