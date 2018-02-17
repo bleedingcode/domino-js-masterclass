@@ -13,7 +13,7 @@ info:
     name: Apache 2.0
     url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
 host: 'localhost:8081'
-basePath: /api
+basePath: /todoApp/rest
 tags:
   - name: store
     description: CRUD for ToDos NSF(s)
@@ -26,7 +26,7 @@ tags:
 schemes:
   - http
 paths:
-  /stores:
+  /v1/stores:
     get:
       tags:
         - store
@@ -50,7 +50,7 @@ paths:
         - domino_auth: []
         - application_auth: []
           user_auth: []
-  /stores/todos/markOverdue:
+  /v1/stores/todos/markOverdue:
     get:
       tags:
         - store
@@ -72,7 +72,7 @@ paths:
           sched_auth: []
         - application_auth: []
           sched_auth: []
-  /store:
+  /v1/store:
     post:
       tags:
         - store
@@ -104,7 +104,7 @@ paths:
         - domino_auth: []
         - application_auth: []
           user_auth: []
-  '/store/{store}':
+  '/v1/store/{store}':
     put:
       tags:
         - store
@@ -164,7 +164,7 @@ paths:
         - domino_auth: []
         - application_auth: []
           user_auth: []
-  '/store/{store}/access':
+  '/v1/store/{store}/access':
     get:
       tags:
         - store
@@ -232,7 +232,7 @@ paths:
         - domino_auth: []
         - application_auth: []
           user_auth: []
-  '/todos/{store}/findByStatus':
+  '/v1/todos/{store}/findByStatus':
     get:
       tags:
         - todo
@@ -276,7 +276,7 @@ paths:
         - domino_auth: []
         - application_auth: []
           user_auth: []
-  '/todos/{store}/findByAsigneeAndStatus':
+  '/v1/todos/{store}/findByAsigneeAndStatus':
     get:
       tags:
         - todo
@@ -326,7 +326,7 @@ paths:
         - domino_auth: []
         - application_auth: []
           user_auth: []
-  '/todos/{store}/findByPriorityAndStatus':
+  '/v1/todos/{store}/findByPriorityAndStatus':
     get:
       tags:
         - todo
@@ -380,7 +380,7 @@ paths:
         - domino_auth: []
         - application_auth: []
           user_auth: []
-  '/todos/{store}/findByDate':
+  '/v1/todos/{store}/findByDate':
     get:
       tags:
         - todo
@@ -424,7 +424,7 @@ paths:
         - domino_auth: []
         - application_auth: []
           user_auth: []
-  '/todo/{key}':
+  '/v1/todo/{key}':
     get:
       tags:
         - todo
@@ -550,7 +550,7 @@ paths:
         - domino_auth: []
         - application_auth: []
           user_auth: []
-  '/todo/{toDoId}/reassign':
+  '/v1/todo/{toDoId}/reassign':
     put:
       tags:
         - todo
@@ -586,7 +586,7 @@ paths:
         - domino_auth: []
         - application_auth: []
           user_auth: []
-  '/todo/{toDoId}/complete':
+  '/v1/todo/{toDoId}/complete':
     put:
       tags:
         - todo
@@ -616,7 +616,7 @@ paths:
         - domino_auth: []
         - application_auth: []
           user_auth: []
-  '/todo/{toDoId}/reopen':
+  '/v1/todo/{toDoId}/reopen':
     put:
       tags:
         - todo
@@ -676,7 +676,7 @@ paths:
             description: success or failure
         '400':
           description: Invalid username/password supplied
-  '/user/{username}':
+  '/v1/user/{username}':
     get:
       tags:
         - user
@@ -704,7 +704,7 @@ paths:
         - domino_auth: []
         - application_auth: []
           user_auth: []
-  /debug/toggleProfiling:
+  /v1/debug/toggleProfiling:
     get:
       tags:
         - debug
@@ -724,7 +724,7 @@ paths:
                 description: whether profiling is enabled or not
         '401':
           description: not authorized
-  /debug/personalStoreName:
+  /v1/debug/personalStoreName:
     get:
       tags:
         - debug
@@ -753,7 +753,7 @@ paths:
         - application_auth: []
           user_auth: []
           debug_auth: []
-  '/debug/{store}/prepopulate':
+  '/v1/debug/{store}/prepopulate':
     get:
       tags:
         - debug
@@ -862,10 +862,8 @@ definitions:
         type: string
         description: >-
           username of the person who creates the ToDo - set automatically via
-          the API from the currentUser passed across
+          the API
         readOnly: true
-      currentUser:
-        $ref: '#/definitions/User'
       taskName:
         type: string
         description: Brief description of task

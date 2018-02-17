@@ -15,7 +15,7 @@
     }
   },
   "host": "localhost:8081",
-  "basePath": "/api",
+  "basePath": "/todoApp/rest",
   "tags": [
     {
       "name": "store",
@@ -38,7 +38,7 @@
     "http"
   ],
   "paths": {
-    "/stores": {
+    "/v1/stores": {
       "get": {
         "tags": [
           "store"
@@ -77,7 +77,7 @@
         ]
       }
     },
-    "/stores/todos/markOverdue": {
+    "/v1/stores/todos/markOverdue": {
       "get": {
         "tags": [
           "store",
@@ -112,7 +112,7 @@
         ]
       }
     },
-    "/store": {
+    "/v1/store": {
       "post": {
         "tags": [
           "store"
@@ -159,7 +159,7 @@
         ]
       }
     },
-    "/store/{store}": {
+    "/v1/store/{store}": {
       "put": {
         "tags": [
           "store"
@@ -255,7 +255,7 @@
         ]
       }
     },
-    "/store/{store}/access": {
+    "/v1/store/{store}/access": {
       "get": {
         "tags": [
           "store",
@@ -359,7 +359,7 @@
         ]
       }
     },
-    "/todos/{store}/findByStatus": {
+    "/v1/todos/{store}/findByStatus": {
       "get": {
         "tags": [
           "todo"
@@ -423,7 +423,7 @@
         ]
       }
     },
-    "/todos/{store}/findByAsigneeAndStatus": {
+    "/v1/todos/{store}/findByAsigneeAndStatus": {
       "get": {
         "tags": [
           "todo"
@@ -494,7 +494,7 @@
         ]
       }
     },
-    "/todos/{store}/findByPriorityAndStatus": {
+    "/v1/todos/{store}/findByPriorityAndStatus": {
       "get": {
         "tags": [
           "todo"
@@ -570,7 +570,7 @@
         ]
       }
     },
-    "/todos/{store}/findByDate": {
+    "/v1/todos/{store}/findByDate": {
       "get": {
         "tags": [
           "todo"
@@ -637,7 +637,7 @@
         ]
       }
     },
-    "/todo/{key}": {
+    "/v1/todo/{key}": {
       "get": {
         "tags": [
           "todo"
@@ -838,7 +838,7 @@
         ]
       }
     },
-    "/todo/{toDoId}/reassign": {
+    "/v1/todo/{toDoId}/reassign": {
       "put": {
         "tags": [
           "todo"
@@ -895,7 +895,7 @@
         ]
       }
     },
-    "/todo/{toDoId}/complete": {
+    "/v1/todo/{toDoId}/complete": {
       "put": {
         "tags": [
           "todo"
@@ -943,7 +943,7 @@
         ]
       }
     },
-    "/todo/{toDoId}/reopen": {
+    "/v1/todo/{toDoId}/reopen": {
       "put": {
         "tags": [
           "todo"
@@ -1032,7 +1032,7 @@
         }
       }
     },
-    "/user/{username}": {
+    "/v1/user/{username}": {
       "get": {
         "tags": [
           "user"
@@ -1077,7 +1077,7 @@
         ]
       }
     },
-    "/debug/toggleProfiling": {
+    "/v1/debug/toggleProfiling": {
       "get": {
         "tags": [
           "debug"
@@ -1107,7 +1107,7 @@
         }
       }
     },
-    "/debug/personalStoreName": {
+    "/v1/debug/personalStoreName": {
       "get": {
         "tags": [
           "debug"
@@ -1152,7 +1152,7 @@
         ]
       }
     },
-    "/debug/{store}/prepopulate": {
+    "/v1/debug/{store}/prepopulate": {
       "get": {
         "tags": [
           "debug"
@@ -1292,11 +1292,8 @@
         },
         "author": {
           "type": "string",
-          "description": "username of the person who creates the ToDo - set automatically via the API from the currentUser passed across",
+          "description": "username of the person who creates the ToDo - set automatically via the API",
           "readOnly": true
-        },
-        "currentUser": {
-          "$ref": "#/definitions/User"
         },
         "taskName": {
           "type": "string",
