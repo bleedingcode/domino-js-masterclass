@@ -16,6 +16,7 @@ import org.openntf.domino.xots.AbstractXotsCallable;
 import org.openntf.domino.xots.Tasklet;
 import org.openntf.domino.xots.Tasklet.Context;
 import org.openntf.domino.xots.XotsUtil;
+import org.openntf.todo.ToDoUtils;
 import org.openntf.todo.model.Store;
 
 @Tasklet(session = Tasklet.Session.NATIVE, context = Context.PLUGIN)
@@ -29,12 +30,14 @@ public class StoreLoader extends AbstractXotsCallable<Map<String, Store>> {
 			Database todoCatalog = sess.getDatabase(Store.TODO_PATH + "catalog.nsf");
 			if (null == todoCatalog) {
 				// Initialise the ToDo Catalog
+				ToDoUtils.debugPrint("Initialising the ToDo Catalog database");
 				todoCatalog = sess.createBlankDatabase(Store.TODO_PATH + "catalog.nsf");
 				todoCatalog.setCategories("OpenNTF ToDo");
 				todoCatalog.setTitle("OpenNTF ToDo Master");
 				ACL acl = todoCatalog.getACL();
 
 				// Set ACL access
+				ToDoUtils.debugPrint("Initialising ACL for the ToDo Catalog database");
 				ACLEntry servers = acl.createACLEntry("LocalDomainServers", Level.MANAGER);
 				ACLEntry otherServers = acl.createACLEntry("OtherDomainServers", Level.NOACCESS);
 				ACLEntry admins = acl.createACLEntry("LocalDomainAdmins", Level.MANAGER);
@@ -43,7 +46,9 @@ public class StoreLoader extends AbstractXotsCallable<Map<String, Store>> {
 				acl.save();
 				org.openntf.domino.View v = todoCatalog.createView("NONE");
 				v.setSelectionFormula("SELECT @False");
+				ToDoUtils.debugPrint("Completed initialising the ToDo Catalog database");
 			} else {
+				ToDoUtils.debugPrint("Loading ToDo Instances from ToDo Catalog database");
 				NoteCollection nc = todoCatalog.createNoteCollection(false);
 				nc.setSelectDocuments(true);
 				nc.buildCollection();
@@ -52,6 +57,7 @@ public class StoreLoader extends AbstractXotsCallable<Map<String, Store>> {
 					Store store = ToDoStoreFactory.getInstance().createStoreFromDoc(doc);
 					retVal.put(store.getReplicaId(), store);
 				}
+				ToDoUtils.debugPrint("Loaded " + nc.getCount() + " ToDo Instances from ToDo Catalog database");
 			}
 			return retVal;
 		} catch (Exception e) {

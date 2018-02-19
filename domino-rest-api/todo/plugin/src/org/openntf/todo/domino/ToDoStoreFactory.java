@@ -32,6 +32,7 @@ import org.openntf.domino.utils.Factory;
 import org.openntf.domino.utils.Factory.SessionType;
 import org.openntf.domino.xots.Xots;
 import org.openntf.todo.ToDoUtils;
+import org.openntf.todo.exceptions.DataNotAcceptableException;
 import org.openntf.todo.exceptions.DatabaseModuleException;
 import org.openntf.todo.exceptions.DocumentNotFoundException;
 import org.openntf.todo.exceptions.StoreNotFoundException;
@@ -195,10 +196,58 @@ public class ToDoStoreFactory {
 		return store;
 	}
 
-	public ToDo getToDoFromDoc(String metaversalId) throws StoreNotFoundException, DocumentNotFoundException {
+	public ToDo serializeToStore(Store store, ToDo todo)
+			throws DataNotAcceptableException, StoreNotFoundException, DocumentNotFoundException {
+		Document doc = null;
+		if (null == store) {
+				throw new DataNotAcceptableException("Store must be supplied");
+			}
+			Database db = Factory.getSession(SessionType.CURRENT).getDatabase(store.getReplicaId());
+			doc = db.createDocument();
+		todo = updateDocFromToDo(doc, todo);
+		return todo;
+	}
+
+	public ToDo updateToDo(ToDo todo) throws StoreNotFoundException, DocumentNotFoundException {
+		Document doc = getToDoDoc(todo.getMetaversalId());
+		updateDocFromToDo(doc, todo);
+		return todo;
+	}
+
+	private ToDo updateDocFromToDo(Document doc, ToDo todo) {
+		boolean isNew = false;
+		if (doc.isNewNote()) {
+			isNew = true;
+		}
+		doc.replaceItemValue("taskName", todo.getTaskName());
+		doc.replaceItemValue("description", todo.getDescription());
+		todo.setAuthor(Utils.getCurrentUsername());
+		doc.replaceItemValue("author", Utils.getCurrentUsername());
+		if (null == todo.getPriority()) {
+			todo.setPriority(Priority.LOW);
+		}
+		doc.replaceItemValue("priority", todo.getPriority().getValue());
+		todo.setStatus(ToDo.Status.NEW);
+		doc.replaceItemValue("status", todo.getStatus().getValue());
+		doc.replaceItemValue("dueDate", todo.getDueDate());
+		if (StringUtils.isEmpty(todo.getAssignedTo())) {
+			todo.setAssignedTo(todo.getAuthor());
+		} else {
+			todo.setAssignedTo(Utils.getAsUsername(todo.getAssignedTo()));
+		}
+		doc.replaceItemValue("assignedTo", todo.getAuthor());
+		doc.save();
+		if (isNew) {
+			todo.setMetaversalId(doc.getMetaversalID());
+		}
+		return todo;
+	}
+
+	public ToDo getToDoFromMetaversalId(String metaversalId) throws StoreNotFoundException, DocumentNotFoundException {
 		Document doc = getToDoDoc(metaversalId);
+
 		ToDo todo = new ToDo();
-		todo.setMetaversalId(metaversalId);
+		todo.setMetaversalId(doc.getMetaversalID());
 		todo.setAuthor(doc.getAuthors().get(0));
 		todo.setTaskName(doc.getItemValueString("taskName"));
 		todo.setDescription(doc.getItemValueString("description"));

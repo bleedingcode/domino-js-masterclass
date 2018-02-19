@@ -131,7 +131,7 @@ public class UnitTestResource {
 			Gson gson = ToDoUtils.getGson();
 			User[] passedUsers = gson.fromJson(body, User[].class);
 			for (User user : passedUsers) {
-				if (user.isValidForUpdate()) {
+				if (user.validateForUpdate()) {
 					System.out.println("Valid - " + user.getUsername());
 				} else {
 					System.out.println("Not valid - " + user.getUsername());

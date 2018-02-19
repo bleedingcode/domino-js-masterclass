@@ -65,8 +65,8 @@ public class StoreResource {
 			}
 
 			// Create store
-			Store store = ToDoStoreFactory.getInstance().createToDoNSF(passedStore.getTitle(),
-					passedStore.getName(), passedStore.getType());
+			Store store = ToDoStoreFactory.getInstance().createToDoNSF(passedStore.getTitle(), passedStore.getName(),
+					passedStore.getType());
 			RequestBuilder builder = new RequestBuilder(Store.class);
 			return Response.ok(builder.buildJson(store), MediaType.APPLICATION_JSON).build();
 		} catch (Exception e) {
@@ -175,13 +175,12 @@ public class StoreResource {
 			Gson gson = new Gson();
 			User[] newUsers = gson.fromJson(body, User[].class);
 			for (User user : newUsers) {
-				if (user.isValidForUpdate()) {
-					// Update ACL if required
-					DatabaseAccess currAccess = ToDoStoreFactory.getInstance().queryAccess(store, user.getUsername());
-					if (!currAccess.getLevel().equals(user.getAccess().getLevel())
-							&& !currAccess.getAllowDelete().equals(user.getAccess().getAllowDelete())) {
-						ToDoStoreFactory.getInstance().updateAccess(store, user);
-					}
+				user.validateForUpdate();
+				// Update ACL if required
+				DatabaseAccess currAccess = ToDoStoreFactory.getInstance().queryAccess(store, user.getUsername());
+				if (!currAccess.getLevel().equals(user.getAccess().getLevel())
+						&& !currAccess.getAllowDelete().equals(user.getAccess().getAllowDelete())) {
+					ToDoStoreFactory.getInstance().updateAccess(store, user);
 				}
 			}
 

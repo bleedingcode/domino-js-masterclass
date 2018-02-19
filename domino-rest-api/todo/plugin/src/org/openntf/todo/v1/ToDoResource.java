@@ -13,13 +13,16 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import org.openntf.todo.domino.ToDoStoreFactory;
+import org.openntf.todo.exceptions.DataNotAcceptableException;
 import org.openntf.todo.exceptions.DocumentNotFoundException;
 import org.openntf.todo.exceptions.StoreNotFoundException;
 import org.openntf.todo.json.RequestBuilder;
+import org.openntf.todo.json.ResultParser;
 import org.openntf.todo.model.Store;
 import org.openntf.todo.model.ToDo;
 
 @Path("/v1/todo")
+@SuppressWarnings("unchecked")
 public class ToDoResource {
 
 	/**
@@ -35,17 +38,23 @@ public class ToDoResource {
 	public Response addToDo(@PathParam(value = "key") final String storeKey, final String body) {
 		try {
 			Store store = ToDoStoreFactory.getInstance().getStore(storeKey);
+			ToDo todo = new ResultParser<ToDo>(ToDo.class).parse(body);
+			todo.validateForUpdate();
+			todo = ToDoStoreFactory.getInstance().serializeToStore(store, todo);
 
-			// TODO: Build collection
-			RequestBuilder builder = new RequestBuilder(Store.class);
-			return Response.ok(builder.buildJson(store), MediaType.APPLICATION_JSON).build();
+			RequestBuilder builder = new RequestBuilder(ToDo.class);
+			return Response.ok(builder.buildJson(todo), MediaType.APPLICATION_JSON).build();
+		} catch (DataNotAcceptableException de) {
+			de.printStackTrace();
+			throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity(de.getMessage()).build());
 		} catch (StoreNotFoundException se) {
 			se.printStackTrace();
 			throw new WebApplicationException(Response.status(Status.BAD_REQUEST)
 					.entity(ToDoStoreFactory.STORE_NOT_FOUND_OR_ACCESS_ERROR).build());
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new WebApplicationException(e, Status.INTERNAL_SERVER_ERROR);
+			throw new WebApplicationException(
+					Response.status(Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build());
 		}
 	}
 
@@ -61,12 +70,12 @@ public class ToDoResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response getToDo(@PathParam(value = "key") final String metaversalId) {
 		try {
-			ToDo todo = ToDoStoreFactory.getInstance().getToDoFromDoc(metaversalId);
+			ToDo todo = ToDoStoreFactory.getInstance().getToDoFromMetaversalId(metaversalId);
 
 			RequestBuilder builder = new RequestBuilder(ToDo.class);
 			return Response.ok(builder.buildJson(todo), MediaType.APPLICATION_JSON).build();
-		} catch (DocumentNotFoundException se) {
-			se.printStackTrace();
+		} catch (DocumentNotFoundException dde) {
+			dde.printStackTrace();
 			throw new WebApplicationException(
 					Response.status(Status.BAD_REQUEST).entity(ToDoStoreFactory.DOCUMENT_NOT_FOUND_ERROR).build());
 		} catch (StoreNotFoundException se) {
@@ -75,7 +84,8 @@ public class ToDoResource {
 					.entity(ToDoStoreFactory.STORE_NOT_FOUND_OR_ACCESS_ERROR).build());
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new WebApplicationException(e, Status.INTERNAL_SERVER_ERROR);
+			throw new WebApplicationException(
+					Response.status(Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build());
 		}
 	}
 
@@ -91,19 +101,24 @@ public class ToDoResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response updateToDo(@PathParam(value = "key") final String metaversalId, final String body) {
 		try {
-			Store store = ToDoStoreFactory.getInstance().getStore(metaversalId);
-			// TODO: Get ToDos for this Store between dates passed
+			ToDo todo = new ResultParser<ToDo>(ToDo.class).parse(body);
+			todo = todo.compareAndUpdateFromPrevious();
+			todo = ToDoStoreFactory.getInstance().updateToDo(todo);
 
-			// TODO: Build collection
-			RequestBuilder builder = new RequestBuilder(Store.class);
-			return Response.ok(builder.buildJson(store), MediaType.APPLICATION_JSON).build();
+			RequestBuilder builder = new RequestBuilder(ToDo.class);
+			return Response.ok(builder.buildJson(todo), MediaType.APPLICATION_JSON).build();
 		} catch (StoreNotFoundException se) {
 			se.printStackTrace();
 			throw new WebApplicationException(Response.status(Status.BAD_REQUEST)
 					.entity(ToDoStoreFactory.STORE_NOT_FOUND_OR_ACCESS_ERROR).build());
+		} catch (DocumentNotFoundException dde) {
+			dde.printStackTrace();
+			throw new WebApplicationException(
+					Response.status(Status.BAD_REQUEST).entity(ToDoStoreFactory.DOCUMENT_NOT_FOUND_ERROR).build());
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new WebApplicationException(e, Status.INTERNAL_SERVER_ERROR);
+			throw new WebApplicationException(
+					Response.status(Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build());
 		}
 	}
 

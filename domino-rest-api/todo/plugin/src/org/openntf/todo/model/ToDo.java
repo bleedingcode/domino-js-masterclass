@@ -1,8 +1,16 @@
 package org.openntf.todo.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Objects;
+
+import org.apache.commons.lang3.StringUtils;
+import org.openntf.todo.domino.ToDoStoreFactory;
+import org.openntf.todo.domino.Utils;
+import org.openntf.todo.exceptions.DataNotAcceptableException;
+import org.openntf.todo.exceptions.DocumentNotFoundException;
+import org.openntf.todo.exceptions.StoreNotFoundException;
 
 public class ToDo implements Serializable {
 	private String metaversalId = null;
@@ -241,5 +249,51 @@ public class ToDo implements Serializable {
 		return o.toString().replace("\n", "\n    ");
 	}
 
+	public boolean validateForUpdate() throws DataNotAcceptableException {
+		ArrayList<String> missing = new ArrayList<String>();
+		if (StringUtils.isEmpty(getTaskName())) {
+			missing.add("taskName");
+		}
+		if (StringUtils.isEmpty(getDescription())) {
+			missing.add("description");
+		}
+		if (null == getDueDate()) {
+			missing.add("dueDate");
+		}
+		if (null == getPriority()) {
+			missing.add("priority");
+		}
+		if (!missing.isEmpty()) {
+			throw new DataNotAcceptableException(
+					"The following properties must be included: " + StringUtils.join(missing, ","));
+		}
+		return true;
+	}
+
+	public boolean serializeToStore(Store store) {
+		return false;
+	}
+
+	public ToDo compareAndUpdateFromPrevious() throws StoreNotFoundException, DocumentNotFoundException {
+		ToDo oldTodo = ToDoStoreFactory.getInstance().getToDoFromMetaversalId(getMetaversalId());
+		setMetaversalId(oldTodo.getMetaversalId());
+		setAuthor(oldTodo.getAuthor());
+		if (StringUtils.isEmpty(getTaskName())) {
+			setTaskName(oldTodo.getTaskName());
+		}
+		if (StringUtils.isEmpty(getDescription())) {
+			setDescription(oldTodo.getDescription());
+		}
+		if (null == getPriority()) {
+			setPriority(oldTodo.getPriority());
+		}
+		setStatus(oldTodo.getStatus());
+		if (StringUtils.isEmpty(getAssignedTo())) {
+			setAssignedTo(oldTodo.getAssignedTo());
+		} else {
+			setAssignedTo(Utils.getAsUsername(getAssignedTo()));
+		}
+		return this;
+	}
 
 }
