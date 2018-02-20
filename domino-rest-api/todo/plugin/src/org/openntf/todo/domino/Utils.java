@@ -7,6 +7,7 @@ import org.openntf.domino.Session;
 import org.openntf.domino.utils.Factory;
 import org.openntf.domino.utils.Factory.SessionType;
 import org.openntf.todo.authentication.ApplicationAuthenticationFactory;
+import org.openntf.todo.exceptions.InvalidMetaversalIdException;
 
 public class Utils {
 
@@ -50,6 +51,19 @@ public class Utils {
 
 	public static String getDbName(Database db) {
 		return db.getFilePath().toLowerCase();
+	}
+
+	public static boolean validateMetaversalId(String metaversalId) throws InvalidMetaversalIdException {
+		if (metaversalId.length() == 32) {
+			return true;
+		} else {
+			throw new InvalidMetaversalIdException();
+		}
+	}
+
+	public static String getReplicaIdFromMetaversalId(String metaversalId) throws InvalidMetaversalIdException {
+		validateMetaversalId(metaversalId);
+		return StringUtils.left(metaversalId, 16);
 	}
 
 }

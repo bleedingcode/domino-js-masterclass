@@ -15,6 +15,7 @@ import javax.ws.rs.core.Response.Status;
 import org.openntf.todo.ToDoUtils;
 import org.openntf.todo.domino.ToDoStoreFactory;
 import org.openntf.todo.domino.Utils;
+import org.openntf.todo.exceptions.DatabaseModuleException;
 import org.openntf.todo.exceptions.StoreNotFoundException;
 import org.openntf.todo.json.RequestBuilder;
 import org.openntf.todo.json.ResultParser;
@@ -38,28 +39,27 @@ public class StoreResource {
 	 * @return Response containing created Store or error
 	 */
 	@POST
-	@Path("")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response createStore(final String body) {
 		try {
 			Store passedStore = new ResultParser<Store>(Store.class).parse(body);
 			if (null == passedStore.getTitle()) {
-				Response.status(Status.BAD_REQUEST).entity("Expected title in body").build();
+				return Response.status(Status.BAD_REQUEST).entity("Expected title in body").build();
 			}
 
 			if (null == passedStore.getType()) {
-				Response.status(Status.BAD_REQUEST).entity("type should be 'Personal' or 'Team'").build();
+				return Response.status(Status.BAD_REQUEST).entity("type should be 'Personal' or 'Team'").build();
 			} else if (StoreType.TEAM.equals(passedStore.getType())) {
 				if (null == passedStore.getName()) {
-					Response.status(Status.BAD_REQUEST).entity("Expected name in body").build();
+					return Response.status(Status.BAD_REQUEST).entity("Expected name in body").build();
 				}
 				passedStore.setName(ToDoUtils.getStoreFilePath(passedStore.getName(), StoreType.TEAM));
 			} else {
 				passedStore.setName(ToDoUtils.getStoreFilePath(Utils.getPersonalStoreName(), StoreType.PERSONAL));
 			}
 
-			if (null != ToDoStoreFactory.getInstance().getStoreAsNative(passedStore.getName())) {
-				Response.status(Status.CONFLICT).entity(
+			if (ToDoStoreFactory.getInstance().createStoreDoesStoreExist(passedStore.getName())) {
+				return Response.status(Status.CONFLICT).entity(
 						"A store already exists with the name. (For personal stores, the username overrides the name passed)")
 						.build();
 			}
@@ -69,9 +69,13 @@ public class StoreResource {
 					passedStore.getType());
 			RequestBuilder builder = new RequestBuilder(Store.class);
 			return Response.ok(builder.buildJson(store), MediaType.APPLICATION_JSON).build();
+		} catch (DatabaseModuleException de) {
+			de.printStackTrace();
+			throw new WebApplicationException(
+					Response.status(Status.INTERNAL_SERVER_ERROR).entity(de.getMessage()).build());
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new WebApplicationException(e, Status.INTERNAL_SERVER_ERROR);
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
 		}
 	}
 

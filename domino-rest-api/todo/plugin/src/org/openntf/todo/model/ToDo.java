@@ -10,6 +10,7 @@ import org.openntf.todo.domino.ToDoStoreFactory;
 import org.openntf.todo.domino.Utils;
 import org.openntf.todo.exceptions.DataNotAcceptableException;
 import org.openntf.todo.exceptions.DocumentNotFoundException;
+import org.openntf.todo.exceptions.InvalidMetaversalIdException;
 import org.openntf.todo.exceptions.StoreNotFoundException;
 
 public class ToDo implements Serializable {
@@ -274,7 +275,8 @@ public class ToDo implements Serializable {
 		return false;
 	}
 
-	public ToDo compareAndUpdateFromPrevious() throws StoreNotFoundException, DocumentNotFoundException {
+	public ToDo compareAndUpdateFromPrevious()
+			throws StoreNotFoundException, DocumentNotFoundException, InvalidMetaversalIdException {
 		ToDo oldTodo = ToDoStoreFactory.getInstance().getToDoFromMetaversalId(getMetaversalId());
 		setMetaversalId(oldTodo.getMetaversalId());
 		setAuthor(oldTodo.getAuthor());

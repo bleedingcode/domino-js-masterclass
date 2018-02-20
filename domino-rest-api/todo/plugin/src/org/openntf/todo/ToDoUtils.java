@@ -54,4 +54,16 @@ public class ToDoUtils {
 		return builder.create();
 	}
 
+	public static String getErrorMessage(Exception e) {
+		if (null == e.getMessage()) {
+			if (null != e.getCause()) {
+				return e.getCause().getMessage();
+			} else {
+				return "Unexpected error, see stack trace on server";
+			}
+		} else {
+			return e.getMessage();
+		}
+	}
+
 }

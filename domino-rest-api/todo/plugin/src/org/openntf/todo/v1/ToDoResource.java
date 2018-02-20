@@ -12,14 +12,21 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.apache.commons.lang3.StringUtils;
 import org.openntf.todo.domino.ToDoStoreFactory;
+import org.openntf.todo.domino.Utils;
 import org.openntf.todo.exceptions.DataNotAcceptableException;
 import org.openntf.todo.exceptions.DocumentNotFoundException;
+import org.openntf.todo.exceptions.InvalidMetaversalIdException;
 import org.openntf.todo.exceptions.StoreNotFoundException;
 import org.openntf.todo.json.RequestBuilder;
 import org.openntf.todo.json.ResultParser;
+import org.openntf.todo.model.DatabaseAccess;
 import org.openntf.todo.model.Store;
 import org.openntf.todo.model.ToDo;
+import org.openntf.todo.model.User;
+
+import com.ibm.commons.util.io.json.JsonJavaObject;
 
 @Path("/v1/todo")
 @SuppressWarnings("unchecked")
@@ -74,6 +81,10 @@ public class ToDoResource {
 
 			RequestBuilder builder = new RequestBuilder(ToDo.class);
 			return Response.ok(builder.buildJson(todo), MediaType.APPLICATION_JSON).build();
+		} catch (InvalidMetaversalIdException ie) {
+			ie.printStackTrace();
+			throw new WebApplicationException(
+					Response.status(Status.BAD_REQUEST).entity(ToDoStoreFactory.INVALID_METAVERSAL_ID_ERROR).build());
 		} catch (DocumentNotFoundException dde) {
 			dde.printStackTrace();
 			throw new WebApplicationException(
@@ -107,6 +118,10 @@ public class ToDoResource {
 
 			RequestBuilder builder = new RequestBuilder(ToDo.class);
 			return Response.ok(builder.buildJson(todo), MediaType.APPLICATION_JSON).build();
+		} catch (InvalidMetaversalIdException ie) {
+			ie.printStackTrace();
+			throw new WebApplicationException(
+					Response.status(Status.BAD_REQUEST).entity(ToDoStoreFactory.INVALID_METAVERSAL_ID_ERROR).build());
 		} catch (StoreNotFoundException se) {
 			se.printStackTrace();
 			throw new WebApplicationException(Response.status(Status.BAD_REQUEST)
@@ -132,12 +147,19 @@ public class ToDoResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response deleteToDo(@PathParam(value = "key") final String metaversalId) {
 		try {
-			Store store = ToDoStoreFactory.getInstance().getStore(metaversalId);
-			// TODO: Get ToDos for this Store between dates passed
-
-			// TODO: Build collection
-			RequestBuilder builder = new RequestBuilder(Store.class);
-			return Response.ok(builder.buildJson(store), MediaType.APPLICATION_JSON).build();
+			Store store = ToDoStoreFactory.getInstance().getStore(Utils.getReplicaIdFromMetaversalId(metaversalId));
+			DatabaseAccess dbAccess = ToDoStoreFactory.getInstance().queryAccess(store, Utils.getCurrentUsername());
+			if (!dbAccess.getAllowDelete()) {
+				throw new WebApplicationException(Status.FORBIDDEN);
+			}
+			
+			JsonJavaObject jjo = new JsonJavaObject();
+			jjo.put("success", ToDoStoreFactory.getInstance().deleteToDoDoc(metaversalId));
+			return Response.ok(jjo.toString(), MediaType.APPLICATION_JSON).build();
+		} catch (InvalidMetaversalIdException ie) {
+			ie.printStackTrace();
+			throw new WebApplicationException(Response.status(Status.BAD_REQUEST)
+					.entity(ToDoStoreFactory.INVALID_METAVERSAL_ID_ERROR).build());
 		} catch (StoreNotFoundException se) {
 			se.printStackTrace();
 			throw new WebApplicationException(Response.status(Status.BAD_REQUEST)
@@ -160,12 +182,26 @@ public class ToDoResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response reassignToDo(@PathParam(value = "toDoId") final String metaversalId, final String body) {
 		try {
-			Store store = ToDoStoreFactory.getInstance().getStore(metaversalId);
-			// TODO: Get ToDos for this Store between dates passed
+			User newUser = new ResultParser<User>(User.class).parse(body);
+			if (StringUtils.isEmpty(newUser.getUsername())) {
+				throw new WebApplicationException(
+						Response.status(Status.BAD_REQUEST).entity("Username must be supplied").build());
+			}
+			ToDo todo = ToDoStoreFactory.getInstance().getToDoFromMetaversalId(metaversalId);
+			todo.setAssignedTo(Utils.getAsUsername(newUser.getUsername()));
+			ToDoStoreFactory.getInstance().updateToDo(todo);
 
-			// TODO: Build collection
-			RequestBuilder builder = new RequestBuilder(Store.class);
-			return Response.ok(builder.buildJson(store), MediaType.APPLICATION_JSON).build();
+			JsonJavaObject jjo = new JsonJavaObject();
+			jjo.put("success", true);
+			return Response.ok(jjo.toString(), MediaType.APPLICATION_JSON).build();
+		} catch (InvalidMetaversalIdException ie) {
+			ie.printStackTrace();
+			throw new WebApplicationException(
+					Response.status(Status.BAD_REQUEST).entity(ToDoStoreFactory.INVALID_METAVERSAL_ID_ERROR).build());
+		} catch (DocumentNotFoundException dde) {
+			dde.printStackTrace();
+			throw new WebApplicationException(
+					Response.status(Status.BAD_REQUEST).entity(ToDoStoreFactory.DOCUMENT_NOT_FOUND_ERROR).build());
 		} catch (StoreNotFoundException se) {
 			se.printStackTrace();
 			throw new WebApplicationException(Response.status(Status.BAD_REQUEST)
@@ -186,12 +222,21 @@ public class ToDoResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response completeToDo(@PathParam(value = "toDoId") final String metaversalId) {
 		try {
-			Store store = ToDoStoreFactory.getInstance().getStore(metaversalId);
-			// TODO: Get ToDos for this Store between dates passed
+			ToDo todo = ToDoStoreFactory.getInstance().getToDoFromMetaversalId(metaversalId);
+			todo.setStatus(ToDo.Status.COMPLETE);
+			ToDoStoreFactory.getInstance().updateToDo(todo);
 
-			// TODO: Build collection
-			RequestBuilder builder = new RequestBuilder(Store.class);
-			return Response.ok(builder.buildJson(store), MediaType.APPLICATION_JSON).build();
+			JsonJavaObject jjo = new JsonJavaObject();
+			jjo.put("success", true);
+			return Response.ok(jjo.toString(), MediaType.APPLICATION_JSON).build();
+		} catch (InvalidMetaversalIdException ie) {
+			ie.printStackTrace();
+			throw new WebApplicationException(
+					Response.status(Status.BAD_REQUEST).entity(ToDoStoreFactory.INVALID_METAVERSAL_ID_ERROR).build());
+		} catch (DocumentNotFoundException dde) {
+			dde.printStackTrace();
+			throw new WebApplicationException(
+					Response.status(Status.BAD_REQUEST).entity(ToDoStoreFactory.DOCUMENT_NOT_FOUND_ERROR).build());
 		} catch (StoreNotFoundException se) {
 			se.printStackTrace();
 			throw new WebApplicationException(Response.status(Status.BAD_REQUEST)
@@ -212,12 +257,21 @@ public class ToDoResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response reopenToDo(@PathParam(value = "toDoId") final String metaversalId) {
 		try {
-			Store store = ToDoStoreFactory.getInstance().getStore(metaversalId);
-			// TODO: Get ToDos for this Store between dates passed
+			ToDo todo = ToDoStoreFactory.getInstance().getToDoFromMetaversalId(metaversalId);
+			todo.setStatus(ToDo.Status.NEW);
+			ToDoStoreFactory.getInstance().updateToDo(todo);
 
-			// TODO: Build collection
-			RequestBuilder builder = new RequestBuilder(Store.class);
-			return Response.ok(builder.buildJson(store), MediaType.APPLICATION_JSON).build();
+			JsonJavaObject jjo = new JsonJavaObject();
+			jjo.put("success", true);
+			return Response.ok(jjo.toString(), MediaType.APPLICATION_JSON).build();
+		} catch (InvalidMetaversalIdException ie) {
+			ie.printStackTrace();
+			throw new WebApplicationException(
+					Response.status(Status.BAD_REQUEST).entity(ToDoStoreFactory.INVALID_METAVERSAL_ID_ERROR).build());
+		} catch (DocumentNotFoundException dde) {
+			dde.printStackTrace();
+			throw new WebApplicationException(
+					Response.status(Status.BAD_REQUEST).entity(ToDoStoreFactory.DOCUMENT_NOT_FOUND_ERROR).build());
 		} catch (StoreNotFoundException se) {
 			se.printStackTrace();
 			throw new WebApplicationException(Response.status(Status.BAD_REQUEST)

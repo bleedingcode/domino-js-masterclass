@@ -35,6 +35,7 @@ import org.openntf.todo.ToDoUtils;
 import org.openntf.todo.exceptions.DataNotAcceptableException;
 import org.openntf.todo.exceptions.DatabaseModuleException;
 import org.openntf.todo.exceptions.DocumentNotFoundException;
+import org.openntf.todo.exceptions.InvalidMetaversalIdException;
 import org.openntf.todo.exceptions.StoreNotFoundException;
 import org.openntf.todo.model.DatabaseAccess;
 import org.openntf.todo.model.DatabaseAccess.AccessLevel;
@@ -49,6 +50,7 @@ public class ToDoStoreFactory {
 	public static String STORE_NOT_FOUND_OR_ACCESS_ERROR = "The store could not be found with the name or replicaId passed, or you do not have access to that store";
 	public static String DOCUMENT_NOT_FOUND_ERROR = "The ToDo with that ID could not be found";
 	public static String USER_NOT_AUTHORIZED_ERROR = "You are not authorized to perform this operation";
+	public static String INVALID_METAVERSAL_ID_ERROR = "The value passed is not a valid metaversal id";
 	private static ToDoStoreFactory INSTANCE;
 
 	public static ToDoStoreFactory getInstance() {
@@ -196,6 +198,11 @@ public class ToDoStoreFactory {
 		return store;
 	}
 
+	public boolean createStoreDoesStoreExist(String key) {
+		Store store = getStoreUnchecked(Factory.getSession(SessionType.NATIVE), key);
+		return store != null;
+	}
+
 	public ToDo serializeToStore(Store store, ToDo todo)
 			throws DataNotAcceptableException, StoreNotFoundException, DocumentNotFoundException {
 		Document doc = null;
@@ -208,7 +215,8 @@ public class ToDoStoreFactory {
 		return todo;
 	}
 
-	public ToDo updateToDo(ToDo todo) throws StoreNotFoundException, DocumentNotFoundException {
+	public ToDo updateToDo(ToDo todo)
+			throws StoreNotFoundException, DocumentNotFoundException, InvalidMetaversalIdException {
 		Document doc = getToDoDoc(todo.getMetaversalId());
 		updateDocFromToDo(doc, todo);
 		return todo;
@@ -243,7 +251,8 @@ public class ToDoStoreFactory {
 		return todo;
 	}
 
-	public ToDo getToDoFromMetaversalId(String metaversalId) throws StoreNotFoundException, DocumentNotFoundException {
+	public ToDo getToDoFromMetaversalId(String metaversalId)
+			throws StoreNotFoundException, DocumentNotFoundException, InvalidMetaversalIdException {
 		Document doc = getToDoDoc(metaversalId);
 
 		ToDo todo = new ToDo();
@@ -270,8 +279,10 @@ public class ToDoStoreFactory {
 		return todo;
 	}
 
-	public Document getToDoDoc(String metaversalId) throws StoreNotFoundException, DocumentNotFoundException {
+	public Document getToDoDoc(String metaversalId)
+			throws StoreNotFoundException, DocumentNotFoundException, InvalidMetaversalIdException {
 		try {
+			Utils.validateMetaversalId(metaversalId);
 			Document doc = Factory.getSession(SessionType.CURRENT).getDocumentByMetaversalID(metaversalId);
 			return doc;
 		} catch (Exception e) {
@@ -280,6 +291,12 @@ public class ToDoStoreFactory {
 			}
 			throw new WebApplicationException(e, Status.INTERNAL_SERVER_ERROR);
 		}
+	}
+
+	public boolean deleteToDoDoc(String metaversalId)
+			throws StoreNotFoundException, DocumentNotFoundException, InvalidMetaversalIdException {
+		Document doc = getToDoDoc(metaversalId);
+		return doc.remove(true);
 	}
 
 	/**
@@ -302,19 +319,28 @@ public class ToDoStoreFactory {
 		}
 	}
 
+	public void updateToDoNSFTitle(Store store, String newTitle) {
+		// TODO:
+	}
+
 	public Store createToDoNSF(String title, String name, StoreType type) throws DatabaseModuleException {
 		try {
 			// Create database using name or user's name if a Personal store
 			if (StoreType.PERSONAL.equals(type)) {
 				name = Utils.getPersonalStoreName();
+				title = "Personal Store - " + name;
 			}
 			Database db = Factory.getSession(SessionType.NATIVE)
 					.createBlankDatabase(ToDoUtils.getStoreFilePath(name, type));
+			db.setTitle(title);
+			db.setCategories(type.getValue());
+			db.setListInDbCatalog(false);
 			DatabaseDesign dbDesign = (DatabaseDesign) db.getDesign();
 			HashMap<DbProperties, Boolean> props = new HashMap<DbProperties, Boolean>();
 			props.put(DbProperties.USE_JS, false);
 			props.put(DbProperties.NO_URL_OPEN, false);
 			props.put(DbProperties.ENHANCED_HTML, true);
+			props.put(DbProperties.SHOW_IN_OPEN_DIALOG, false);
 			dbDesign.setDatabaseProperties(props);
 			dbDesign.save();
 
@@ -395,15 +421,18 @@ public class ToDoStoreFactory {
 			// Set ACL access
 			ACL acl = db.getACL();
 			acl.addRole("Admin");
-			ACLEntry servers = acl.createACLEntry("LocalDomainServers", Level.MANAGER);
+			ACLEntry servers = acl.getEntry("LocalDomainServers");
+			if (null == servers) {
+				servers = acl.createACLEntry("LocalDomainServers", Level.MANAGER);
+			} else {
+				servers.setLevel(Level.MANAGER);
+			}
 			servers.setCanDeleteDocuments(true);
 			servers.enableRole("Admin");
-			acl.createACLEntry("OtherDomainServers", Level.NOACCESS);
 			ACLEntry admins = acl.createACLEntry("LocalDomainAdmins", Level.MANAGER);
 			admins.setCanDeleteDocuments(true);
 			admins.enableRole("Admin");
 			acl.createACLEntry("Anonymous", Level.NOACCESS);
-			acl.createACLEntry("-Default-", Level.NOACCESS);
 
 			// Add user to access
 			DatabaseAccess access = new DatabaseAccess();
@@ -417,7 +446,7 @@ public class ToDoStoreFactory {
 			return addStore(db);
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new DatabaseModuleException(e.getMessage());
+			throw new DatabaseModuleException(ToDoUtils.getErrorMessage(e));
 		}
 	}
 
@@ -451,7 +480,7 @@ public class ToDoStoreFactory {
 			acl.save();
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new DatabaseModuleException(e.getMessage());
+			throw new DatabaseModuleException(ToDoUtils.getErrorMessage(e));
 		}
 	}
 

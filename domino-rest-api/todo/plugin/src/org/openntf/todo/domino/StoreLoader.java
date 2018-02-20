@@ -1,15 +1,17 @@
 package org.openntf.todo.domino;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.openntf.domino.ACL;
 import org.openntf.domino.ACL.Level;
-import org.openntf.domino.ACLEntry;
 import org.openntf.domino.Database;
 import org.openntf.domino.Document;
 import org.openntf.domino.NoteCollection;
 import org.openntf.domino.Session;
+import org.openntf.domino.design.DatabaseDesign.DbProperties;
+import org.openntf.domino.design.impl.DatabaseDesign;
 import org.openntf.domino.utils.Factory;
 import org.openntf.domino.utils.Factory.SessionType;
 import org.openntf.domino.xots.AbstractXotsCallable;
@@ -34,15 +36,21 @@ public class StoreLoader extends AbstractXotsCallable<Map<String, Store>> {
 				todoCatalog = sess.createBlankDatabase(Store.TODO_PATH + "catalog.nsf");
 				todoCatalog.setCategories("OpenNTF ToDo");
 				todoCatalog.setTitle("OpenNTF ToDo Master");
+				todoCatalog.setListInDbCatalog(false);
+				DatabaseDesign dbDesign = (DatabaseDesign) todoCatalog.getDesign();
+				HashMap<DbProperties, Boolean> props = new HashMap<DbProperties, Boolean>();
+				props.put(DbProperties.USE_JS, false);
+				props.put(DbProperties.NO_URL_OPEN, false);
+				props.put(DbProperties.ENHANCED_HTML, true);
+				props.put(DbProperties.SHOW_IN_OPEN_DIALOG, false);
+				dbDesign.setDatabaseProperties(props);
+				dbDesign.save();
 				ACL acl = todoCatalog.getACL();
 
 				// Set ACL access
 				ToDoUtils.debugPrint("Initialising ACL for the ToDo Catalog database");
-				ACLEntry servers = acl.createACLEntry("LocalDomainServers", Level.MANAGER);
-				ACLEntry otherServers = acl.createACLEntry("OtherDomainServers", Level.NOACCESS);
-				ACLEntry admins = acl.createACLEntry("LocalDomainAdmins", Level.MANAGER);
+				acl.createACLEntry("LocalDomainAdmins", Level.MANAGER);
 				acl.createACLEntry("Anonymous", Level.NOACCESS);
-				acl.createACLEntry("-Default-", Level.NOACCESS);
 				acl.save();
 				org.openntf.domino.View v = todoCatalog.createView("NONE");
 				v.setSelectionFormula("SELECT @False");
