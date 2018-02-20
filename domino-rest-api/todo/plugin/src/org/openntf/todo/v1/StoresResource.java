@@ -22,7 +22,6 @@ import java.util.List;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -68,7 +67,7 @@ public class StoresResource {
 			RequestBuilder<List<Store>> builder = new RequestBuilder(Store.class);
 			return Response.ok(builder.buildJson(stores), MediaType.APPLICATION_JSON).build();
 		} catch (final Exception e) {
-			throw new WebApplicationException(e, Status.INTERNAL_SERVER_ERROR);
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
 		}
 	}
 

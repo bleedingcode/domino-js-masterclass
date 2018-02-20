@@ -133,10 +133,10 @@ public class ToDoStoreFactory {
 			doc = todoCatalog.createDocument();
 			doc.setUniversalID(DominoUtils.toUnid(store.getReplicaId()));
 		}
-		doc.replace("replicaId", store.getReplicaId());
-		doc.replace("name", store.getName());
-		doc.replace("title", store.getTitle());
-		doc.replace("type", store.getType().getValue());
+		doc.replaceItemValue("replicaId", store.getReplicaId());
+		doc.replaceItemValue("name", store.getName());
+		doc.replaceItemValue("title", store.getTitle());
+		doc.replaceItemValue("type", store.getType().getValue());
 		doc.save();
 	}
 
@@ -319,27 +319,22 @@ public class ToDoStoreFactory {
 		}
 	}
 
-	public void updateToDoNSFTitle(Store store, String newTitle) {
-		// TODO:
+	public void updateToDoNSFTitle(Store store) {
+		Database db = Factory.getSession(SessionType.NATIVE).getDatabase(store.getReplicaId());
+		db.setTitle(store.getTitle());
 	}
 
 	public Store createToDoNSF(String title, String name, StoreType type) throws DatabaseModuleException {
 		try {
-			// Create database using name or user's name if a Personal store
-			if (StoreType.PERSONAL.equals(type)) {
-				name = Utils.getPersonalStoreName();
-				title = "Personal Store - " + name;
-			}
 			Database db = Factory.getSession(SessionType.NATIVE)
-					.createBlankDatabase(ToDoUtils.getStoreFilePath(name, type));
+					.createBlankDatabase(name);
 			db.setTitle(title);
 			db.setCategories(type.getValue());
 			db.setListInDbCatalog(false);
 			DatabaseDesign dbDesign = (DatabaseDesign) db.getDesign();
 			HashMap<DbProperties, Boolean> props = new HashMap<DbProperties, Boolean>();
 			props.put(DbProperties.USE_JS, false);
-			props.put(DbProperties.NO_URL_OPEN, false);
-			props.put(DbProperties.ENHANCED_HTML, true);
+			props.put(DbProperties.NO_URL_OPEN, true);
 			props.put(DbProperties.SHOW_IN_OPEN_DIALOG, false);
 			dbDesign.setDatabaseProperties(props);
 			dbDesign.save();
@@ -361,6 +356,7 @@ public class ToDoStoreFactory {
 			col.setTitle("Task Name");
 			col.setItemName("taskName");
 			byStatus.save();
+			db.getView("byStatus").setDefaultView(true);
 
 			DesignView byAssignee = dbDesign.createView();
 			byAssignee.setSelectionFormula("SELECT Form=\"ToDo\"");
@@ -459,6 +455,7 @@ public class ToDoStoreFactory {
 	public void addAccess(ACL acl, String username, DatabaseAccess access) throws DatabaseModuleException {
 		try {
 			ACLEntry user = acl.createACLEntry(username, Level.NOACCESS);
+			user.setUserType(ACLEntry.TYPE_PERSON);
 			switch (access.getLevel()) {
 			case ADMIN:
 				user.setLevel(Level.EDITOR);

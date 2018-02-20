@@ -15,6 +15,7 @@ import javax.ws.rs.core.Response.Status;
 import org.openntf.todo.ToDoUtils;
 import org.openntf.todo.domino.ToDoStoreFactory;
 import org.openntf.todo.domino.Utils;
+import org.openntf.todo.exceptions.DataNotAcceptableException;
 import org.openntf.todo.exceptions.DatabaseModuleException;
 import org.openntf.todo.exceptions.StoreNotFoundException;
 import org.openntf.todo.json.RequestBuilder;
@@ -24,7 +25,6 @@ import org.openntf.todo.model.Store;
 import org.openntf.todo.model.Store.StoreType;
 import org.openntf.todo.model.User;
 
-import com.google.gson.Gson;
 import com.ibm.commons.util.io.json.JsonJavaObject;
 
 @SuppressWarnings({ "unchecked", "rawtypes" })
@@ -96,6 +96,7 @@ public class StoreResource {
 		try {
 			Store store = ToDoStoreFactory.getInstance().getStoreAsNative(storeKey);
 			store.setTitle(newTitle);
+			ToDoStoreFactory.getInstance().updateToDoNSFTitle(store);
 			store.serializeToCatalog();
 			RequestBuilder builder = new RequestBuilder(Store.class);
 			return Response.ok(builder.buildJson(store), MediaType.APPLICATION_JSON).build();
@@ -105,7 +106,7 @@ public class StoreResource {
 					.entity("The store could not be found with the name or replicaId passed").build());
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new WebApplicationException(e, Status.INTERNAL_SERVER_ERROR);
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
 		}
 	}
 
@@ -130,7 +131,7 @@ public class StoreResource {
 					.entity(ToDoStoreFactory.STORE_NOT_FOUND_OR_ACCESS_ERROR).build());
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new WebApplicationException(e, Status.INTERNAL_SERVER_ERROR);
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
 		}
 	}
 
@@ -159,7 +160,7 @@ public class StoreResource {
 					.entity(ToDoStoreFactory.STORE_NOT_FOUND_OR_ACCESS_ERROR).build());
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new WebApplicationException(e, Status.INTERNAL_SERVER_ERROR);
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
 		}
 	}
 
@@ -176,10 +177,11 @@ public class StoreResource {
 			}
 
 			// Extract users to update from body and validate
-			Gson gson = new Gson();
-			User[] newUsers = gson.fromJson(body, User[].class);
+			ResultParser<User[]> parser = new ResultParser<User[]>(User[].class);
+			User[] newUsers = parser.parse(body);
 			for (User user : newUsers) {
 				user.validateForUpdate();
+				user.setUsername(Utils.getAsUsername(user.getUsername()));
 				// Update ACL if required
 				DatabaseAccess currAccess = ToDoStoreFactory.getInstance().queryAccess(store, user.getUsername());
 				if (!currAccess.getLevel().equals(user.getAccess().getLevel())
@@ -191,13 +193,16 @@ public class StoreResource {
 			JsonJavaObject jjo = new JsonJavaObject();
 			jjo.put("success", true);
 			return Response.ok(jjo.toString(), MediaType.APPLICATION_JSON).build();
+		} catch (DataNotAcceptableException de) {
+			de.printStackTrace();
+			throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity(de.getMessage()).build());
 		} catch (StoreNotFoundException se) {
 			se.printStackTrace();
 			throw new WebApplicationException(Response.status(Status.BAD_REQUEST)
 					.entity(ToDoStoreFactory.STORE_NOT_FOUND_OR_ACCESS_ERROR).build());
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new WebApplicationException(e, Status.INTERNAL_SERVER_ERROR);
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
 		}
 	}
 
