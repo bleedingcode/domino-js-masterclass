@@ -914,6 +914,9 @@ definitions:
           property will be ignored for the CurrentUser. If not, the REST
           service  will use the username passed, replacing '@' with '_', append
           a computed OU, and use the server's O.
+      commonName:
+        type: string
+        description: Username in Domino common name format
       access:
         type: object
         description: >-
