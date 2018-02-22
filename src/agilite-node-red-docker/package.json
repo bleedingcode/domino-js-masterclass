@@ -1,7 +1,7 @@
 {
   "name": "agilite-node-red-docker",
   "private": false,
-  "version": "0.0.4",
+  "version": "0.0.1",
   "description": "Agilit-e Node-RED Docker",
   "main": "app.js",
   "scripts": {

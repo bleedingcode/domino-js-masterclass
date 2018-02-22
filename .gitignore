@@ -2,3 +2,7 @@ nodejs-api-quickstart/node_modules
 swagger-mock-server/mockserver/node_modules
 src/agilite-node-red-docker/node_modules
 src/agilite-node-red-docker/flows
+src/react-to-do-docker/node_modules
+bundle.js
+bundle.js.map
+src/web-socket-server-docker/node_modules
