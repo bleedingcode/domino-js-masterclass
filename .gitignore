@@ -6,3 +6,4 @@ src/react-to-do-docker/node_modules
 bundle.js
 bundle.js.map
 src/web-socket-server-docker/node_modules
+anrd-config.json
