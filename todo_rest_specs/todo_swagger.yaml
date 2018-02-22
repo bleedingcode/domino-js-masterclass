@@ -13,7 +13,7 @@ info:
     name: Apache 2.0
     url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
 host: 'localhost:8081'
-basePath: /todoApp/rest
+basePath: /todoApp
 tags:
   - name: store
     description: CRUD for ToDos NSF(s)
@@ -238,8 +238,7 @@ paths:
         - todo
       description: >-
         get all todos in a store for a particular status, sorted by due date
-        ascending. If no status is passed, default will be incomplete -
-        OUTSTANDING
+        ascending. If no status is passed, default will be New
       operationId: getToDosByStatus
       consumes:
         - application/json
@@ -284,7 +283,7 @@ paths:
       description: >-
         get all todos in a store assigned to a particular user for a particular
         status, sorted by due date ascending. If no username or status is
-        passed, current user and incomplete status will be used - OUTSTANDING
+        passed, current user and New status
       operationId: getToDosByAssigneeAndStatus
       consumes:
         - application/json
@@ -333,8 +332,7 @@ paths:
         - todo
       description: >-
         get all todos in a store for a particular priority and status, sorted by
-        due date ascending. If no priority and status are passed, high and
-        unassigned will be used - OUTSTANDING
+        due date ascending. If no priority and status are passed, high and New
       operationId: getToDosByPriorityAndStatus
       consumes:
         - application/json
@@ -385,7 +383,10 @@ paths:
     get:
       tags:
         - todo
-      description: get all todos in a store after or between dates - OUTSTANDING
+      description: >-
+        get all todos in a store after or between dates. If no start date is
+        passed, today's date will be used. If no end date is passed, today + 1
+        year will be used.
       operationId: getToDosByDate
       consumes:
         - application/json
@@ -411,7 +412,7 @@ paths:
           format: date
       responses:
         '200':
-          description: incomplete todos for the priority
+          description: todos between the dates
           schema:
             type: array
             description: array of todos
@@ -647,36 +648,22 @@ paths:
         - domino_auth: []
         - application_auth: []
           user_auth: []
-  /user/login:
+  /v1/user:
     get:
       tags:
         - user
       summary: Logs user into the system
-      description: >-
-        Relevant only for Domino authentication, not included in the API, just
-        standard Domino authentication
-      operationId: loginUser
+      description: Get current user
+      operationId: getCurrentUser
       produces:
         - application/json
-      parameters:
-        - name: username
-          in: query
-          description: The user name for login
-          required: true
-          type: string
-        - name: password
-          in: query
-          description: The password for login in clear text
-          required: true
-          type: string
       responses:
         '200':
           description: successful operation
           schema:
-            type: boolean
-            description: success or failure
-        '400':
-          description: Invalid username/password supplied
+            $ref: '#/definitions/User'
+        '401':
+          description: Not authorised
   '/v1/user/{username}':
     get:
       tags:
