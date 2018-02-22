@@ -47,7 +47,7 @@ spec:
           configMap:
             name: anrd-config
             items:
-            - key: config.json
+            - key: anrd-config.json
               path: config.json
 ---
 apiVersion: v1

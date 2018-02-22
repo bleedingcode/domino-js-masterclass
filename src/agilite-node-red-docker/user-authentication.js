@@ -17,18 +17,14 @@ module.exports = {
           var user = null;
           var params = {
             method: Globals.config.authService.method,
-            url:Globals.config.authService.url
+            url:Globals.config.authService.url,
+            headers:Globals.config.authService.headers,
+            data:{credentials:Buffer.from(username + ":" + password).toString('base64')}
           };
-  
-          //Determine User/Pwd properties
-          params.url += "?";
-          params.url += Globals.config.authService.queryParamNameUser + "=" + username;
-          params.url += "&";
-          params.url += Globals.config.authService.queryParamNamePassword + "=" + password;
-  
+
           axios.request(params)
           .then(function (response) {
-            user = { username: response.data.username, permissions: "*" };
+            user = { username: response.data.commonName, permissions: "*" };
             resolve(user);
           }).catch(function (error) {
             console.log("Authentication Error");

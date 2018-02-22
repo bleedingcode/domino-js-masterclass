@@ -1,9 +1,0 @@
-{
-    "authService":{
-        "method": "get",
-        "url": "http://agilite-node-red.eu-gb.mybluemix.net/user/login",
-        "queryParamNameUser": "username",
-        "queryParamNamePassword": "password",
-        "headers": []
-    }
-}
