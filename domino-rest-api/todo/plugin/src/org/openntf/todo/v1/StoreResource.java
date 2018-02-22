@@ -2,11 +2,11 @@ package org.openntf.todo.v1;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -88,14 +88,14 @@ public class StoreResource {
 	 *            new title for the store
 	 * @return Response containing updated store or error
 	 */
-	@PUT
-	@Path("/{store}")
+	@POST
+	@Path("/{store}/updateTitle")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response changeTitle(final @PathParam(value = "store") String storeKey,
-			final @QueryParam(value = "newTitle") String newTitle) {
+			final @HeaderParam(value = "title") String title) {
 		try {
 			Store store = ToDoStoreFactory.getInstance().getStoreAsNative(storeKey);
-			store.setTitle(newTitle);
+			store.setTitle(title);
 			ToDoStoreFactory.getInstance().updateToDoNSFTitle(store);
 			store.serializeToCatalog();
 			RequestBuilder builder = new RequestBuilder(Store.class);

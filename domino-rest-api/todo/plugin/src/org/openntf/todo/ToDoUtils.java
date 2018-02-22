@@ -46,7 +46,7 @@ public class ToDoUtils {
 
 	public static Gson getGson() {
 		GsonBuilder builder = new GsonBuilder();
-		builder.setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSZ");
+		builder.setDateFormat("yyyy-MM-dd");
 		builder.registerTypeAdapter(AccessLevel.class, new AccessLevelDeserializer());
 		builder.registerTypeAdapter(Priority.class, new PriorityDeserializer());
 		builder.registerTypeAdapter(Status.class, new StatusDeserializer());

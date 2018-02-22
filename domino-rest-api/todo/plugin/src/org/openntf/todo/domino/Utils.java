@@ -15,6 +15,12 @@ public class Utils {
 		return Factory.getSession(SessionType.CURRENT).getEffectiveUserName();
 	}
 
+	public static String getCommonName(String fullUserName) {
+		Session sess = Factory.getSession(SessionType.NATIVE);
+		Name name = sess.createName(fullUserName);
+		return name.getCommon();
+	}
+
 	/**
 	 * Converts passed username to username format used by the application
 	 * 
@@ -54,7 +60,7 @@ public class Utils {
 	}
 
 	public static boolean validateMetaversalId(String metaversalId) throws InvalidMetaversalIdException {
-		if (metaversalId.length() == 32) {
+		if (metaversalId.length() == 48) {
 			return true;
 		} else {
 			throw new InvalidMetaversalIdException();

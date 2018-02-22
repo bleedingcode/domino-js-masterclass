@@ -229,21 +229,14 @@ public class ToDoStoreFactory {
 		}
 		doc.replaceItemValue("taskName", todo.getTaskName());
 		doc.replaceItemValue("description", todo.getDescription());
-		todo.setAuthor(Utils.getCurrentUsername());
 		doc.replaceItemValue("author", Utils.getCurrentUsername());
 		if (null == todo.getPriority()) {
 			todo.setPriority(Priority.LOW);
 		}
 		doc.replaceItemValue("priority", todo.getPriority().getValue());
-		todo.setStatus(ToDo.Status.NEW);
 		doc.replaceItemValue("status", todo.getStatus().getValue());
 		doc.replaceItemValue("dueDate", todo.getDueDate());
-		if (StringUtils.isEmpty(todo.getAssignedTo())) {
-			todo.setAssignedTo(todo.getAuthor());
-		} else {
-			todo.setAssignedTo(Utils.getAsUsername(todo.getAssignedTo()));
-		}
-		doc.replaceItemValue("assignedTo", todo.getAuthor());
+		doc.replaceItemValue("assignedTo", todo.getAssignedTo());
 		doc.save();
 		if (isNew) {
 			todo.setMetaversalId(doc.getMetaversalID());
@@ -284,9 +277,14 @@ public class ToDoStoreFactory {
 		try {
 			Utils.validateMetaversalId(metaversalId);
 			Document doc = Factory.getSession(SessionType.CURRENT).getDocumentByMetaversalID(metaversalId);
+			if (null == doc) {
+				throw new DocumentNotFoundException();
+			}
 			return doc;
+		} catch (DocumentNotFoundException de) {
+			throw de;
 		} catch (Exception e) {
-			if (null != getStoreAsNative(StringUtils.substring(metaversalId, 16))) {
+			if (null != getStoreAsNative(StringUtils.left(metaversalId, 16))) {
 				throw new DocumentNotFoundException();
 			}
 			throw new WebApplicationException(e, Status.INTERNAL_SERVER_ERROR);

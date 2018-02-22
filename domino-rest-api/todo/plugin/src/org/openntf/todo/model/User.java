@@ -10,10 +10,12 @@ import org.openntf.todo.exceptions.DataNotAcceptableException;
 public class User implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private String username = null;
+	private String commonName = null;
 	private DatabaseAccess access = null;
 
 	public User(String username) {
 		setUsername(username);
+		setCommonName(Utils.getCommonName(username));
 		DatabaseAccess access = new DatabaseAccess();
 	}
 
@@ -95,6 +97,14 @@ public class User implements Serializable {
 			throw new DataNotAcceptableException("No database access level has been requested for " + getUsername());
 		}
 		return true;
+	}
+
+	public String getCommonName() {
+		return commonName;
+	}
+
+	public void setCommonName(String commonName) {
+		this.commonName = commonName;
 	}
 
 }

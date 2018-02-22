@@ -27,6 +27,7 @@ import org.openntf.todo.model.ToDo;
 import org.openntf.todo.model.User;
 
 import com.ibm.commons.util.io.json.JsonJavaObject;
+import com.ibm.domino.httpmethod.PATCH;
 
 @Path("/v1/todo")
 @SuppressWarnings("unchecked")
@@ -46,6 +47,9 @@ public class ToDoResource {
 		try {
 			Store store = ToDoStoreFactory.getInstance().getStore(storeKey);
 			ToDo todo = new ResultParser<ToDo>(ToDo.class).parse(body);
+			todo.setAuthor(Utils.getCurrentUsername());
+			todo.setAssignedTo(todo.getAuthor());
+			todo.setStatus(ToDo.Status.NEW);
 			todo.validateForUpdate();
 			todo = ToDoStoreFactory.getInstance().serializeToStore(store, todo);
 
@@ -107,12 +111,13 @@ public class ToDoResource {
 	 *            JSON object containing ToDo
 	 * @return Response returned ToDo
 	 */
-	@PUT
+	@PATCH
 	@Path("/{key}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response updateToDo(@PathParam(value = "key") final String metaversalId, final String body) {
 		try {
 			ToDo todo = new ResultParser<ToDo>(ToDo.class).parse(body);
+			todo.setMetaversalId(metaversalId);
 			todo = todo.compareAndUpdateFromPrevious();
 			todo = ToDoStoreFactory.getInstance().updateToDo(todo);
 
