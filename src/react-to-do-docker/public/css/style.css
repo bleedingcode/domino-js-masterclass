@@ -1,0 +1,71 @@
+body {
+    padding-bottom: 50px;
+    background-color: #fafafa !important;
+}
+
+.trash-button {
+  display: none;
+}
+
+.trash-button .trash-enabled {
+	cursor: pointer;
+}
+
+.add-button {
+  display: none;
+  cursor: pointer;
+	margin-left:15px;
+}
+
+.list-entry:hover .trash-button {
+  display: inline;
+}
+
+.list-entry:hover .add-button {
+  display: inline;
+}
+
+.messagesError{
+  margin-top: -20px;
+}
+
+.messagesError div{
+  background-color: #EF9A9A;
+  color:#ffffff;
+}
+
+.messagesError ul{
+  list-style: none;
+}
+
+.messagesSuccess{
+  margin-top: -20px;
+}
+
+.messagesSuccess div{
+  background-color: #00a952;
+  color:#ffffff;
+}
+
+.messagesSuccess ul{
+  list-style: none;
+}
+
+/*THIS IS FOR LIST ROWS BACKGROUND COLOR*/
+.warning{
+  background-color: #FFF3E0;
+}
+
+.error{
+  background-color: #FFCDD2;
+}
+
+.divLoading {
+  position:absolute;
+  top:50%;
+  left:50%;
+  padding:15px;
+  -ms-transform: translateX(-50%) translateY(-50%);
+  -webkit-transform: translate(-50%,-50%);
+  transform: translate(-50%,-50%);
+}
