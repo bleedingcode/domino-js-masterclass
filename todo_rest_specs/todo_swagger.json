@@ -83,7 +83,7 @@
           "store",
           "todo"
         ],
-        "summary": "Mark any todos that are due as \"Overdue\" status",
+        "summary": "Mark any todos that are due as \"Overdue\" status - OUTSTANDING",
         "description": "",
         "operationId": "markOverdue",
         "consumes": [
@@ -159,8 +159,8 @@
         ]
       }
     },
-    "/v1/store/{store}": {
-      "put": {
+    "/v1/store/{store}/updateTitle": {
+      "patch": {
         "tags": [
           "store"
         ],
@@ -181,8 +181,8 @@
             "type": "string"
           },
           {
-            "in": "query",
-            "name": "newTitle",
+            "in": "header",
+            "name": "title",
             "description": "New title for the store",
             "required": true,
             "type": "string"
@@ -364,7 +364,7 @@
         "tags": [
           "todo"
         ],
-        "description": "get all todos in a store for a particular status, sorted by due date ascending. If no status is passed, default will be incomplete",
+        "description": "get all todos in a store for a particular status, sorted by due date ascending. If no status is passed, default will be incomplete - OUTSTANDING",
         "operationId": "getToDosByStatus",
         "consumes": [
           "application/json"
@@ -428,7 +428,7 @@
         "tags": [
           "todo"
         ],
-        "description": "get all todos in a store assigned to a particular user for a particular status, sorted by due date ascending. If no username or status is passed, current user and incomplete status will be used",
+        "description": "get all todos in a store assigned to a particular user for a particular status, sorted by due date ascending. If no username or status is passed, current user and incomplete status will be used - OUTSTANDING",
         "operationId": "getToDosByAssigneeAndStatus",
         "consumes": [
           "application/json"
@@ -499,7 +499,7 @@
         "tags": [
           "todo"
         ],
-        "description": "get all todos in a store for a particular priority and status, sorted by due date ascending. If no priority and status are passed, high and unassigned will be used",
+        "description": "get all todos in a store for a particular priority and status, sorted by due date ascending. If no priority and status are passed, high and unassigned will be used - OUTSTANDING",
         "operationId": "getToDosByPriorityAndStatus",
         "consumes": [
           "application/json"
@@ -575,7 +575,7 @@
         "tags": [
           "todo"
         ],
-        "description": "get all todos in a store after or between dates",
+        "description": "get all todos in a store after or between dates - OUTSTANDING",
         "operationId": "getToDosByDate",
         "consumes": [
           "application/json"

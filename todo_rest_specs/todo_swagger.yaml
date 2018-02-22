@@ -55,7 +55,7 @@ paths:
       tags:
         - store
         - todo
-      summary: Mark any todos that are due as "Overdue" status
+      summary: Mark any todos that are due as "Overdue" status - OUTSTANDING
       description: ''
       operationId: markOverdue
       consumes:
@@ -104,8 +104,8 @@ paths:
         - domino_auth: []
         - application_auth: []
           user_auth: []
-  '/v1/store/{store}':
-    put:
+  '/v1/store/{store}/updateTitle':
+    patch:
       tags:
         - store
       description: Change the title of a ToDo store
@@ -120,8 +120,8 @@ paths:
           in: path
           required: true
           type: string
-        - in: query
-          name: newTitle
+        - in: header
+          name: title
           description: New title for the store
           required: true
           type: string
@@ -238,7 +238,8 @@ paths:
         - todo
       description: >-
         get all todos in a store for a particular status, sorted by due date
-        ascending. If no status is passed, default will be incomplete
+        ascending. If no status is passed, default will be incomplete -
+        OUTSTANDING
       operationId: getToDosByStatus
       consumes:
         - application/json
@@ -283,7 +284,7 @@ paths:
       description: >-
         get all todos in a store assigned to a particular user for a particular
         status, sorted by due date ascending. If no username or status is
-        passed, current user and incomplete status will be used
+        passed, current user and incomplete status will be used - OUTSTANDING
       operationId: getToDosByAssigneeAndStatus
       consumes:
         - application/json
@@ -333,7 +334,7 @@ paths:
       description: >-
         get all todos in a store for a particular priority and status, sorted by
         due date ascending. If no priority and status are passed, high and
-        unassigned will be used
+        unassigned will be used - OUTSTANDING
       operationId: getToDosByPriorityAndStatus
       consumes:
         - application/json
@@ -384,7 +385,7 @@ paths:
     get:
       tags:
         - todo
-      description: get all todos in a store after or between dates
+      description: get all todos in a store after or between dates - OUTSTANDING
       operationId: getToDosByDate
       consumes:
         - application/json
