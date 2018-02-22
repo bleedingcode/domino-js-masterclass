@@ -24,7 +24,7 @@ public class UserResource {
 	 * @throws JsonException
 	 */
 	@GET
-	public Response getUserByName() throws JsonException {
+	public Response getCurrentUser() throws JsonException {
 		User user = new User(Utils.getCurrentUsername());
 		String json = new RequestBuilder(User.class).buildJson(user);
 		return Response.ok(json, MediaType.APPLICATION_JSON).build();

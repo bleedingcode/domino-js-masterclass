@@ -1,7 +1,7 @@
 package org.openntf.todo.domino;
 
-import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,8 +20,11 @@ import org.openntf.domino.ACL.Level;
 import org.openntf.domino.ACLEntry;
 import org.openntf.domino.Database;
 import org.openntf.domino.Database.DBPrivilege;
+import org.openntf.domino.DateRange;
 import org.openntf.domino.Document;
+import org.openntf.domino.DocumentCollection;
 import org.openntf.domino.Session;
+import org.openntf.domino.View;
 import org.openntf.domino.design.DatabaseDesign.DbProperties;
 import org.openntf.domino.design.DesignColumn;
 import org.openntf.domino.design.DesignColumn.SortOrder;
@@ -44,6 +47,7 @@ import org.openntf.todo.model.Store.StoreType;
 import org.openntf.todo.model.ToDo;
 import org.openntf.todo.model.ToDo.Priority;
 import org.openntf.todo.model.User;
+import org.openntf.todo.v1.ToDosResource.ViewType;
 
 public class ToDoStoreFactory {
 	private Map<String, Store> stores = new ConcurrentHashMap<String, Store>();
@@ -215,6 +219,42 @@ public class ToDoStoreFactory {
 		return todo;
 	}
 
+	public List<ToDo> getToDoCollectionRange(Store store, ViewType viewType, Date startDate, Date endDate)
+			throws DatabaseModuleException {
+		DateRange key = Factory.getSession(SessionType.CURRENT).createDateRange(startDate, endDate);
+		return getToDoCollection(store, viewType, key);
+	}
+
+	public List<ToDo> getToDoCollection(Store store, ViewType viewType, Object key) throws DatabaseModuleException {
+		List<ToDo> todos = new ArrayList<ToDo>();
+		try {
+			Database db = Factory.getSession(SessionType.CURRENT).getDatabase(store.getReplicaId());
+			View view = getView(db, viewType);
+			DocumentCollection dc = view.getAllDocumentsByKey(key);
+			for (Document doc : dc) {
+				ToDo todo = getToDoFromDoc(doc);
+				todos.add(todo);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new DatabaseModuleException(ToDoUtils.getErrorMessage(e));
+		}
+		return todos;
+	}
+
+	public View getView(Database db, ViewType viewType) throws DatabaseModuleException {
+		if (viewType.equals(ViewType.STATUS)) {
+			return db.getView("byStatus");
+		} else if (viewType.equals(ViewType.ASSIGNEE)) {
+			return db.getView("byAssignee");
+		} else if (viewType.equals(ViewType.PRIORITY)) {
+			return db.getView("byPriority");
+		} else if (viewType.equals(ViewType.DATE)) {
+			return db.getView("byDueDate");
+		}
+		throw new DatabaseModuleException("Unable to find view for " + viewType.name());
+	}
+
 	public ToDo updateToDo(ToDo todo)
 			throws StoreNotFoundException, DocumentNotFoundException, InvalidMetaversalIdException {
 		Document doc = getToDoDoc(todo.getMetaversalId());
@@ -225,6 +265,7 @@ public class ToDoStoreFactory {
 	private ToDo updateDocFromToDo(Document doc, ToDo todo) {
 		boolean isNew = false;
 		if (doc.isNewNote()) {
+			doc.replaceItemValue("Form", "ToDo");
 			isNew = true;
 		}
 		doc.replaceItemValue("taskName", todo.getTaskName());
@@ -248,6 +289,11 @@ public class ToDoStoreFactory {
 			throws StoreNotFoundException, DocumentNotFoundException, InvalidMetaversalIdException {
 		Document doc = getToDoDoc(metaversalId);
 
+		ToDo todo = getToDoFromDoc(doc);
+		return todo;
+	}
+
+	private ToDo getToDoFromDoc(Document doc) {
 		ToDo todo = new ToDo();
 		todo.setMetaversalId(doc.getMetaversalID());
 		todo.setAuthor(doc.getAuthors().get(0));
