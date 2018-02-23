@@ -4,33 +4,44 @@ import _ from 'lodash';
 import { cancelProfile, submitProfile } from './to-do-actions';
 import { postPendingData } from '../core/core-logic';
 import tempData from '../temp-data-store/temp-data';
+import Globals from '../globals';
 
 /*
   GLOBAL VARIABLES
 */
-let toDoSocket = null;
+let ws = null;
 
 //Establish Web Socket Connection
 export const connectWebSocket = () => {
-  toDoSocket = IOClient.connect({reconnect: true});
+  ws = IOClient.connect(Globals.wsUrl, {reconnect: true});
 
-  toDoSocket.on('TestResult', function(msg){
-    console.log("Result = " + msg);
+  ws.on('to-do-responses', function(msg){
+    console.log("To Do Responses");
+    console.log(msg);
   });
 
-  toDoSocket.on('connect', function (socket) {
-      console.log('Connected!');
-      toDoSocket.emit('Test', 'Test Message');
+  ws.on('connect', function (socket) {
+    console.log("To Do Web Socket Connected!");
   });
 
-  return true;
+  ws.on('init-user-session', function (id) {
+    console.log("To Do Init User Session");
+    Globals.user.socketId = id;
+  });
+
+  ws.on('to-do-requests', function (data) {
+    console.log("To Do Requests");
+    console.log(data);
+  });
+
+  return null;
 }
 
 //Disconnect Web Socket Connection when moving away from ToDo App
 export const disconnectWebSocket = () => {
   console.log("To Do Web Socket Disconnected");
-  toDoSocket.disconnect();
-  toDoSocket = null;
+  ws.disconnect();
+  ws = null;
 
   return true;
 }

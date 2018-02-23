@@ -6,6 +6,7 @@ import React from 'react';
 import ToolbarMainContainer from '../containers/toolbar-main-container';
 import LandingWrapperContainer from '../../landing/containers/landing-wrapper-container';
 import ToDoAppContainer from '../../to-do/containers/to-do-app-container';
+import ToDoStoreAppContainer from '../../to-do-store/containers/to-do-store-app-container';
 
 class MainApp extends React.Component {
 	render() {
@@ -14,6 +15,7 @@ class MainApp extends React.Component {
 	  	<ToolbarMainContainer />
 			{ this.props.app === 'home' ? <LandingWrapperContainer /> : null }
 			{ this.props.app === 'to-do' ? <ToDoAppContainer /> : null }
+			{ this.props.app === 'to-do-store' ? <ToDoStoreAppContainer /> : null }
 	  </div>
   	);
 	}

@@ -30,8 +30,21 @@ const tempData = {
 		activeEntry:{},
 		data:[]
 	},	
+	toDoStore:{
+		dataTemplate:{
+			_id:"",
+			custom:customTemplate,
+			data:{
+	      		title:"",
+				name:"",
+				type:""
+	    	}
+		},
+		activeEntry:{},
+		data:[]
+	},	
 	signInForm:{
-		email:"",
+		username:"",
 		password:""
 	}
 }

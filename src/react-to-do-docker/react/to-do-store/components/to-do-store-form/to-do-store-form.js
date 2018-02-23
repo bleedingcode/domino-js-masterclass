@@ -12,38 +12,33 @@ import TextField from 'material-ui/TextField';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 
-class ToDoForm extends React.Component {
+class ToDoStoreForm extends React.Component {
 	constructor(){
 		super();
+
 		this.state = {
-			entry:tempData.toDo.activeEntry,
-			priority:tempData.toDo.activeEntry.data.priority
+			entry:tempData.toDoStore.activeEntry,
+			type:tempData.toDoStore.activeEntry.data.type
 		};
 
-		this.setPriority = this.setPriority.bind(this);
+		this.setType = this.setType.bind(this);
 	}
 
-	setPriority(value){
-		this.setState({priority:value});
+	setType(value){
+		this.setState({type:value});
 	}
 
 	onChange(key, value){
 		switch(key){
-			case "inputTaskName":
-				this.state.entry.data.taskName = value;
+			case "inputTitle":
+				this.state.entry.data.title = value;
 				break;
-			case "inputDescription":
-				this.state.entry.data.description = value;
+			case "inputName":
+				this.state.entry.data.name = value;
 				break;
-			case "inputDueDate":
-				this.state.entry.data.dueDate = value;
-				break;
-			case "inputResponsiblePerson":
-				this.state.entry.data.responsiblePerson = value;
-				break;
-			case "inputPriority":
-				this.state.entry.data.priority = value;
-				this.setPriority(value);
+			case "inputType":
+				this.state.entry.data.type = value;
+				this.setType(value);
 				break;
 		}
 	}
@@ -62,62 +57,41 @@ class ToDoForm extends React.Component {
 						showMenuIconButton={false}
 						style={{backgroundColor:this.props.theme.secondaryLight2}}
             			titleStyle={{color:this.props.theme.black}}
-						title="To Do Profile"
+						title="Store Profile"
 					/>
 					<CardText>
 						<div className="row">
 							<div className="col-md-6" style={{marginTop:20}}>
 								<TextField
-									hintText="Task Name"
-									floatingLabelText="Task Name"
+									hintText="Provide a Title"
+									floatingLabelText="Title"
 									fullWidth={true}
-									defaultValue={this.state.entry.data.taskName}
+									defaultValue={this.state.entry.data.title}
 									onChange={(e, value) => {
-										this.onChange("inputTaskName", value)
+										this.onChange("inputTitle", value)
 									}}
 								/><br />
 								<TextField
-									hintText="A detailed description for this To Do"
-									floatingLabelText="Description (optional)"
+									hintText="Provide a Name"
+									floatingLabelText="Name"
 									fullWidth={true}
-									defaultValue={this.state.entry.data.description}
-									multiLine={true}
-									rowsMax={5}
+									defaultValue={this.state.entry.data.name}
 									onChange={(e, value) => {
-										this.onChange("inputDescription", value)
-									}}
-								/><br />
-								<TextField
-									hintText="Provide a Due Date"
-									floatingLabelText="Due Date (optional)"
-									fullWidth={true}
-									defaultValue={this.state.entry.data.dueDate}
-									onChange={(e, value) => {
-										this.onChange("inputDueDate", value)
-									}}
-								/><br />
-								<TextField
-									hintText="Provide a Responsible Person"
-									floatingLabelText="Responsible Person"
-									fullWidth={true}
-									defaultValue={this.state.entry.data.responsiblePerson}
-									onChange={(e, value) => {
-										this.onChange("inputResponsiblePerson", value)
+										this.onChange("inputName", value)
 									}}
 								/><br />
 								<SelectField
-									floatingLabelText="Priority"
+									floatingLabelText="Type"
 									floatingLabelFixed={true}
-									value={this.state.entry.data.priority}
+									value={this.state.entry.data.type}
 									autoWidth={true}
 									onChange={(e, index, value) => {
-										this.onChange("inputPriority", value)
+										this.onChange("inputType", value)
 									}}
 								>
 									<MenuItem value={""} primaryText="-Select-" />
-									<MenuItem value={"Low"} primaryText="Low" />
-									<MenuItem value={"Medium"} primaryText="Medium" />
-									<MenuItem value={"High"} primaryText="High" />
+									<MenuItem value={"Personal"} primaryText="Personal" />
+									<MenuItem value={"Team"} primaryText="Team" />
 								</SelectField>							
 							</div>
 						</div>
@@ -150,4 +124,4 @@ class ToDoForm extends React.Component {
 	}
 }
 
-export default ToDoForm;
+export default ToDoStoreForm;

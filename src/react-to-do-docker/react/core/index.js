@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware, combineReducers } from 'redux';
 import thunk from 'redux-thunk';
-import {userVerifiedSuccess, userVerifiedFailed, checkUserToken, actions} from './core-actions';
+import {userVerifiedSuccess, userVerifiedFailed, actions} from './core-actions';
 import {actions as landingActions} from '../landing/landing-actions';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import tempData from '../temp-data-store/temp-data';
@@ -21,6 +21,7 @@ injectTapEventPlugin();
 */
 import main from './core-app-reducer';
 import toDo from '../to-do/to-do-reducer';
+import toDoStore from '../to-do-store/to-do-store-reducer';
 import landing from '../landing/landing-reducer';
 import MainAppContainer from './containers/main-app-container'
 
@@ -28,6 +29,7 @@ import MainAppContainer from './containers/main-app-container'
 const indexReducerWrapper = combineReducers({
   main,
   toDo,
+  toDoStore,
   landing
 });
 
@@ -38,31 +40,13 @@ let store = createStoreWithMiddleware(indexReducerWrapper,
 	window.devToolsExtension ? window.devToolsExtension() : undefined
 )
 
-//CHECKS FOR WHEN APP LOADS
-//Check if User can Auto Sign In
-const initLogin = () => {
-  localStorage.removeItem('token');
-  tempData.userProfile = {};
-  tempData.adminData = {};
+//TODO: We need to see if this is going to work
+Globals.dispatch = store.dispatch;
 
+//CHECKS FOR WHEN APP LOADS
+const initLogin = () => {
   store.dispatch({type: actions.SIGN_OUT_USER});
   store.dispatch({type: landingActions.INIT_HOME_PAGE});
-
-  // const token = localStorage.getItem('token');
-
-  // let userCheck = checkUserToken(token)
-  // .then(response => {
-  //   tempData.adminData = response.data.adminData;
-  //   store.dispatch({type: actions.SIGN_IN_USER})
-  // })
-  // .catch(response => {
-  //   localStorage.removeItem('token');
-  //   tempData.userProfile = {};
-  //   tempData.adminData = {};
-
-  //   store.dispatch({type: actions.SIGN_OUT_USER});
-  //   store.dispatch({type: landingActions.INIT_HOME_PAGE});
-  // })
 }
 
 //Check if there are url parameters

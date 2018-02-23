@@ -1,5 +1,6 @@
 import React from 'react';
 import tempData from '../../temp-data-store/temp-data';
+import { connectWebSocket, disconnectWebSocket } from '../landing-logic';
 
 import {Card, CardActions, CardTitle, CardText} from 'material-ui/Card';
 import FlatButton from 'material-ui/FlatButton';
@@ -18,8 +19,8 @@ class HomeAnonymousSignIn extends React.Component {
 
 	onChange(key, value){
 		switch(key){
-			case "inputEmail":
-				this.entry.email = value;
+			case "inputUsername":
+				this.entry.username = value;
 				break;
 			case "inputPassword":
 				this.entry.password = value;
@@ -27,11 +28,16 @@ class HomeAnonymousSignIn extends React.Component {
 		}
 	}
 
-  render(){
-    let theme = this.props.theme
+	componentDidMount(){
+		connectWebSocket();
+	}
 
-    let inputEmail
-    let inputPassword
+	componentWillUnmount(){
+		disconnectWebSocket();
+	}
+
+  render(){
+    let theme = this.props.theme;
 
     return(
       <div>
@@ -54,13 +60,12 @@ class HomeAnonymousSignIn extends React.Component {
               <div className="row">
               <div className="col-sm-10">
               <TextField
-                hintText="Enter your email address"
-                floatingLabelText="Email"
-                type="email"
+                hintText="Enter your username"
+                floatingLabelText="Username"
                 fullWidth={true}
-                defaultValue={this.entry.email}
+                defaultValue={this.entry.username}
                 onChange={(e, value) => {
-                  this.onChange("inputEmail", value)
+                  this.onChange("inputUsername", value)
                 }}
               /><br />
               <TextField
@@ -85,24 +90,6 @@ class HomeAnonymousSignIn extends React.Component {
                 icon={<ActionDone />}
                 label="Sign In"
                 style={{color:theme.successColor}}
-              />
-              <FlatButton
-                icon={<ContentForward />}
-                label="Forgot Password"
-                secondary={true}
-                onTouchTap={e => {
-                    e.preventDefault()
-                    this.props.initForgotPasswordForm()
-                }}
-              />     
-              <FlatButton
-                icon={<ContentInbox />}
-                label="Register"
-                primary={true}
-                onTouchTap={e => {
-                    e.preventDefault()
-                    this.props.initRegisterForm()
-                }}
               />
             </div>
             </div>

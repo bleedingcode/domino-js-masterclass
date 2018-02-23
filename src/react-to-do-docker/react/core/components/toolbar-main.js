@@ -47,11 +47,6 @@ class ToolbarMain extends React.Component {
     };
   }
 
-	handleRefresh = (event) => {
-    event.preventDefault();
-    this.props.refreshView(this.props.app);
-  }
-
   render(){
     let theme = this.props.theme;
 
@@ -74,12 +69,13 @@ class ToolbarMain extends React.Component {
     					<NavigationMenuIcon />
     				</IconButton>
             <Drawer
-    						docked={true}
+    						docked={false}
     						width={300}
-    						open={true}
+    						open={this.props.drawerOpen}
+                onRequestChange={(open) => this.props.toggleDrawer()}              
     					>
                 <Toolbar style={{backgroundColor:theme.primary}}>
-                  <ToolbarTitle text="Portal Menu" style={{color:theme.white}}/>
+                  <ToolbarTitle text={globals.title} style={{color:theme.white}}/>
                 </Toolbar>
                 <List>
                   <ToolbarMenuItemContainer
@@ -91,51 +87,54 @@ class ToolbarMain extends React.Component {
                 </List>
                 <Divider style={{color:theme.secondaryLight}} />
                 <List>
-                  <Subheader>To Do App</Subheader>
-                  <ToolbarMenuItemContainer
-                    title='All'
-                    leftIcon={<MapsLayers />}
-                    dataId='to-do-all'
-                    dataClass={this.props.app === 'to-do-all' ? 'active' : ''}
-                  />
-                  <ToolbarMenuItemContainer
-                    title='Complete'
-                    leftIcon={<EditorFormatListNumbered />}
-                    dataId='to-do-complete'
-                    dataClass={this.props.app === 'to-do-complete' ? 'active' : ''}
-                  />
-                  <ToolbarMenuItemContainer
-                    title='Urgent'
-                    leftIcon={<ContentFilterList />}
-                    dataId='to-do-urgent'
-                    dataClass={this.props.app === 'to-do-urgent' ? 'active' : ''}
-                  />
-                  <ToolbarMenuItemContainer
-                    title='Overdue'
-                    leftIcon={<ContentLink />}
-                    dataId='to-do-overdue'
-                    dataClass={this.props.app === 'to-do-overdue' ? 'active' : ''}
-                  />
-                  <ToolbarMenuItemContainer
-                    title='Node-RED'
-                    leftIcon={<EditorLinearScale />}
-                    dataId='node-red'
-                  />
-                </List>
-                <Divider style={{color:theme.secondaryLight}} />
+                  <ListItem
+      							primaryText="To Dos"
+      							initiallyOpen={true}
+      							primaryTogglesNestedList={true}
+      							nestedItems={[
+                        <ToolbarMenuItemContainer
+                        key="to-do-all"
+                        title='All'
+                        leftIcon={<MapsLayers />}
+                        dataId='to-do-all'
+                        dataClass={this.props.app === 'to-do-all' ? 'active' : ''}
+                      />,
+                      <ToolbarMenuItemContainer
+                        key="to-do-complete"
+                        title='Complete'
+                        leftIcon={<EditorFormatListNumbered />}
+                        dataId='to-do-complete'
+                        dataClass={this.props.app === 'to-do-complete' ? 'active' : ''}
+                      />,
+                      <ToolbarMenuItemContainer
+                        key="to-do-urgent"
+                        title='Urgent'
+                        leftIcon={<ContentFilterList />}
+                        dataId='to-do-urgent'
+                        dataClass={this.props.app === 'to-do-urgent' ? 'active' : ''}
+                      />,
+                      <ToolbarMenuItemContainer
+                        key="to-do-overdue"
+                        title='Overdue'
+                        leftIcon={<ContentLink />}
+                        dataId='to-do-overdue'
+                        dataClass={this.props.app === 'to-do-overdue' ? 'active' : ''}
+                      />                      
+      							]}
+      						/>
+                </List>                
                 <List>
                   <ListItem
-      							primaryText="Projects"
-      							leftIcon={<HardwareSecurity />}
+      							primaryText="Stores"
       							initiallyOpen={false}
       							primaryTogglesNestedList={true}
       							nestedItems={[
                       <ToolbarMenuItemContainer
-                        key="projects-all"
-                        leftIcon={null}
+                        key="stores-all"
                         title='All'
-                        dataId='projects-all'
-                        dataClass={this.props.app === 'projects-all' ? 'active' : ''}
+                        leftIcon={<ContentLink />}
+                        dataId='stores-all'
+                        dataClass={this.props.app === 'stores-all' ? 'active' : ''}
                       />
       							]}
       						/>

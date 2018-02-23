@@ -42,83 +42,73 @@ const returnVariableType = function(input){
 };
 
 const loadConfig = function(callback){
-  let deployType = "";
+  const Globals = require('./globals');
+  const path = require('path');
+  const fs = require('fs');
+
   let result = "";
   let filePath = "";
 
-  try {
-    //Check if Deploy Type can be resolved for Bluemix
-    deployType = process.env.DEPLOY_TYPE;
-
-    if(!deployType){
-      //Try Local
-      require('dotenv').config()
-      deployType = process.env.DEPLOY_TYPE;
-
-      //Default deployType to MiniKube if still not defined
-      if(!deployType){
-        deployType = Enums.DEPLOY_TYPE_MINIKUBE;
-      }
-    }
-
-    //If we get here, Get Config Details
-    filePath = path.join(__dirname, "../config_" + deployType + ".js");
+  try {    
+    filePath = path.join(__dirname, "../config.json/config.json");
 
     fs.readFile(filePath, 'utf8', function (err,data) {
       if (err) {
         console.log("Config File Not Found");
-        callback(false);
+        return callback();
       }
 
       try {
         result = JSON.parse(data);
         Globals.config = result;
+        console.log("Config Loaded Successfully");
       } catch (e) {
         console.log("Parsing Config as JSON Failed");
-        callback(false);
       }
 
-      callback(true);
+      return callback();
     });
   } catch (e) {
-    callback(false);
+    console.log(e.stack);
+    return callback();
   }
 
   return null;
 };
 
-const initAAWebhook = function(params, callback){
+const authenticateUser = function(data, callback){
   const Axios = require('axios');
-  
-  let data = {
-      sessionId:params.socketId,
-      userId:params.userId,
-      username:params.username,
-      content:params.msg
+
+  let params = {
+      method:"post",
+      url:Globals.config.agilite.apiUrl + Globals.config.agilite.urlSuffixConnectors,
+      headers:{
+        "Content-Type":"application/json",
+        "api-key": Globals.config.agilite.apiKey,
+        "profile-key": Globals.config.agilite.dominoProfileKey,
+        "route-key": Globals.config.agilite.routeLogin
+      },
+      data:{
+        credentials:Buffer.from(data.username + ":" + data.password).toString('base64')
+      }
   };
 
-  var params = {
-      method:"post",
-      url:params.webhookURL,
-      headers:{"Content-Type":"application/json"},
-      data:data
-  };
-  
   Axios.request(params)
   .then(function (response) {
-      console.log(response.data);
-      if(response.data.success){
-          callback(null, response.data);
-      }else{
-          callback(response.data.message, null);
-      }
+    try {
+      if(response.data.data.substring(0, 1) === "<"){
+        response.data.success = false;
+        response.data.messages.push("Incorrect Username/Password. Please try again");
+      }      
+    } catch (error) {}
+
+    callback(response.data);
   })
   .catch(function (err) {
-      console.log(err);
       if(err.response){
-          callback(err.response.data.message, null);
+          callback(err.response.data);
       }else{
-          callback(err, null);
+          callback({success:false, messages:[err], data:{}});
       }
   });
 
@@ -129,4 +119,4 @@ exports.generateBase64Authorization = generateBase64Authorization;
 exports.mustacheConvert = mustacheConvert;
 exports.returnVariableType = returnVariableType;
 exports.loadConfig = loadConfig;
-exports.initAAWebhook = initAAWebhook;
+exports.authenticateUser = authenticateUser;

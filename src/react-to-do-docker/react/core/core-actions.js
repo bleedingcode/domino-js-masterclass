@@ -1,5 +1,5 @@
 import tempData from '../temp-data-store/temp-data';
-import globals from '../globals';
+import Globals from '../globals';
 
 import axios from 'axios';
 import {actions as landingActions} from '../landing/landing-actions';
@@ -13,6 +13,8 @@ export const actions = {
   SWITCH_MENU: 'SWITCH_MENU',
   SIGN_IN_USER: 'SIGN_IN_USER',
   SIGN_OUT_USER: 'SIGN_OUT_USER',
+  OPEN_DRAWER: 'OPEN_DRAWER',
+  TOGGLE_DRAWER: 'TOGGLEDRAWER',  
   INIT_PREVIOUS_APP: 'INIT_PREVIOUS_APP',
   NULL:'NULL'
 }
@@ -22,7 +24,7 @@ export const switchMenu = (dataId) => {
     switch (dataId) {
     case "node-red"://Launch Node-RED and Continue
       dataId = null;
-      window.open(globals.nodeRedUrl);
+      window.open(Globals.nodeRedUrl);
     default:
       dispatch({
         type: actions.SWITCH_MENU,
@@ -32,17 +34,15 @@ export const switchMenu = (dataId) => {
   }
 }
 
-export const signOutUser = () => {
-  return dispatch => {
-    localStorage.removeItem('token');
-    tempData.userProfile = {};
+export const openDrawer = () => {
+  return {
+    type: actions.OPEN_DRAWER
+  }
+}
 
-    dispatch({
-      type: actions.SIGN_OUT_USER
-    })
-    dispatch({
-      type: landingActions.INIT_HOME_PAGE
-    })
+export const toggleDrawer = () => {
+  return {
+    type: actions.TOGGLE_DRAWER
   }
 }
 
@@ -54,22 +54,6 @@ export const initPreviousApp = () => {
   }
 }
 
-export const refreshView = (app) => {
-  return dispatch => {
-    switch(app){
-      case "to-do":
-        loadDataExtendedToDo(dispatch);
-        break;     
-    }
-  }  
-}
-
-export const checkUserToken = (token) => {
-    return axios.get(globals.apiUrl, {
-      headers:{"api-key":token}
-    });
-}
-
 export const signInUser = () => {
   return dispatch => {
     let result = true;
@@ -78,25 +62,14 @@ export const signInUser = () => {
     let htmlEnd = "</ul></div>"
     let html = "";
     let tmpDiv = document.getElementById('divMessages');
-    let constraints = {};
-    let validMessage = "";
-
-    let email = tempData.signInForm.email;
+    let params = {};
+    let username = tempData.signInForm.username;
     let password = tempData.signInForm.password;
 
-    //First, validate email address
-    if(!email || (email === "")){
+    //First, validate Username
+    if(!username || (username === "")){
       result = false;
-      htmlContent += "<li>Please provide an Email Address</li>";
-    }else{
-      //Check if value is a valid email address
-      constraints = {username: {email:true}};
-      validMessage = validate({username: email}, constraints);
-
-      if(validMessage){
-          result = false;
-          htmlContent += "<li>Email is not a valid address</li>";
-      }
+      htmlContent += "<li>Please provide a Username</li>";
     }
 
     //Then, validate password
@@ -106,36 +79,17 @@ export const signInUser = () => {
     }
 
     if(result){
-      //Finalise formatting of the values
-      tempData.signInForm.email = _.toLower(email);
+      Globals.user.username = username;
+      Globals.user.password = password;
 
-      //Authenticate User
-      axios.post(`${globals.apiUrl}/user/authenticate`, tempData.signInForm)
-      .then(response => {
-        localStorage.setItem('token', response.data.data.apiKey);
+      params = {
+        reqType:"1",
+        socketId: Globals.user.socketId,
+        username,
+        password
+      };
 
-        tempData.userProfile = {
-          firstName:response.data.data.firstName,
-          lastName:response.data.data.lastName,
-          email:response.data.data.email,
-        };
-
-        tempData.signInForm = {};
-
-        dispatch({
-          type: actions.SIGN_IN_USER
-        })
-      })
-      .catch(err => {
-        result = false;
-
-        for(var x in err.response.data.messages){
-          htmlContent += `<li>${err.response.data.messages[x]}</li>`;
-        }
-
-        html = htmlStart + htmlContent + htmlEnd;
-        tmpDiv.innerHTML = html;
-      })
+      Globals.ws.emit('to-do-app-requests', params);
     }
 
     //Finalise
@@ -145,6 +99,34 @@ export const signInUser = () => {
       html = htmlStart + htmlContent + htmlEnd;
     }
 
+    tmpDiv.innerHTML = html;
+  }
+}
+
+export const processSignInResult = (data) => {
+  let htmlContent = "";
+  let htmlStart = "<div><ul>"
+  let htmlEnd = "</ul></div>"
+  let html = "";
+  let tmpDiv = document.getElementById('divMessages');  
+
+  if(data.success){
+    tempData.signInForm = {};
+    Globals.user.commonName = data.data.commonName;
+
+    Globals.dispatch({
+      type: actions.SIGN_IN_USER
+    })
+
+  }else{
+    Globals.user.username = "";
+    Globals.user.password = "";
+
+    for(var x in data.messages){
+      htmlContent += `<li>${data.messages[x]}</li>`;
+    }
+
+    html = htmlStart + htmlContent + htmlEnd;
     tmpDiv.innerHTML = html;
   }
 }

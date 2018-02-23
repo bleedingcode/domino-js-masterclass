@@ -4,52 +4,49 @@ import tempData from '../temp-data-store/temp-data';
 
 const main = (state = mainAppState, action) => {
   switch (action.type) {
+    case actions.OPEN_DRAWER:
+      return Object.assign({}, state, {
+          drawerOpen:true
+      });
+    case actions.TOGGLE_DRAWER:
+      let status = !state.drawerOpen;
+      return Object.assign({}, state, {
+          drawerOpen:status
+      });    
     case actions.SWITCH_MENU:
       let title = state.title;
+      let app = state.app;
       var prevApp = "";
 
       if(action.dataId === null){
-        return Object.assign({}, state, mainAppState);
+        return Object.assign({}, state, {
+            drawerOpen:false
+        });
       }
 
       switch(action.dataId){
         case "home":
-          title = "Agilit-e Admin Portal";
+          app = "home";
+          title = "React To Do Portal";
           break;
-        case "keywords":
-          title = "Agilit-e Keywords";
+        case "stores-all":
+          app = "to-do-store";
+          title = "Stores";
           break;
-        case "numbering":
-          title = "Agilit-e Numbering";
-          break;
-        case "connectors":
-          title = "Agilit-e Connectors";
-          break;
-        case "data-mapping":
-          title = "Agilit-e Data Mapping";
-          break;
-        case "templates":
-          title = "Agilit-e Templates";
-          break;
-        case "bpm":
-          title = "Agilit-e BPM (Business Process Management)";
-          break;
-        case "roles":
-          title = "Agilit-e Roles";
-          break;                    
-        case "log-profiles":
-          title = "Agilit-e Log Profiles";
+        case "to-do-all":
+          app = "to-do"; 
+          title = "To Dos";
           break;
         default:
           prevApp = state.app;
-          title = "Agilit-e Administration";
           break;
       }
 
       return Object.assign({}, state, {
-          app: action.dataId,
+          app,
           previousApp:prevApp,
           title:title,
+          drawerOpen:false,
           landingPage:{
             facet:'index'
           }

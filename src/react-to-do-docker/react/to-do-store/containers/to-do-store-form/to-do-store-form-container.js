@@ -1,11 +1,11 @@
 import { connect } from 'react-redux';
-import { confirmCancel, validateSubmit } from '../../to-do-logic';
-import ToDoForm from '../../components/to-do-form/to-do-form';
+import { confirmCancel, validateSubmit } from '../../to-do-store-logic';
+import ToDoStoreForm from '../../components/to-do-store-form/to-do-store-form';
 
 
 const mapStateToProps = (state) => {
   return {
-    state:state.toDo,
+    state:state.toDoStore,
     theme:state.main.theme
   }
 }
@@ -21,9 +21,9 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-const ToDoFormContainer = connect(
+const ToDoStoreFormContainer = connect(
   mapStateToProps,
   mapDispatchToProps
-)(ToDoForm)
+)(ToDoStoreForm)
 
-export default ToDoFormContainer;
+export default ToDoStoreFormContainer;

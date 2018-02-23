@@ -5,6 +5,7 @@ const mainAppState = {
 	app:'home',
 	previousApp:"",
 	title:globals.title,
+	drawerOpen:false,
 	themeKey:'agilite',
 	theme:theme,
 	user:{
