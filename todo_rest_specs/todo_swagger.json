@@ -92,6 +92,15 @@
         "produces": [
           "application/json"
         ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "updateUrl",
+            "description": "Web sockets url to post updated todos to",
+            "required": false,
+            "type": "string"
+          }
+        ],
         "responses": {
           "202": {
             "description": "accepted for processing"
