@@ -55,11 +55,7 @@ public class ToDo implements Serializable {
 	 * Current status of the ToDo. Set via workflow actions, defaulting to New
 	 */
 	public enum Status {
-		NEW("New"),
-
-		REASSIGNED("Reassigned"),
-
-		COMPLETE("Complete");
+		NEW("New"), REASSIGNED("Reassigned"), COMPLETE("Complete"), OVERDUE("Overdue");
 
 		private String value;
 

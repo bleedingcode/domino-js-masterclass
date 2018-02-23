@@ -21,15 +21,18 @@ package org.openntf.todo.v1;
 import java.util.List;
 
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import org.openntf.todo.domino.ToDoStoreFactory;
+import org.openntf.todo.exceptions.DatabaseModuleException;
 import org.openntf.todo.json.RequestBuilder;
 import org.openntf.todo.model.Store;
 
+import com.ibm.commons.util.io.json.JsonJavaObject;
 import com.ibm.domino.osgi.core.context.ContextInfo;
 
 /**
@@ -73,58 +76,16 @@ public class StoresResource {
 
 	@GET
 	@Path("/todos/markOverdue")
-	public Response markOverdue() {
-		// TODO: Generate Xots tasks over all stores to mark any ToDos past their due date as overdue
-		return null;
-	}
+	public Response markOverdue(@HeaderParam(value = "updateUrl") String nextUrl) {
+		try {
+			ToDoStoreFactory.getInstance().markOverdue(nextUrl);
 
-	// /**
-	// * A restricted endpoint, which the user must be authenticated to use, so
-	// * "...helloworld/restricted"
-	// *
-	// * @return Response with username or HTTP 403 error
-	// */
-	// @GET
-	// @Path("/restricted")
-	// public Response mustBeAuthenticated() {
-	// final Session session = Factory.getSession(SessionType.CURRENT);
-	// final JsonJavaObject jjo = new JsonJavaObject();
-	// if ("Anonymous".equals(session.getEffectiveUserName())) {
-	// throw new WebApplicationException(ErrorHelper
-	// .createErrorResponse("You are not authorized to access this endpoint", Status.FORBIDDEN));
-	// } else {
-	// jjo.put("Username", session.getEffectiveUserName());
-	// return Response.ok(jjo.toString(), MediaType.APPLICATION_JSON).build();
-	// }
-	//
-	// }
-	//
-	// /**
-	// * An endpoint to test including a url parameter and sending Json data, so
-	// * "...helloworld/" + param
-	// *
-	// * @param msg
-	// * String the url parameter
-	// * @param body
-	// * String the Json data passed
-	// * @return Json object echoing url parameter, Json body as string and Json
-	// * body passed
-	// * @throws JsonException
-	// * Exception if parsing the Json data
-	// */
-	// @POST
-	// @Path("/{param}")
-	// @Consumes(MediaType.APPLICATION_JSON)
-	// public Response postMessage(@PathParam("param") final String msg, final String body) throws JsonException {
-	// final String output = "POST: " + msg;
-	// final JsonJavaObject jjo = new JsonJavaObject();
-	// jjo.put("ParamMessage", output);
-	// jjo.put("jsonObjectAsString", body);
-	// final Map<String, Object> jsonAsObj = (Map<String, Object>) JsonParser.fromJson(JsonJavaFactory.instance, body);
-	// for (final String key : jsonAsObj.keySet()) {
-	// jjo.put(key, jsonAsObj.get(key));
-	// }
-	// return Response.ok(jjo.toString(), MediaType.APPLICATION_JSON).build();
-	// }
+			JsonJavaObject jjo = new JsonJavaObject();
+			jjo.put("success", true);
+			return Response.status(Status.ACCEPTED).entity(jjo.toString()).build();
+		} catch (DatabaseModuleException e) {
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+		}
+	}
 
 }

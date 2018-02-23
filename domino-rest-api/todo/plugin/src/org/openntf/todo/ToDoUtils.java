@@ -2,9 +2,13 @@ package org.openntf.todo;
 
 import org.apache.commons.lang3.StringUtils;
 import org.openntf.todo.json.AccessLevelDeserializer;
+import org.openntf.todo.json.AccessLevelSerializer;
 import org.openntf.todo.json.PriorityDeserializer;
+import org.openntf.todo.json.PrioritySerializer;
 import org.openntf.todo.json.StatusDeserializer;
+import org.openntf.todo.json.StatusSerializer;
 import org.openntf.todo.json.StoreTypeDeserializer;
+import org.openntf.todo.json.StoreTypeSerializer;
 import org.openntf.todo.model.DatabaseAccess.AccessLevel;
 import org.openntf.todo.model.Store;
 import org.openntf.todo.model.Store.StoreType;
@@ -47,9 +51,13 @@ public class ToDoUtils {
 	public static Gson getGson() {
 		GsonBuilder builder = new GsonBuilder();
 		builder.setDateFormat("yyyy-MM-dd");
+		builder.registerTypeAdapter(AccessLevel.class, new AccessLevelSerializer());
 		builder.registerTypeAdapter(AccessLevel.class, new AccessLevelDeserializer());
+		builder.registerTypeAdapter(Priority.class, new PrioritySerializer());
 		builder.registerTypeAdapter(Priority.class, new PriorityDeserializer());
+		builder.registerTypeAdapter(Status.class, new StatusSerializer());
 		builder.registerTypeAdapter(Status.class, new StatusDeserializer());
+		builder.registerTypeAdapter(StoreType.class, new StoreTypeSerializer());
 		builder.registerTypeAdapter(StoreType.class, new StoreTypeDeserializer());
 		return builder.create();
 	}

@@ -50,7 +50,7 @@ import org.openntf.todo.model.User;
 import org.openntf.todo.v1.ToDosResource.ViewType;
 
 public class ToDoStoreFactory {
-	private Map<String, Store> stores = new ConcurrentHashMap<String, Store>();
+	private Map<String, Store> stores = null;
 	public static String STORE_NOT_FOUND_OR_ACCESS_ERROR = "The store could not be found with the name or replicaId passed, or you do not have access to that store";
 	public static String DOCUMENT_NOT_FOUND_ERROR = "The ToDo with that ID could not be found";
 	public static String USER_NOT_AUTHORIZED_ERROR = "You are not authorized to perform this operation";
@@ -71,7 +71,7 @@ public class ToDoStoreFactory {
 	 */
 	public Map<String, Store> getStores() {
 		if (null == stores) {
-			stores = new ConcurrentHashMap<String, Store>();
+			loadStores();
 		}
 		return stores;
 	}
@@ -147,7 +147,7 @@ public class ToDoStoreFactory {
 	public Store createStoreFromDoc(Document doc) {
 		Store store = new Store();
 		store.setReplicaId(doc.getItemValueString("replicaId"));
-		store.setName(doc.getItemValueString("name"));
+		store.setName(StringUtils.replace(doc.getItemValueString("name"), "\\", "/"));
 		store.setTitle(doc.getItemValueString("title"));
 		String typeFromDoc = doc.getItemValueString("type");
 		for (StoreType type : StoreType.values()) {
@@ -293,7 +293,7 @@ public class ToDoStoreFactory {
 		return todo;
 	}
 
-	private ToDo getToDoFromDoc(Document doc) {
+	public ToDo getToDoFromDoc(Document doc) {
 		ToDo todo = new ToDo();
 		todo.setMetaversalId(doc.getMetaversalID());
 		todo.setAuthor(doc.getAuthors().get(0));
@@ -348,7 +348,11 @@ public class ToDoStoreFactory {
 	 * starts
 	 */
 	public void loadStores() {
+		if (stores != null) {
+			return;
+		}
 		Future<Map<String, Store>> result = Xots.getService().submit(new StoreLoader());
+		stores = new ConcurrentHashMap<String, Store>();
 
 		// There is only
 		synchronized (stores) {
@@ -360,6 +364,17 @@ public class ToDoStoreFactory {
 			} catch (ExecutionException e) {
 				e.printStackTrace();
 			}
+		}
+	}
+
+	public void markOverdue(String nextUrl) throws DatabaseModuleException {
+		try {
+			for (String replicaId : getStores().keySet()) {
+				Xots.getService().submit(new StoreMarkToDosOverdueRunner(replicaId, nextUrl));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new DatabaseModuleException(ToDoUtils.getErrorMessage(e));
 		}
 	}
 

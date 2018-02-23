@@ -65,7 +65,7 @@ public class StoreLoader extends AbstractXotsCallable<Map<String, Store>> {
 					Store store = ToDoStoreFactory.getInstance().createStoreFromDoc(doc);
 					retVal.put(store.getReplicaId(), store);
 				}
-				ToDoUtils.debugPrint("Loaded " + nc.getCount() + " ToDo Instances from ToDo Catalog database");
+				ToDoUtils.debugPrint("Loaded ToDo Instances from ToDo Catalog database");
 			}
 			return retVal;
 		} catch (Exception e) {
