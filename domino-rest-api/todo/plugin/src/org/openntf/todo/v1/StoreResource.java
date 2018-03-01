@@ -59,7 +59,7 @@ public class StoreResource {
 				passedStore.setName(ToDoUtils.getStoreFilePath(Utils.getPersonalStoreName(), StoreType.PERSONAL));
 			}
 
-			if (ToDoStoreFactory.getInstance().createStoreDoesStoreExist(passedStore.getName())) {
+			if (ToDoStoreFactory.getInstance().checkStoreExists(passedStore.getName())) {
 				return Response.status(Status.CONFLICT).entity(
 						"A store already exists with the name. (For personal stores, the username overrides the name passed)")
 						.build();

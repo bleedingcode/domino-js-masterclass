@@ -54,6 +54,7 @@ public class StoreLoader extends AbstractXotsCallable<Map<String, Store>> {
 				acl.save();
 				org.openntf.domino.View v = todoCatalog.createView("NONE");
 				v.setSelectionFormula("SELECT @False");
+				v.setDefaultView(true);
 				ToDoUtils.debugPrint("Completed initialising the ToDo Catalog database");
 			} else {
 				ToDoUtils.debugPrint("Loading ToDo Instances from ToDo Catalog database");
@@ -62,7 +63,7 @@ public class StoreLoader extends AbstractXotsCallable<Map<String, Store>> {
 				nc.buildCollection();
 				for (int noteid : nc.getNoteIDs()) {
 					Document doc = todoCatalog.getDocumentByID(noteid);
-					Store store = ToDoStoreFactory.getInstance().createStoreFromDoc(doc);
+					Store store = ToDoStoreFactory.getInstance().deserializeStoreFromDoc(doc);
 					retVal.put(store.getReplicaId(), store);
 				}
 				ToDoUtils.debugPrint("Loaded ToDo Instances from ToDo Catalog database");
