@@ -121,6 +121,8 @@ paths:
       responses:
         '200':
           $ref: '#/definitions/Store'
+        '400':
+          description: Personal store doesn't exist
         '401':
           description: Unauthenticated
       security:
