@@ -32,6 +32,11 @@ import com.ibm.domino.httpmethod.PATCH;
 @Path("/v1/store")
 public class StoreResource {
 
+	/**
+	 * Get personal store, if it exists. If it doesn't, throw Bad Request error 400
+	 * 
+	 * @return Response containing Store object for personal store or error
+	 */
 	@GET
 	@Path("/mine")
 	public Response getMyStore() {
@@ -103,7 +108,7 @@ public class StoreResource {
 	 * 
 	 * @param storeKey
 	 *            store id or name
-	 * @param newTitle
+	 * @param title
 	 *            new title for the store
 	 * @return Response containing updated store or error
 	 */
@@ -182,6 +187,15 @@ public class StoreResource {
 		}
 	}
 
+	/**
+	 * Updates access for an individual to a store
+	 * 
+	 * @param storeKey
+	 *            store id or name
+	 * @param body
+	 *            User to update with access level
+	 * @return Response containing boolean success or error
+	 */
 	@PUT
 	@Path("/{store}/access")
 	@Consumes(MediaType.APPLICATION_JSON)

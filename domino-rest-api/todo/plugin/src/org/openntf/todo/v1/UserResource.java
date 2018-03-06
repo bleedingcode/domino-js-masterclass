@@ -18,8 +18,6 @@ public class UserResource {
 	/**
 	 * Get a user by username
 	 * 
-	 * @param username
-	 *            String username
 	 * @return User object
 	 * @throws JsonException
 	 */
@@ -37,6 +35,7 @@ public class UserResource {
 	 *            String username
 	 * @return User object
 	 * @throws JsonException
+	 *             exception parsing User to json
 	 */
 	@GET
 	@Path("/{username}")

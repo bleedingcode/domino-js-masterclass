@@ -75,8 +75,6 @@ public class ToDoResource {
 	/**
 	 * @param metaversalId
 	 *            String metaversalId of the ToDo
-	 * @param body
-	 *            JSON object containing ToDo
 	 * @return Response returned ToDo
 	 */
 	@GET
@@ -153,7 +151,7 @@ public class ToDoResource {
 	}
 
 	/**
-	 * @param storeKey
+	 * @param metaversalId
 	 *            String metaversalId of the ToDo
 	 * @return Response returned ToDo
 	 */

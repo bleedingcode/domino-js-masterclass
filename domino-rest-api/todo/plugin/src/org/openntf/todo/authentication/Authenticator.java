@@ -11,6 +11,9 @@ public class Authenticator {
 
 	}
 
+	/**
+	 * @return Authenticator instance
+	 */
 	public static Authenticator getInstance() {
 		if (null == INSTANCE) {
 			INSTANCE = new Authenticator();
@@ -46,6 +49,7 @@ public class Authenticator {
 	 * to do that to use a specific authentication factory for development or testing, for example
 	 * 
 	 * @param factory
+	 *            specific instance of IAuthenticationFactory to install
 	 */
 	public void setAuthenticationFactory(IAuthenticationFactory factory) {
 		this.authenticationFactoriesSearched = true;

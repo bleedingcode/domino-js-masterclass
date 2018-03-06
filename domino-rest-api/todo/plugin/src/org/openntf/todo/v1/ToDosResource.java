@@ -146,10 +146,10 @@ public class ToDosResource {
 	 * 
 	 * @param storeKey
 	 *            String store id or name
-	 * @param priority
-	 *            String priority to look for (or High)
-	 * @param status
-	 *            String status to look for (or New)
+	 * @param startDate
+	 *            String startDate to look for
+	 * @param endDate
+	 *            String endDate to look for
 	 * @return Response containing a collection of ToDos
 	 */
 	@GET

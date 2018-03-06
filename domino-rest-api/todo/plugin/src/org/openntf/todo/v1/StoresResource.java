@@ -33,23 +33,10 @@ import org.openntf.todo.json.RequestBuilder;
 import org.openntf.todo.model.Store;
 
 import com.ibm.commons.util.io.json.JsonJavaObject;
-import com.ibm.domino.osgi.core.context.ContextInfo;
 
 /**
  * @author Paul Withers
  * @since 1.0.0
- *
- *        Sample REST endpoint Resource class URL will be
- *        <em>protocol://server.host.name/optionalDbPath/odaDemoServlet/rest/helloworld</em>
- *
- *        <ul>
- *        <li>Protocol will be "http" or "https" depending on server configuration</li>
- *        <li>OptionalDbPath is optional and, if included, gives a database context in which the REST service runs,
- *        accessible via {@link ContextInfo#getUserDatabase()}</li>
- *        <li>"todoApp" is pulled from the plugin.xml's "contextRoot" setting for the
- *        "com.ibm.pvc.webcontainer.application" endpoint</li>
- *        <li>"rest" is the servlet-mapping in the web.xml</li>
- *        <li>* is @Path added to everything in this class</li>
  *
  */
 @Path("/v1/stores")

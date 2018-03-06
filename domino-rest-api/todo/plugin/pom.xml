@@ -79,6 +79,22 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<configuration>
+					<stylesheetfile>${basedir}/stylesheet.css</stylesheetfile>
+					<show>public</show>
+				</configuration>
+				<executions>
+					<execution>
+						<id>generate-javadoc</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 </project>

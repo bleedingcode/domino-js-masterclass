@@ -59,6 +59,9 @@ public class ToDoStoreFactory {
 	public static String INVALID_METAVERSAL_ID_ERROR = "The value passed is not a valid metaversal id";
 	private static ToDoStoreFactory INSTANCE;
 
+	/**
+	 * @return ToDoStoreFactory instance
+	 */
 	public static ToDoStoreFactory getInstance() {
 		if (null == INSTANCE) {
 			INSTANCE = new ToDoStoreFactory();
@@ -78,6 +81,11 @@ public class ToDoStoreFactory {
 		return stores;
 	}
 
+	/**
+	 * Get all stores the current User has access to
+	 * 
+	 * @return List of Stores
+	 */
 	public List<Store> getStoresForCurrentUser() {
 		String username = Factory.getSession(SessionType.CURRENT).getEffectiveUserName();
 
@@ -99,6 +107,7 @@ public class ToDoStoreFactory {
 	 * 
 	 * @param db
 	 *            NSF to add
+	 * @return Store corresponding to the relevant NSF
 	 */
 	public Store addStore(Database db) {
 		Store store = initialiseStoreFromDatabase(db);
@@ -112,6 +121,8 @@ public class ToDoStoreFactory {
 	 * Converts NSF to a Store object, serializing to ToDo catalog
 	 * 
 	 * @param db
+	 *            NSF to create a Store object from
+	 * @return Store corresponding to the relevant NSF
 	 */
 	public Store initialiseStoreFromDatabase(Database db) {
 		Store store = new Store();
@@ -131,6 +142,10 @@ public class ToDoStoreFactory {
 		return store;
 	}
 
+	/**
+	 * @param store
+	 *            Store to write to the catalog database
+	 */
 	public void serializeStoreToCatalog(Store store) {
 		Session sess = Factory.getSession(SessionType.NATIVE);
 		Database todoCatalog = sess.getDatabase(Store.TODO_PATH + "catalog.nsf");
