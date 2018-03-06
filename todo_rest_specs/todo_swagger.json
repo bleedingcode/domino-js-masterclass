@@ -168,6 +168,35 @@
         ]
       }
     },
+    "/v1/store/mine": {
+      "get": {
+        "tags": [
+          "store"
+        ],
+        "description": "Get personal store if it exists",
+        "operationId": "getMyStore",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/definitions/Store"
+          },
+          "401": {
+            "description": "Unauthenticated"
+          }
+        },
+        "security": [
+          {
+            "domino_auth": []
+          },
+          {
+            "application_auth": [],
+            "user_auth": []
+          }
+        ]
+      }
+    },
     "/v1/store/{store}/updateTitle": {
       "patch": {
         "tags": [

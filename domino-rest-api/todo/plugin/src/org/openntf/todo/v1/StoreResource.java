@@ -32,6 +32,24 @@ import com.ibm.domino.httpmethod.PATCH;
 @Path("/v1/store")
 public class StoreResource {
 
+	@GET
+	@Path("/mine")
+	public Response getMyStore() {
+		try {
+			String myStorePath = ToDoUtils.getStoreFilePath(Utils.getPersonalStoreName(), StoreType.PERSONAL);
+			Store store = ToDoStoreFactory.getInstance().getStore(myStorePath);
+			RequestBuilder builder = new RequestBuilder(Store.class);
+			return Response.ok(builder.buildJson(store), MediaType.APPLICATION_JSON).build();
+		} catch (StoreNotFoundException se) {
+			se.printStackTrace();
+			throw new WebApplicationException(Response.status(Status.BAD_REQUEST)
+					.entity(ToDoStoreFactory.STORE_NOT_FOUND_OR_ACCESS_ERROR).build());
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+		}
+	}
+
 	/**
 	 * Create a Store with the passed details
 	 * 
