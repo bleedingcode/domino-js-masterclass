@@ -18,12 +18,13 @@ const tempData = {
 			_id:"",
 			custom:customTemplate,
 			data:{
+				metaversalId:"",
 	      		author:"",
 				taskName:"",
 				description:"",
 				dueDate:"",
-				responsiblePerson:"",
 				priority:"",
+				assignedTo:"",
 				status:"New"
 	    	}
 		},
@@ -35,6 +36,7 @@ const tempData = {
 			_id:"",
 			custom:customTemplate,
 			data:{
+				replicaId:"",
 	      		title:"",
 				name:"",
 				type:""

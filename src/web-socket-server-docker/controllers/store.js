@@ -97,6 +97,7 @@ const createRecord = function(data, callback){
         }else{
             resultData = {
                 _id:response.data.data.replicaId,
+                custom:customObject,
                 data:response.data.data
             }
     
@@ -154,6 +155,7 @@ const updateRecord = function(data, callback){
         }else{
             resultData = {
                 _id:response.data.data.replicaId,
+                custom:customObject,
                 data:response.data.data
             }
     

@@ -51,7 +51,7 @@ export const validateSubmit = (dispatch, state) => {
 
   entry = tempData.toDoStore.activeEntry.data;
 
-  //First Check Key is not blank
+  //Validate Fields
   if(entry.title === ""){
     result = false;
     htmlContent += "<li>Please provide a Title</li>";

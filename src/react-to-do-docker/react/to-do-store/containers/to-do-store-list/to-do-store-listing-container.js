@@ -9,10 +9,9 @@ const getListing = (listing, listFilter) => {
     return listing;
   }else{
     return listing.filter(t =>
-      ((t.data.taskName.toLowerCase().indexOf(listFilter) > -1) ||
-      (t.data.description.toLowerCase().indexOf(listFilter) > -1) ||
-      (t.data.dueDate.toLowerCase().indexOf(listFilter) > -1) ||
-      (t.data.priority.toLowerCase().indexOf(listFilter) > -1))
+      ((t.data.title.toLowerCase().indexOf(listFilter) > -1) ||
+      (t.data.name.toLowerCase().indexOf(listFilter) > -1) ||
+      (t.data.type.toLowerCase().indexOf(listFilter) > -1))
     )
   }
 }

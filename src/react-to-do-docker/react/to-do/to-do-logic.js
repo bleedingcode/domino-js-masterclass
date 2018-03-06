@@ -1,47 +1,35 @@
 import IOClient from 'socket.io-client';
 import _ from 'lodash';
+import { processWSResponse } from './to-do-actions';
 
 import { cancelProfile, submitProfile } from './to-do-actions';
 import { postPendingData } from '../core/core-logic';
 import tempData from '../temp-data-store/temp-data';
 import Globals from '../globals';
 
-/*
-  GLOBAL VARIABLES
-*/
-let ws = null;
+export const connectWebSocket = (callback) => {
+  Globals.ws = IOClient.connect(Globals.wsUrl, {reconnect: true});
 
-//Establish Web Socket Connection
-export const connectWebSocket = () => {
-  ws = IOClient.connect(Globals.wsUrl, {reconnect: true});
-
-  ws.on('to-do-responses', function(msg){
-    console.log("To Do Responses");
-    console.log(msg);
-  });
-
-  ws.on('connect', function (socket) {
+  Globals.ws.on('connect', function (socket) {
+    Globals.wsConnected = true;
     console.log("To Do Web Socket Connected!");
-  });
 
-  ws.on('init-user-session', function (id) {
-    console.log("To Do Init User Session");
-    Globals.user.socketId = id;
-  });
-
-  ws.on('to-do-requests', function (data) {
-    console.log("To Do Requests");
-    console.log(data);
+    Globals.ws.on('init-user-session', function (id) {
+      Globals.user.socketId = id;
+      callback();  
+    });
+  
+    Globals.ws.on('to-do-response', processWSResponse);  
   });
 
   return null;
 }
 
-//Disconnect Web Socket Connection when moving away from ToDo App
 export const disconnectWebSocket = () => {
   console.log("To Do Web Socket Disconnected");
-  ws.disconnect();
-  ws = null;
+  Globals.wsConnected = false;
+  Globals.ws.disconnect();
+  Globals.ws = null;
 
   return true;
 }
@@ -63,10 +51,25 @@ export const validateSubmit = (dispatch, state) => {
 
   entry = tempData.toDo.activeEntry.data;
 
-  //First Check Key is not blank
+  //Validate Fields
   if(entry.taskName === ""){
     result = false;
     htmlContent += "<li>Please provide a Task Name</li>";
+  }
+
+  if(entry.description === ""){
+    result = false;
+    htmlContent += "<li>Please provide a Description</li>";
+  }
+
+  if(entry.dueDate === ""){
+    result = false;
+    htmlContent += "<li>Please provide a Due Date</li>";
+  }
+
+  if(entry.priority === ""){
+    result = false;
+    htmlContent += "<li>Please provide a Priority</li>";
   }
 
   /*

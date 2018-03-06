@@ -78,7 +78,7 @@ export const submitProfile = (state) => {
     activeEntry.data.name = _.trim(activeEntry.data.name);
 
     //Change status of record to Pending
-    tempData.toDoStore.activeEntry.custom.status = 'warning';
+    activeEntry.custom.status = 'warning';
 
     if(activeEntry.custom.isNewDoc){
       //Add new Entry to State
@@ -129,7 +129,7 @@ export const submitProfile = (state) => {
         password: Globals.user.password,
         record:entry
       };
-      console.log(params);
+
       Globals.ws.emit('to-do-store-requests', params);
     }
 
@@ -219,7 +219,7 @@ export const processWSResponse = (data) => {
           data.data[x].custom.status = ""
         }
 
-        Globals.dispatch({type: actions.FETCH_ALL_DATA, payload:data.data});      
+        Globals.dispatch({type: actions.FETCH_ALL_DATA, payload:data.data});
         break;
       case "2"://Submit Record Reponse
         if(data.success){
@@ -227,9 +227,18 @@ export const processWSResponse = (data) => {
           data.data.custom.isSavedDoc = true;
           data.data.custom.status = "";
 
-          dispatch(updateData(data.data));
+          Globals.dispatch(updateData(data.data));
         }      
         break;
+      case "3"://Update Record Reponse
+        if(data.success){
+          data.data.custom.action = "";
+          data.data.custom.isSavedDoc = true;
+          data.data.custom.status = "";
+
+          Globals.dispatch(updateData(data.data));
+        }      
+        break;        
     }
   }
 }

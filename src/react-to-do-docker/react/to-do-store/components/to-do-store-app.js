@@ -30,12 +30,12 @@ class ToDoStoreApp extends React.Component {
 
 	render(){
 		return(
-      <div className="container-fluid" style={{marginTop:20}}>
-		<div className="row">
-  			{ this.props.facet === "view" ? <ToDoStoreListingContainer /> : null }
-        	{ this.props.facet === "form" ? <ToDoStoreFormContainer /> : null }
-  		</div>
-      </div>
+		<div className="container-fluid" style={{marginTop:20}}>
+			<div className="row">
+				{ this.props.facet === "view" ? <ToDoStoreListingContainer /> : null }
+				{ this.props.facet === "form" ? <ToDoStoreFormContainer /> : null }
+			</div>
+		</div>
 		)
 	}
 }

@@ -9,6 +9,12 @@
         "routeLogin":"login",
         "routeFetchStores":"get_my_stores",
         "routeCreateStore":"create_store",
-        "routeUpdateStore":"update_store"
+        "routeUpdateStore":"update_store",
+        "routeFetchToDosNew":"get_todos_new",
+        "routeFetchToDosAssigned":"get_todos_assigned",
+        "routeFetchToDosComplete":"get_todos_complete",
+        "routeFetchToDosOverdue":"get_todos_overdue",
+        "routeCreateToDo":"create_todo",
+        "routeUpdateToDo":"update_todo"        
     }
 }

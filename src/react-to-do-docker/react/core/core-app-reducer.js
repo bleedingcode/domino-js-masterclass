@@ -33,10 +33,22 @@ const main = (state = mainAppState, action) => {
           app = "to-do-store";
           title = "Stores";
           break;
-        case "to-do-all":
-          app = "to-do"; 
-          title = "To Dos";
+        case "to-do-new":
+          app = action.dataId; 
+          title = "To Dos - New";
           break;
+        case "to-do-assigned":
+          app = action.dataId; 
+          title = "To Dos - Assigned";
+          break;
+        case "to-do-complete":
+          app = action.dataId; 
+          title = "To Dos - Complete";
+          break;
+        case "to-do-overdue":
+          app = action.dataId; 
+          title = "To Dos - Overdue";
+          break;                             
         default:
           prevApp = state.app;
           break;

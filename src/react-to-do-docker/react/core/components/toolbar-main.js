@@ -93,25 +93,25 @@ class ToolbarMain extends React.Component {
       							primaryTogglesNestedList={true}
       							nestedItems={[
                         <ToolbarMenuItemContainer
-                        key="to-do-all"
-                        title='All'
+                        key="to-do-new"
+                        title='New'
                         leftIcon={<MapsLayers />}
-                        dataId='to-do-all'
-                        dataClass={this.props.app === 'to-do-all' ? 'active' : ''}
+                        dataId='to-do-new'
+                        dataClass={this.props.app === 'to-do-new' ? 'active' : ''}
+                      />,
+                      <ToolbarMenuItemContainer
+                        key="to-do-assigned"
+                        title='Assigned'
+                        leftIcon={<EditorFormatListNumbered />}
+                        dataId='to-do-assigned'
+                        dataClass={this.props.app === 'to-do-assigned' ? 'active' : ''}
                       />,
                       <ToolbarMenuItemContainer
                         key="to-do-complete"
                         title='Complete'
-                        leftIcon={<EditorFormatListNumbered />}
+                        leftIcon={<ContentFilterList />}
                         dataId='to-do-complete'
                         dataClass={this.props.app === 'to-do-complete' ? 'active' : ''}
-                      />,
-                      <ToolbarMenuItemContainer
-                        key="to-do-urgent"
-                        title='Urgent'
-                        leftIcon={<ContentFilterList />}
-                        dataId='to-do-urgent'
-                        dataClass={this.props.app === 'to-do-urgent' ? 'active' : ''}
                       />,
                       <ToolbarMenuItemContainer
                         key="to-do-overdue"

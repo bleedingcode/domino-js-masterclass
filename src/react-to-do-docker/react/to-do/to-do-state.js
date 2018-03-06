@@ -2,7 +2,8 @@ const toDoState = {
   header:{
     facet:"view",
     viewTitle:"To Dos",
-    listFilter:""
+    listFilter:"",
+    storeList:[]
   },
   data:[]
 }

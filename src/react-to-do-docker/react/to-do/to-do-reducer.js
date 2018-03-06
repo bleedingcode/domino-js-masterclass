@@ -80,7 +80,8 @@ const toDo = (state = toDoState, action) => {
         header:{
           ...state.header
         },
-        data:action.payload
+        data:action.payload.data,
+        storeList:action.payload.storeList
       })
     case actions.UPDATE_DATA:
       var tempIndex = 0;
