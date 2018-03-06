@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
    <feature url="features/org.openntf.todo.feature_1.0.0.qualifier.jar" id="org.openntf.todo.feature" version="1.0.0.qualifier">
-      <category name="OpenNTF Domino API"/>
+      <category name="ODA ToDo Servlet API Gateway and NSF Manager"/>
    </feature>
-   <category-def name="OpenNTF Domino API" label="OpenNTF Domino API"/>
+   <category-def name="ODA ToDo Servlet API Gateway and NSF Manager" label="ODA ToDo Servlet API Gateway and NSF Manager"/>
 </site>

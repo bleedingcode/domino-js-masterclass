@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: agilite-admin-service
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 30013
+    targetPort: a-admin-port
+    protocol: TCP
+  selector:
+    app: agilite-admin-portal
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: agilite-admin-portal-deployment
+spec:
+  selector:
+    matchLabels:
+      app: agilite-admin-portal
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: agilite-admin-portal
+        version: v522
+    spec:
+      containers:
+      - name: agilite-admin-portal-522-1
+        image: acragilitetest.azurecr.io/agilite-admin-portal-docker:v5.2.2-1
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: a-admin-port
+          containerPort: 6013

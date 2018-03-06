@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: agilite-api-service
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 30010
+    targetPort: a-api-port
+    protocol: TCP
+  selector:
+    app: agilite-api-server
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: agilite-api-server-deployment
+spec:
+  selector:
+    matchLabels:
+      app: agilite-api-server
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: agilite-api-server
+        version: v522
+    spec:
+      containers:
+      - name: agilite-api-server-522
+        image: acragilitetest.azurecr.io/agilite-api-server-docker:v5.2.2
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: a-api-port
+          containerPort: 6010

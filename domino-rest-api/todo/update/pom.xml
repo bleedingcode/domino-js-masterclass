@@ -3,8 +3,8 @@
   <modelVersion>4.0.0</modelVersion>
   <artifactId>org.openntf.todo.update</artifactId>
   <packaging>eclipse-update-site</packaging>
-  <name>Update Site for ODA Demo Servlet</name>
-  <description>Update Site project for Demo REST Servlet using OpenNTF Domino API</description>
+  <name>Update Site for ODA ToDo REST Servlet API Gateway</name>
+  <description>Update Site project for ToDo Servlet API Gateway and NSF Manager</description>
   <parent>
   	<groupId>org.openntf.todo</groupId>
   	<artifactId>todo</artifactId>

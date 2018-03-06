@@ -49,7 +49,7 @@ public class Activator extends Plugin {
 	 */
 	@Override
 	public void start(final BundleContext context) throws Exception {
-		System.out.println("Starting Wink Application...");
+		ToDoUtils.debugPrint("Starting Wink Application...");
 		final ClassLoader oldcl = Thread.currentThread().getContextClassLoader();
 		final ClassLoader newcl = RuntimeDelegate.class.getClassLoader();
 

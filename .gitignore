@@ -7,5 +7,4 @@ bundle.js
 bundle.js.map
 src/web-socket-server-docker/node_modules
 anrd-config.json
-.env
-src/web-socket-server-docker/config.json
+/buildNumber.properties

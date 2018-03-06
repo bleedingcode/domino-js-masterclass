@@ -23,6 +23,7 @@ import org.openntf.todo.json.RequestBuilder;
 import org.openntf.todo.json.ResultParser;
 import org.openntf.todo.model.DatabaseAccess;
 import org.openntf.todo.model.Store;
+import org.openntf.todo.model.Store.StoreType;
 import org.openntf.todo.model.ToDo;
 import org.openntf.todo.model.User;
 
@@ -48,12 +49,14 @@ public class ToDoResource {
 			Store store = ToDoStoreFactory.getInstance().getStore(storeKey);
 			ToDo todo = new ResultParser<ToDo>(ToDo.class).parse(body);
 			todo.setAuthor(Utils.getCurrentUsername());
-			todo.setAssignedTo(todo.getAuthor());
+			if (StringUtils.isNotEmpty(todo.getAssignedTo()) || StoreType.PERSONAL.equals(store.getType())) {
+				todo.setAssignedTo(todo.getAuthor());
+			}
 			todo.setStatus(ToDo.Status.NEW);
 			todo.validateForUpdate();
 			todo = ToDoStoreFactory.getInstance().serializeToStore(store, todo);
 
-			RequestBuilder builder = new RequestBuilder(ToDo.class);
+			RequestBuilder<ToDo> builder = new RequestBuilder<ToDo>(ToDo.class);
 			return Response.ok(builder.buildJson(todo), MediaType.APPLICATION_JSON).build();
 		} catch (DataNotAcceptableException de) {
 			de.printStackTrace();
@@ -83,7 +86,7 @@ public class ToDoResource {
 		try {
 			ToDo todo = ToDoStoreFactory.getInstance().getToDoFromMetaversalId(metaversalId);
 
-			RequestBuilder builder = new RequestBuilder(ToDo.class);
+			RequestBuilder<ToDo> builder = new RequestBuilder<ToDo>(ToDo.class);
 			return Response.ok(builder.buildJson(todo), MediaType.APPLICATION_JSON).build();
 		} catch (InvalidMetaversalIdException ie) {
 			ie.printStackTrace();
@@ -116,12 +119,19 @@ public class ToDoResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response updateToDo(@PathParam(value = "key") final String metaversalId, final String body) {
 		try {
+			Store store = ToDoStoreFactory.getInstance().getStore(Utils.getReplicaIdFromMetaversalId(metaversalId));
 			ToDo todo = new ResultParser<ToDo>(ToDo.class).parse(body);
+			if (StringUtils.isNotEmpty(todo.getAssignedTo())) {
+				if (StoreType.PERSONAL.equals(store.getType())) {
+					throw new WebApplicationException(
+							Response.status(Status.BAD_REQUEST).entity("Personal ToDos cannot be reassigned").build());
+				}
+			}
 			todo.setMetaversalId(metaversalId);
 			todo = todo.compareAndUpdateFromPrevious();
 			todo = ToDoStoreFactory.getInstance().updateToDo(todo);
 
-			RequestBuilder builder = new RequestBuilder(ToDo.class);
+			RequestBuilder<ToDo> builder = new RequestBuilder<ToDo>(ToDo.class);
 			return Response.ok(builder.buildJson(todo), MediaType.APPLICATION_JSON).build();
 		} catch (InvalidMetaversalIdException ie) {
 			ie.printStackTrace();
@@ -187,6 +197,11 @@ public class ToDoResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response reassignToDo(@PathParam(value = "toDoId") final String metaversalId, final String body) {
 		try {
+			Store store = ToDoStoreFactory.getInstance().getStore(Utils.getReplicaIdFromMetaversalId(metaversalId));
+			if (StoreType.PERSONAL.equals(store.getType())) {
+				throw new WebApplicationException(
+						Response.status(Status.FORBIDDEN).entity("Personal ToDos cannot be reassigned").build());
+			}
 			User newUser = new ResultParser<User>(User.class).parse(body);
 			if (StringUtils.isEmpty(newUser.getUsername())) {
 				throw new WebApplicationException(

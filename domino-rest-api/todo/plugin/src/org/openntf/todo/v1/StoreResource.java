@@ -26,6 +26,7 @@ import org.openntf.todo.model.Store.StoreType;
 import org.openntf.todo.model.User;
 
 import com.ibm.commons.util.io.json.JsonJavaObject;
+import com.ibm.domino.httpmethod.PATCH;
 
 @SuppressWarnings({ "unchecked", "rawtypes" })
 @Path("/v1/store")
@@ -58,7 +59,7 @@ public class StoreResource {
 				passedStore.setName(ToDoUtils.getStoreFilePath(Utils.getPersonalStoreName(), StoreType.PERSONAL));
 			}
 
-			if (ToDoStoreFactory.getInstance().createStoreDoesStoreExist(passedStore.getName())) {
+			if (ToDoStoreFactory.getInstance().checkStoreExists(passedStore.getName())) {
 				return Response.status(Status.CONFLICT).entity(
 						"A store already exists with the name. (For personal stores, the username overrides the name passed)")
 						.build();
@@ -88,9 +89,8 @@ public class StoreResource {
 	 *            new title for the store
 	 * @return Response containing updated store or error
 	 */
-	@POST
+	@PATCH
 	@Path("/{store}/updateTitle")
-	@Consumes(MediaType.APPLICATION_JSON)
 	public Response changeTitle(final @PathParam(value = "store") String storeKey,
 			final @HeaderParam(value = "title") String title) {
 		try {

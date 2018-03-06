@@ -40,6 +40,8 @@ import org.openntf.todo.exceptions.DatabaseModuleException;
 import org.openntf.todo.exceptions.DocumentNotFoundException;
 import org.openntf.todo.exceptions.InvalidMetaversalIdException;
 import org.openntf.todo.exceptions.StoreNotFoundException;
+import org.openntf.todo.json.RequestBuilder;
+import org.openntf.todo.json.ResultParser;
 import org.openntf.todo.model.DatabaseAccess;
 import org.openntf.todo.model.DatabaseAccess.AccessLevel;
 import org.openntf.todo.model.Store;
@@ -50,7 +52,7 @@ import org.openntf.todo.model.User;
 import org.openntf.todo.v1.ToDosResource.ViewType;
 
 public class ToDoStoreFactory {
-	private Map<String, Store> stores = new ConcurrentHashMap<String, Store>();
+	private Map<String, Store> stores = null;
 	public static String STORE_NOT_FOUND_OR_ACCESS_ERROR = "The store could not be found with the name or replicaId passed, or you do not have access to that store";
 	public static String DOCUMENT_NOT_FOUND_ERROR = "The ToDo with that ID could not be found";
 	public static String USER_NOT_AUTHORIZED_ERROR = "You are not authorized to perform this operation";
@@ -71,7 +73,7 @@ public class ToDoStoreFactory {
 	 */
 	public Map<String, Store> getStores() {
 		if (null == stores) {
-			stores = new ConcurrentHashMap<String, Store>();
+			loadStores();
 		}
 		return stores;
 	}
@@ -99,7 +101,7 @@ public class ToDoStoreFactory {
 	 *            NSF to add
 	 */
 	public Store addStore(Database db) {
-		Store store = createStoreFromDatabase(db);
+		Store store = initialiseStoreFromDatabase(db);
 		synchronized (stores) {
 			stores.put(store.getReplicaId(), store);
 		}
@@ -111,7 +113,7 @@ public class ToDoStoreFactory {
 	 * 
 	 * @param db
 	 */
-	public Store createStoreFromDatabase(Database db) {
+	public Store initialiseStoreFromDatabase(Database db) {
 		Store store = new Store();
 		store.setName(Utils.getDbName(db));
 		store.setTitle(db.getTitle());
@@ -137,25 +139,14 @@ public class ToDoStoreFactory {
 			doc = todoCatalog.createDocument();
 			doc.setUniversalID(DominoUtils.toUnid(store.getReplicaId()));
 		}
-		doc.replaceItemValue("replicaId", store.getReplicaId());
-		doc.replaceItemValue("name", store.getName());
-		doc.replaceItemValue("title", store.getTitle());
-		doc.replaceItemValue("type", store.getType().getValue());
+		RequestBuilder<Store> builder = new RequestBuilder<Store>(Store.class);
+		doc.replaceItemValue("json", builder.buildJson(store));
 		doc.save();
 	}
 
-	public Store createStoreFromDoc(Document doc) {
-		Store store = new Store();
-		store.setReplicaId(doc.getItemValueString("replicaId"));
-		store.setName(doc.getItemValueString("name"));
-		store.setTitle(doc.getItemValueString("title"));
-		String typeFromDoc = doc.getItemValueString("type");
-		for (StoreType type : StoreType.values()) {
-			if (type.getValue().equals(typeFromDoc)) {
-				store.setType(type);
-				break;
-			}
-		}
+	public Store deserializeStoreFromDoc(Document doc) {
+		String json = doc.getItemValueString("json");
+		Store store = new ResultParser<Store>(Store.class).parse(json);
 		return store;
 	}
 
@@ -202,7 +193,7 @@ public class ToDoStoreFactory {
 		return store;
 	}
 
-	public boolean createStoreDoesStoreExist(String key) {
+	public boolean checkStoreExists(String key) {
 		Store store = getStoreUnchecked(Factory.getSession(SessionType.NATIVE), key);
 		return store != null;
 	}
@@ -232,7 +223,7 @@ public class ToDoStoreFactory {
 			View view = getView(db, viewType);
 			DocumentCollection dc = view.getAllDocumentsByKey(key);
 			for (Document doc : dc) {
-				ToDo todo = getToDoFromDoc(doc);
+				ToDo todo = deserializeToDoFromDoc(doc);
 				todos.add(todo);
 			}
 		} catch (Exception e) {
@@ -289,11 +280,11 @@ public class ToDoStoreFactory {
 			throws StoreNotFoundException, DocumentNotFoundException, InvalidMetaversalIdException {
 		Document doc = getToDoDoc(metaversalId);
 
-		ToDo todo = getToDoFromDoc(doc);
+		ToDo todo = deserializeToDoFromDoc(doc);
 		return todo;
 	}
 
-	private ToDo getToDoFromDoc(Document doc) {
+	public ToDo deserializeToDoFromDoc(Document doc) {
 		ToDo todo = new ToDo();
 		todo.setMetaversalId(doc.getMetaversalID());
 		todo.setAuthor(doc.getAuthors().get(0));
@@ -348,7 +339,11 @@ public class ToDoStoreFactory {
 	 * starts
 	 */
 	public void loadStores() {
+		if (stores != null) {
+			return;
+		}
 		Future<Map<String, Store>> result = Xots.getService().submit(new StoreLoader());
+		stores = new ConcurrentHashMap<String, Store>();
 
 		// There is only
 		synchronized (stores) {
@@ -360,6 +355,17 @@ public class ToDoStoreFactory {
 			} catch (ExecutionException e) {
 				e.printStackTrace();
 			}
+		}
+	}
+
+	public void markOverdue(String nextUrl) throws DatabaseModuleException {
+		try {
+			for (String replicaId : getStores().keySet()) {
+				Xots.getService().submit(new StoreMarkToDosOverdueRunner(replicaId, nextUrl));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new DatabaseModuleException(ToDoUtils.getErrorMessage(e));
 		}
 	}
 

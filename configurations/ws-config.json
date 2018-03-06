@@ -3,6 +3,12 @@
     "agilite":{
         "portalUrl":"http://192.168.99.100:30013",
         "apiUrl": "http://agilite-api-service:30010",
-        "api-key": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1YThlYTcyOWE1Y2MwZjAwMTA3N2Y1OGEiLCJpYXQiOjE1MTkzMDkyNjcyNjZ9.A0_NvBdT_AD1EbylXHRDybECsudwiB2PWjPAO3iNRrs"
+        "urlSuffixConnectors": "/connectors/execute",
+        "apiKey": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1YThlYTcyOWE1Y2MwZjAwMTA3N2Y1OGEiLCJpYXQiOjE1MTkzMDkyNjcyNjZ9.A0_NvBdT_AD1EbylXHRDybECsudwiB2PWjPAO3iNRrs",
+        "dominoProfileKey":"paul_domino_dev",
+        "routeLogin":"login",
+        "routeFetchStores":"get_my_stores",
+        "routeCreateStore":"create_store",
+        "routeUpdateStore":"update_store"
     }
 }

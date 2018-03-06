@@ -56,7 +56,7 @@ public class Utils {
 	}
 
 	public static String getDbName(Database db) {
-		return db.getFilePath().toLowerCase();
+		return StringUtils.replace(db.getFilePath().toLowerCase(), "\\", "/");
 	}
 
 	public static boolean validateMetaversalId(String metaversalId) throws InvalidMetaversalIdException {
