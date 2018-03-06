@@ -28,7 +28,6 @@ const initEvents = function(io){
                     break;
                 case "2"://Create Record
                     Store.createRecord(data, function(result){
-                        console.log(result);
                         io.sockets.sockets[data.socketId].emit("to-do-store-response", result);
                     });
                     break;
@@ -40,6 +39,31 @@ const initEvents = function(io){
                     break;                                       
             }
         });
+
+        //Process requests related to To Dos
+        socket.on('to-do-requests', function (data) {
+            switch(data.reqType){
+                case "1"://Fetch All Data New
+                case "2"://Fetch All Data Assigned
+                case "3"://Fetch All Data Complete
+                case "4"://Fetch All Data Overdue
+                    ToDo.fetchAllData(data, function(result){
+                        io.sockets.sockets[data.socketId].emit("to-do-response", result);
+                    });
+                    break;
+                case "5"://Create Record
+                    ToDo.createRecord(data, function(result){
+                        io.sockets.sockets[data.socketId].emit("to-do-response", result);
+                    });
+                    break;
+                case "6"://Update Record
+                    ToDo.updateRecord(data, function(result){
+                        console.log(result);
+                        io.sockets.sockets[data.socketId].emit("to-do-response", result);
+                    });
+                    break;                                       
+            }
+        });        
     }); 
     return null;
 };

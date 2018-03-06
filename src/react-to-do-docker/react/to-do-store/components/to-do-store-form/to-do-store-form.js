@@ -18,7 +18,8 @@ class ToDoStoreForm extends React.Component {
 
 		this.state = {
 			entry:tempData.toDoStore.activeEntry,
-			type:tempData.toDoStore.activeEntry.data.type
+			type:tempData.toDoStore.activeEntry.data.type,
+			isNewDoc:tempData.toDoStore.activeEntry.custom.isNewDoc
 		};
 
 		this.setType = this.setType.bind(this);
@@ -74,6 +75,7 @@ class ToDoStoreForm extends React.Component {
 								<TextField
 									hintText="Provide a Name"
 									floatingLabelText="Name"
+									disabled={!this.state.isNewDoc}
 									fullWidth={true}
 									defaultValue={this.state.entry.data.name}
 									onChange={(e, value) => {
@@ -83,6 +85,7 @@ class ToDoStoreForm extends React.Component {
 								<SelectField
 									floatingLabelText="Type"
 									floatingLabelFixed={true}
+									disabled={!this.state.isNewDoc}
 									value={this.state.entry.data.type}
 									autoWidth={true}
 									onChange={(e, index, value) => {

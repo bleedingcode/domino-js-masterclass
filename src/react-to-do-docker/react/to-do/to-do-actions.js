@@ -1,5 +1,5 @@
 import tempData from '../temp-data-store/temp-data';
-import globals from '../globals';
+import Globals from '../globals';
 import { postPendingData } from '../core/core-logic';
 import axios from 'axios';
 
@@ -78,7 +78,7 @@ export const submitProfile = (state) => {
     activeEntry.data.description = _.trim(activeEntry.data.description);
 
     //Change status of record to Pending
-    tempData.toDo.activeEntry.custom.status = 'warning';
+    activeEntry.custom.status = 'warning';
 
     if(activeEntry.custom.isNewDoc){
       //Add new Entry to State
@@ -120,22 +120,17 @@ export const submitProfile = (state) => {
 
     for(var x in dupArray){
       entry = dupArray[x];
-      reqType = entry.custom.action === "create" ? "post" : "put";
+      reqType = entry.custom.action === "create" ? "2" : "3";
 
-      postPendingData("to-do", entry, reqType)
-      .then(function (response) {
-        if(response.data.success){
-          response.data.data.custom.action = "";
-          response.data.data.custom.isSavedDoc = true;
-          response.data.data.custom.status = "";
+      let params = {
+        reqType:reqType,
+        socketId: Globals.user.socketId,
+        username: Globals.user.username,
+        password: Globals.user.password,
+        record:entry
+      };
 
-          dispatch(updateData(response.data.data));
-        }
-      })
-      .catch(function (error) {
-        console.log(error);
-        return null;
-      });
+      Globals.ws.emit('to-do-requests', params);
     }
 
     dupArray = null;
@@ -199,31 +194,72 @@ export const deleteProfile = (id, state) => {
   }
 }
 
-export const fetchAllData = () => {
+export const fetchAllData = (appType) => {
   return dispatch => {
-    loadDataExtended(dispatch);
-  };
-}
+    //Determine Req Type
+    let reqType = "";
 
-export const loadDataExtended = (dispatch) => {
-  let config = {headers: {"api-key": localStorage.getItem("token"), "Content-Type": "application/json"}};
-  let url = `${globals.apiUrl}/todo/data`;
-
-  axios.get(url, config)
-  .then(function (response) {
-    //We need to add custom object to each record
-    for(var x in response.data.data){
-      response.data.data[x].custom = JSON.parse(JSON.stringify(tempData.toDo.dataTemplate.custom));
-      response.data.data[x].custom.isSavedDoc = true;
-      response.data.data[x].custom.isNewDoc = false;
-      response.data.data[x].custom.status = ""
+    switch(appType){
+      case "to-do-new":
+        reqType = "1";
+        break;
+      case "to-do-assigned":
+        reqType = "2";
+        break; 
+      case "to-do-complete":
+        reqType = "3";
+        break;
+      case "to-do-overdue":
+        reqType = "4";
+        break;
     }
 
-    dispatch({type: actions.FETCH_ALL_DATA, payload:response.data.data});
-  })
-  .catch(function (error) {
-    console.log(error);
-  });
+    let params = {
+      reqType:reqType,
+      socketId: Globals.user.socketId,
+      username: Globals.user.username,
+      password: Globals.user.password
+    };
+  
+    Globals.ws.emit('to-do-requests', params);  
+  }
+}
 
-  return null;
+export const processWSResponse = (data) => {
+  if(data.success){
+    switch(data.reqType){
+      case "1"://Fetch All Data - New
+      case "2"://Fetch All Data - Assigned
+      case "3"://Fetch All Data - Complete
+      case "4"://Fetch All Data - Overdue
+        //We need to add custom object to each record
+        for(var x in data.data){
+          data.data[x].custom = JSON.parse(JSON.stringify(tempData.toDo.dataTemplate.custom));
+          data.data[x].custom.isSavedDoc = true;
+          data.data[x].custom.isNewDoc = false;
+          data.data[x].custom.status = ""
+        }
+
+        Globals.dispatch({type: actions.FETCH_ALL_DATA, payload:{data:data.data, storeList:data.storeList}});
+        break;
+      case "5"://Submit Record Reponse
+        if(data.success){
+          data.data.custom.action = "";
+          data.data.custom.isSavedDoc = true;
+          data.data.custom.status = "";
+
+          Globals.dispatch(updateData(data.data));
+        }      
+        break;
+      case "6"://Update Record Reponse
+        if(data.success){
+          data.data.custom.action = "";
+          data.data.custom.isSavedDoc = true;
+          data.data.custom.status = "";
+
+          Globals.dispatch(updateData(data.data));
+        }      
+        break;        
+    }
+  }
 }

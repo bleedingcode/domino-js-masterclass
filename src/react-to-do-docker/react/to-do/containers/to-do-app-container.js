@@ -5,7 +5,8 @@ import { resetState, fetchAllData } from '../to-do-actions';
 
 const mapStateToProps = (state) => {
   return {
-    facet:state.toDo.header.facet
+    facet:state.toDo.header.facet,
+    app:state.main.app
   }
 }
 
