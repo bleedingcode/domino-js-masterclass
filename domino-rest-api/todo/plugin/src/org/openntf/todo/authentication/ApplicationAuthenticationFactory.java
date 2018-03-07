@@ -25,10 +25,23 @@ import org.openntf.domino.xsp.session.XPageNamedSessionFactory;
 
 import com.ibm.commons.util.StringUtil;
 
+/**
+ * @author Paul Withers
+ * 
+ *         Class to allow authentication using API key passed along with REST services. Usernames will take the name
+ *         passed, add the OU defined here, and the O of the server.
+ *
+ */
 public class ApplicationAuthenticationFactory implements IAuthenticationFactory {
 	private final String API_KEY = "i49chtnbea5h1dfolcqoh2qght";
 	public static final String OU = "qemqa5tno4roja5bg71j1puk3h";
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.openntf.todo.authentication.IAuthenticationFactory#isAuthenticated(javax.servlet.http.HttpServletRequest)
+	 */
 	@Override
 	public boolean isAuthenticated(HttpServletRequest request) {
 		// In reality, this would be held in e.g. notes.ini and API would look up to that

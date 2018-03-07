@@ -18,18 +18,10 @@
  */
 package org.openntf.todo.exceptions;
 
-import com.ibm.domino.osgi.core.context.ContextInfo;
-
 /**
  * @author Paul Withers
- * @since 1.0.0
  *
- *        Use this Exception if the URL is not used with the correct database
- *        context. For example, if the REST endpoint should only be used after a
- *        specific database path, throw this error if
- *        {@link ContextInfo#getUserDatabase()} is not that particular database.
- *        This is not designed to pass a message back to the REST service, but
- *        to throw the error within this servlet.
+ *         For error retrieving a particular database
  */
 public class DatabaseModuleException extends Exception {
 	private static final long serialVersionUID = 1L;

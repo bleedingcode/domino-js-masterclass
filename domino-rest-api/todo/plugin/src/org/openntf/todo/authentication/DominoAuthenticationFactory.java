@@ -23,8 +23,21 @@ import org.openntf.domino.xsp.session.DasCurrentSessionFactory;
 
 import com.ibm.domino.osgi.core.context.ContextInfo;
 
+/**
+ * @author Paul Withers
+ * 
+ *         IAuthenticationFactory for using the Basic Authentication credentials passed and ensuring valid credentials
+ *         were passed from the REST service.
+ *
+ */
 public class DominoAuthenticationFactory implements IAuthenticationFactory {
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.openntf.todo.authentication.IAuthenticationFactory#isAuthenticated(javax.servlet.http.HttpServletRequest)
+	 */
 	@Override
 	public boolean isAuthenticated(HttpServletRequest request) {
 		boolean anon = ContextInfo.isAnonymous();

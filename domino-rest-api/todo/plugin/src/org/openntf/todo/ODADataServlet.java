@@ -88,10 +88,9 @@ public class ODADataServlet extends AbstractRestServlet {
 			response.addHeader("Access-Control-Allow-Headers", "Content-Type");
 			response.addHeader("Access-Control-Max-Age", "86400");
 			// Check immediately to make sure either Domino authentication has been performed or X-TODO-API-KEY is
-			// valid.
-			// This method calls Factory.setSessionFactory(relevant-factory, SessionType.CURRENT);
+			// valid. That method calls Factory.setSessionFactory(relevant-factory, SessionType.CURRENT);
 			if (!Authenticator.getInstance().getAuthenticationFactory().isAuthenticated(request)) {
-				response.sendError(401);
+				response.sendError(401); // Not Authenticated, abort immediately
 			}
 			super.doService(request, response);
 			// Close ODA for this thread

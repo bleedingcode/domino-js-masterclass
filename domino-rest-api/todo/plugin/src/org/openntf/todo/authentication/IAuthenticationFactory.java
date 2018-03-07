@@ -17,12 +17,27 @@ package org.openntf.todo.authentication;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.openntf.todo.ODADataServlet;
+
 /**
+ * 
  * @author Paul Withers
- *
+ * 
+ *         This interface allows us to use multiple authentication methods, picking the relevant one via the
+ *         META-INF/services file or programmatically setting it via
+ *         {@link Authenticator#setAuthenticationFactory(IAuthenticationFactory)}. Whichever authentication factory is
+ *         used, we can call the {@link #isAuthenticated(HttpServletRequest)} method to provide
+ *         AuthenticationFactory-specific code for how to work out whether or not the user is authenticated.
+ * 
  */
 public interface IAuthenticationFactory {
 
+	/**
+	 * @param request
+	 *            HttpServletRequest. The method will be called from the {@link ODADataServlet}. This will allow the
+	 *            code to load the SessionFactory with the relevant CURRENT session.
+	 * @return boolean whether an authenticated REST service session can be identified
+	 */
 	public boolean isAuthenticated(HttpServletRequest request);
 
 }

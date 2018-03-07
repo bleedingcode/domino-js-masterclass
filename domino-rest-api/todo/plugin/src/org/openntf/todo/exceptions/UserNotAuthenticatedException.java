@@ -18,13 +18,16 @@
  */
 package org.openntf.todo.exceptions;
 
+import org.openntf.todo.ODADataServlet;
+
 /**
  * @author Paul Withers
  * @since 1.0.0
  *
- *        Use this Exception if the user is not authenticated. This is not
- *        designed to pass a message back to the REST service, but to throw the
- *        error within this servlet.
+ *        Use this Exception if the user is not authenticated. This is not designed to pass a message back to the REST
+ *        service, but to throw the error within this servlet.
+ * 
+ *        Standard in ODA Starter Servlet, not used here because we just throw a 401 from {@link ODADataServlet}
  */
 public class UserNotAuthenticatedException extends Exception {
 	private static final long serialVersionUID = 1L;
