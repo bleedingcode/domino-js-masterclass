@@ -43,6 +43,12 @@ import org.openntf.todo.model.User;
 import com.ibm.commons.util.io.json.JsonJavaObject;
 import com.ibm.domino.httpmethod.PATCH;
 
+/**
+ * @author Paul Withers
+ * 
+ *         Endpoints relating to an individual Store
+ *
+ */
 @SuppressWarnings({ "unchecked", "rawtypes" })
 @Path("/v1/store")
 public class StoreResource {

@@ -32,10 +32,24 @@ import com.google.gson.Gson;
 import com.ibm.commons.util.io.json.JsonException;
 import com.ibm.commons.util.io.json.JsonJavaObject;
 
+/**
+ * @author Paul Withers
+ *
+ *         REST service endpoints for testing and debugging. All endpoints check to ensure the DEBUG_KEY has been passed
+ *         (see {@link #validateKey(HttpServletRequest)}.
+ * 
+ */
 @Path("/v1/debug")
 public class DebugResource {
 	private final String DEBUG_KEY = "sseqdcof4fq472so10us7ck7r0";
 
+	/**
+	 * Allows toggling of profiling to be done. Profiling has not been implemented throughout though.
+	 * 
+	 * @param request
+	 *            current request
+	 * @return Response with new profiling setting
+	 */
 	@Path("/toggleProfiling")
 	@GET
 	public Response toggleProfiling(@Context HttpServletRequest request) {
@@ -47,6 +61,13 @@ public class DebugResource {
 		return Response.ok(jjo.toString(), MediaType.APPLICATION_JSON).build();
 	}
 
+	/**
+	 * Debug endpoint to get the current person's username and store name
+	 * 
+	 * @param request
+	 *            current request
+	 * @return username and personal store name
+	 */
 	@Path("/personalStoreName")
 	@GET
 	public Response getPersonalStoreName(@Context HttpServletRequest request) {
@@ -59,6 +80,17 @@ public class DebugResource {
 		return Response.ok(jjo.toString(), MediaType.APPLICATION_JSON).build();
 	}
 
+	/**
+	 * Prepopulates a store with dummy ToDos...or would if I'd completed it!
+	 * 
+	 * @param store
+	 *            store id or name
+	 * @param body
+	 *            A collection of User objects for whom to create / allocate ToDos
+	 * @return not sure yet
+	 * @throws JsonException
+	 *             exception parsing body
+	 */
 	@Path("/{store}/prepopulate")
 	@GET
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -73,6 +105,13 @@ public class DebugResource {
 		return null;
 	}
 
+	/**
+	 * Verifies that the X-DEBUG-KEY header param matches the DEBUG_KEY variable
+	 * 
+	 * @param request
+	 *            current request
+	 * @return whether or not they match
+	 */
 	private boolean validateKey(HttpServletRequest request) {
 		String verificationKey = request.getHeader("X-DEBUG-KEY");
 		return DEBUG_KEY.equals(verificationKey);

@@ -31,6 +31,7 @@ import org.openntf.todo.domino.ToDoStoreFactory;
 import org.openntf.todo.exceptions.DatabaseModuleException;
 import org.openntf.todo.json.RequestBuilder;
 import org.openntf.todo.model.Store;
+import org.openntf.todo.model.ToDo;
 
 import com.ibm.commons.util.io.json.JsonJavaObject;
 
@@ -39,14 +40,19 @@ import com.ibm.commons.util.io.json.JsonJavaObject;
  * @since 1.0.0
  *
  */
+/**
+ * @author Paul Withers
+ *
+ *         Endpoints for multiple Stores
+ */
 @Path("/v1/stores")
 public class StoresResource {
 
 	/**
-	 * Basic endpoint, using path of class with no additional URL path
+	 * Basic endpoint, using path of class with no additional URL path, getting all stores the current user has access
+	 * to
 	 *
-	 * @return Json response with "Hello World " + current user + current
-	 *         database path; or error
+	 * @return Response with list of stores
 	 */
 	@GET
 	public Response getStores() {
@@ -61,6 +67,14 @@ public class StoresResource {
 		}
 	}
 
+	/**
+	 * Endpoint to run on a schedule to mark any overdue ToDos as {@link ToDo.Status#OVERDUE} and post them back to a
+	 * passed URL.
+	 * 
+	 * @param nextUrl
+	 *            URL to which to post list of ToDos marked overdue
+	 * @return Response {"success":true} or error
+	 */
 	@GET
 	@Path("/todos/markOverdue")
 	public Response markOverdue(@HeaderParam(value = "updateUrl") String nextUrl) {

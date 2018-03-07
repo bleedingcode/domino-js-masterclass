@@ -45,6 +45,12 @@ import org.openntf.todo.model.User;
 import com.ibm.commons.util.io.json.JsonJavaObject;
 import com.ibm.domino.httpmethod.PATCH;
 
+/**
+ * @author Paul Withers
+ * 
+ *         Endpoints for an individual ToDo
+ *
+ */
 @Path("/v1/todo")
 @SuppressWarnings("unchecked")
 public class ToDoResource {
@@ -54,7 +60,7 @@ public class ToDoResource {
 	 *            String store replicaId or name
 	 * @param body
 	 *            JSON object containing ToDo
-	 * @return Response returned ToDo
+	 * @return Response returned ToDo or error
 	 */
 	@POST
 	@Path("/{key}")
@@ -90,7 +96,7 @@ public class ToDoResource {
 	/**
 	 * @param metaversalId
 	 *            String metaversalId of the ToDo
-	 * @return Response returned ToDo
+	 * @return Response returned ToDo or error
 	 */
 	@GET
 	@Path("/{key}")
@@ -125,7 +131,7 @@ public class ToDoResource {
 	 *            String metaversalId of the ToDo
 	 * @param body
 	 *            JSON object containing ToDo
-	 * @return Response returned ToDo
+	 * @return Response returned ToDo or error
 	 */
 	@PATCH
 	@Path("/{key}")
@@ -168,7 +174,7 @@ public class ToDoResource {
 	/**
 	 * @param metaversalId
 	 *            String metaversalId of the ToDo
-	 * @return Response returned ToDo
+	 * @return Response {"success": true} or error
 	 */
 	@DELETE
 	@Path("/{key}")
@@ -203,7 +209,7 @@ public class ToDoResource {
 	 *            String metaversalId of the ToDo
 	 * @param body
 	 *            JSON object containing User to reassign to
-	 * @return Response returned ToDo
+	 * @return Response {"success":true} or error
 	 */
 	@PUT
 	@Path("/{toDoId}/reassign")
@@ -248,7 +254,7 @@ public class ToDoResource {
 	/**
 	 * @param metaversalId
 	 *            String metaversalId of the ToDo
-	 * @return Response returned ToDo
+	 * @return Response ["success":true} or error
 	 */
 	@PUT
 	@Path("/{toDoId}/complete")
@@ -283,7 +289,7 @@ public class ToDoResource {
 	/**
 	 * @param metaversalId
 	 *            String metaversalId of the ToDo
-	 * @return Response returned ToDo
+	 * @return Response {"success":true} or error
 	 */
 	@PUT
 	@Path("/{toDoId}/reopen")

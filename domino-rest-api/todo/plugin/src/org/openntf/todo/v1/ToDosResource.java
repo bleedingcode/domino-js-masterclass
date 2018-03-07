@@ -39,22 +39,34 @@ import org.openntf.todo.model.Store;
 import org.openntf.todo.model.ToDo;
 import org.openntf.todo.model.ToDo.Priority;
 
+/**
+ * @author Paul Withers
+ * 
+ *         Endpoint for collections of ToDos
+ *
+ */
 @SuppressWarnings({ "unchecked", "rawtypes" })
 @Path("/v1/todos")
 public class ToDosResource {
 
+	/**
+	 * @author Paul Withers
+	 * 
+	 *         Enum for view type, to pass to platform-specific code to identify where to get the collection from
+	 *
+	 */
 	public enum ViewType {
 		STATUS, ASSIGNEE, PRIORITY, DATE;
 	}
 
 	/**
-	 * Get all ToDos in a given store for a given status (or unassigned)
+	 * Get all ToDos in a given store for a given status (or "New")
 	 * 
 	 * @param storeKey
 	 *            String store id or name
 	 * @param status
 	 *            String status to look for (or New)
-	 * @return Response containing a collection of ToDos
+	 * @return Response containing a collection of ToDos or error
 	 */
 	@GET
 	@Path("/{store}/findByStatus")
@@ -79,7 +91,7 @@ public class ToDosResource {
 	}
 
 	/**
-	 * Get all ToDos in a given store for a specific user (or current user) at a given status (or unassigned)
+	 * Get all ToDos in a given store for a specific user (or current user) at a given status (or New)
 	 * 
 	 * @param storeKey
 	 *            String store id or name
@@ -87,7 +99,7 @@ public class ToDosResource {
 	 *            String user to check for (or current user)
 	 * @param status
 	 *            String status to look for (or New)
-	 * @return Response containing a collection of ToDos
+	 * @return Response containing a collection of ToDos or error
 	 */
 	@GET
 	@Path("/{store}/findByAssigneeAndStatus")
@@ -118,7 +130,7 @@ public class ToDosResource {
 	}
 
 	/**
-	 * Get all ToDos in a given store for a specific priority (or high) at a given status (or unassigned)
+	 * Get all ToDos in a given store for a specific priority (or High) at a given status (or New)
 	 * 
 	 * @param storeKey
 	 *            String store id or name
@@ -126,7 +138,7 @@ public class ToDosResource {
 	 *            String priority to look for (or High)
 	 * @param status
 	 *            String status to look for (or New)
-	 * @return Response containing a collection of ToDos
+	 * @return Response containing a collection of ToDos or error
 	 */
 	@GET
 	@Path("/{store}/findByPriorityAndStatus")
@@ -157,15 +169,15 @@ public class ToDosResource {
 	}
 
 	/**
-	 * Get all ToDos in a given store for a specific priority (or high) at a given status (or unassigned)
+	 * Get all ToDos in a given store after a specific date (or today) and before a specific date (or today + 1 year)
 	 * 
 	 * @param storeKey
 	 *            String store id or name
 	 * @param startDate
-	 *            String startDate to look for
+	 *            String startDate to look for or today
 	 * @param endDate
-	 *            String endDate to look for
-	 * @return Response containing a collection of ToDos
+	 *            String endDate to look for or today + 1 year
+	 * @return Response containing a collection of ToDos or error
 	 */
 	@GET
 	@Path("/{store}/findByDate")

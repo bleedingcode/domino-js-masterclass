@@ -41,10 +41,25 @@ import org.openntf.todo.model.User;
 
 import com.google.gson.Gson;
 
+/**
+ * @author Paul Withers
+ * 
+ *         Endpoints for unit testing. This does not interact with the backend database, just with dummy Java objects
+ *         and converting to/from JSON. All endpoints check to ensure the DEBUG_KEY has been passed (see
+ *         {@link #validateKey(HttpServletRequest)}.
+ *
+ */
 @Path("/v1/unitTests")
 public class UnitTestResource {
 	private final String DEBUG_KEY = "sseqdcof4fq472so10us7ck7r0";
 
+	/**
+	 * Creates two dummy Store objects and returns them
+	 * 
+	 * @param request
+	 *            current request
+	 * @return Response containing the two Stores
+	 */
 	@Path("/storeTest")
 	@GET
 	public Response testStoresList(@Context HttpServletRequest request) {
@@ -75,6 +90,15 @@ public class UnitTestResource {
 		}
 	}
 
+	/**
+	 * Creates a Store object from passed content and returns it
+	 * 
+	 * @param request
+	 *            current request
+	 * @param body
+	 *            containing Store object
+	 * @return Response containing updated and validated Store object
+	 */
 	@POST
 	@Path("/createStore")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -110,6 +134,13 @@ public class UnitTestResource {
 		}
 	}
 
+	/**
+	 * Tests returning a User object with DatabaseAccess for the current user
+	 * 
+	 * @param request
+	 *            current request
+	 * @return Response for User object
+	 */
 	@Path("/userTest")
 	@GET
 	public Response testUser(@Context HttpServletRequest request) {
@@ -135,6 +166,14 @@ public class UnitTestResource {
 		}
 	}
 
+	/**
+	 * @param request
+	 *            current request
+	 * @param body
+	 *            containing User objects with Database Access
+	 * @return Response containing the same Users
+	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@POST
 	@Path("/receiveUsers")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -165,6 +204,13 @@ public class UnitTestResource {
 		}
 	}
 
+	/**
+	 * Verifies that the X-DEBUG-KEY header param matches the DEBUG_KEY variable
+	 * 
+	 * @param request
+	 *            current request
+	 * @return whether or not they match
+	 */
 	private boolean validateKey(HttpServletRequest request) {
 		String verificationKey = request.getHeader("X-DEBUG-KEY");
 		return DEBUG_KEY.equals(verificationKey);
