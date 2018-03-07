@@ -90,7 +90,8 @@ public class Utils {
 	 * Converts database name to lower case replacing backslashes to forward slashes
 	 * 
 	 * @param db
-	 * @return
+	 *            Database to get filename for
+	 * @return filename lower-case with forward slashes
 	 */
 	public static String getDbName(Database db) {
 		return StringUtils.replace(db.getFilePath().toLowerCase(), "\\", "/");

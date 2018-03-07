@@ -35,6 +35,7 @@ public class UserResource {
 	 * 
 	 * @return User object
 	 * @throws JsonException
+	 *             if User object could not be converted to Json
 	 */
 	@GET
 	public Response getCurrentUser() throws JsonException {

@@ -66,6 +66,12 @@ import org.openntf.todo.model.ToDo.Priority;
 import org.openntf.todo.model.User;
 import org.openntf.todo.v1.ToDosResource.ViewType;
 
+/**
+ * @author Paul Withers
+ * 
+ *         The class handles all Domino-related code for ToDos
+ *
+ */
 public class ToDoStoreFactory {
 	private Map<String, Store> stores = null;
 	public static String STORE_NOT_FOUND_OR_ACCESS_ERROR = "The store could not be found with the name or replicaId passed, or you do not have access to that store";
@@ -85,7 +91,9 @@ public class ToDoStoreFactory {
 	}
 
 	/**
-	 * Load all stores from ToDo Catalog into memory
+	 * Load all stores from ToDo Catalog into memory. This uses a ConcurrentHashMap because we're never expecting there
+	 * to be too many. If we needed more, we'd use a Cache - either using a memcache or Ehcache server, or within the
+	 * HttpServer using a Google Guava LoadingCache.
 	 * 
 	 * @return ConcurrentHashMap of Store objects, with replicaID as key
 	 */
@@ -158,6 +166,9 @@ public class ToDoStoreFactory {
 	}
 
 	/**
+	 * Writes a Store to the catalog database. Note: we write the json to a single field called json, because it's not
+	 * needed in a view
+	 * 
 	 * @param store
 	 *            Store to write to the catalog database
 	 */
@@ -174,6 +185,13 @@ public class ToDoStoreFactory {
 		doc.save();
 	}
 
+	/**
+	 * Takes the Notes Document and extracts the json field, using Gson to convert it to a Store
+	 * 
+	 * @param doc
+	 *            the document in the catalog database
+	 * @return Store object
+	 */
 	public Store deserializeStoreFromDoc(Document doc) {
 		String json = doc.getItemValueString("json");
 		Store store = new ResultParser<Store>(Store.class).parse(json);
@@ -207,6 +225,15 @@ public class ToDoStoreFactory {
 		}
 	}
 
+	/**
+	 * Gets a store based on replica ID or filepath, running as the current user
+	 * 
+	 * @param key
+	 *            Store NSF's replicaId or filepath
+	 * @return Store
+	 * @throws StoreNotFoundException
+	 *             if it can't be found
+	 */
 	public Store getStore(String key) throws StoreNotFoundException {
 		Store store = getStoreUnchecked(Factory.getSession(SessionType.CURRENT), key);
 		if (null == store) {
@@ -215,6 +242,15 @@ public class ToDoStoreFactory {
 		return store;
 	}
 
+	/**
+	 * Gets a Store based on replica ID or filepath, running as the server
+	 * 
+	 * @param key
+	 *            Store NSF's replicaId or filepath
+	 * @return Store
+	 * @throws StoreNotFoundException
+	 *             if it can't be found
+	 */
 	public Store getStoreAsNative(String key) throws StoreNotFoundException {
 		Store store = getStoreUnchecked(Factory.getSession(SessionType.NATIVE), key);
 		if (null == store) {
@@ -223,29 +259,54 @@ public class ToDoStoreFactory {
 		return store;
 	}
 
+	/**
+	 * Validation method, to check whether a Store NSF already exists, running as the server
+	 * 
+	 * @param key
+	 *            Store NSF's replicaId or filepath
+	 * @return boolean whether NSF exists or not
+	 */
 	public boolean checkStoreExists(String key) {
 		Store store = getStoreUnchecked(Factory.getSession(SessionType.NATIVE), key);
 		return store != null;
 	}
 
-	public ToDo serializeToStore(Store store, ToDo todo)
-			throws DataNotAcceptableException, StoreNotFoundException, DocumentNotFoundException {
-		Document doc = null;
-		if (null == store) {
-				throw new DataNotAcceptableException("Store must be supplied");
-			}
-			Database db = Factory.getSession(SessionType.CURRENT).getDatabase(store.getReplicaId());
-			doc = db.createDocument();
-		todo = updateDocFromToDo(doc, todo);
-		return todo;
-	}
-
+	/**
+	 * Gets a collection of ToDos from the By Date view
+	 * 
+	 * @param store
+	 *            Store from which to get the collection
+	 * @param viewType
+	 *            ViewType, always By Date
+	 * @param startDate
+	 *            for dueDate field of ToDos
+	 * @param endDate
+	 *            for dueDate field of ToDos
+	 * @return List of ToDos
+	 * @throws DatabaseModuleException
+	 *             error if Store or View could not be found
+	 */
 	public List<ToDo> getToDoCollectionRange(Store store, ViewType viewType, Date startDate, Date endDate)
 			throws DatabaseModuleException {
 		DateRange key = Factory.getSession(SessionType.CURRENT).createDateRange(startDate, endDate);
 		return getToDoCollection(store, viewType, key);
 	}
 
+	/**
+	 * Gets a collection of ToDos based on a key. . If we wanted to improve performance then, depending on memory, we
+	 * could use some kind of cache. We would need to manage the size, so a Google Guava LoadingCache would make sense
+	 * using the metaversalId as the key (loading from the Document) or a memcache / Ehcache server.
+	 * 
+	 * @param store
+	 *            Store from which to get the collection
+	 * @param viewType
+	 *            ViewType to identify which view in the NSF
+	 * @param key
+	 *            Object with which to get collection
+	 * @return List of ToDos
+	 * @throws DatabaseModuleException
+	 *             error if Store or View could not be found
+	 */
 	public List<ToDo> getToDoCollection(Store store, ViewType viewType, Object key) throws DatabaseModuleException {
 		List<ToDo> todos = new ArrayList<ToDo>();
 		try {
@@ -263,6 +324,17 @@ public class ToDoStoreFactory {
 		return todos;
 	}
 
+	/**
+	 * Gets the relevant view based on the ViewType passed from the NSF passed
+	 * 
+	 * @param db
+	 *            Database ToDo instance
+	 * @param viewType
+	 *            ViewType to identify which view to get
+	 * @return View from the ToDo instance NSF
+	 * @throws DatabaseModuleException
+	 *             error if we can't get a view for the relevant ViewType (defensive coding)
+	 */
 	public View getView(Database db, ViewType viewType) throws DatabaseModuleException {
 		if (viewType.equals(ViewType.STATUS)) {
 			return db.getView("byStatus");
@@ -276,6 +348,43 @@ public class ToDoStoreFactory {
 		throw new DatabaseModuleException("Unable to find view for " + viewType.name());
 	}
 
+	/**
+	 * Creates a new ToDo to the relevant Store, returning the ToDo object
+	 * 
+	 * @param store
+	 *            Store object from which to get the NSF
+	 * @param todo
+	 *            ToDo to write to the Store
+	 * @return ToDo serialized and updated as required (e.g. with metaversalId)
+	 * @throws DataNotAcceptableException
+	 *             error if Store not passed
+	 * @throws StoreNotFoundException
+	 *             error if Store couldn't be found as current user
+	 */
+	public ToDo serializeToStore(Store store, ToDo todo) throws DataNotAcceptableException, StoreNotFoundException {
+		Document doc = null;
+		if (null == store) {
+			throw new DataNotAcceptableException("Store must be supplied");
+		}
+		Database db = Factory.getSession(SessionType.CURRENT).getDatabase(store.getReplicaId());
+		doc = db.createDocument();
+		todo = updateDocFromToDo(doc, todo);
+		return todo;
+	}
+
+	/**
+	 * Updates an existing ToDo
+	 * 
+	 * @param todo
+	 *            ToDo to update (PATCH)
+	 * @return stored ToDo
+	 * @throws StoreNotFoundException
+	 *             error if Store NSF could not be found
+	 * @throws DocumentNotFoundException
+	 *             error if document could not be found (e.g. already deleted)
+	 * @throws InvalidMetaversalIdException
+	 *             error if the metaversalId passed is not valid
+	 */
 	public ToDo updateToDo(ToDo todo)
 			throws StoreNotFoundException, DocumentNotFoundException, InvalidMetaversalIdException {
 		Document doc = getToDoDoc(todo.getMetaversalId());
@@ -283,6 +392,17 @@ public class ToDoStoreFactory {
 		return todo;
 	}
 
+	/**
+	 * Updates the relevant Notes Document from the ToDo. If we wanted to improve performance then, depending on memory,
+	 * we could use some kind of cache. We would need to manage the size, so a Google Guava LoadingCache would make
+	 * sense using the metaversalId as the key (loading from the Document) or a memcache / Ehcache server.
+	 * 
+	 * @param doc
+	 *            Notes Document
+	 * @param todo
+	 *            ToDo being passed
+	 * @return processed ToDo
+	 */
 	private ToDo updateDocFromToDo(Document doc, ToDo todo) {
 		boolean isNew = false;
 		if (doc.isNewNote()) {
@@ -306,6 +426,19 @@ public class ToDoStoreFactory {
 		return todo;
 	}
 
+	/**
+	 * Gets a ToDo based on the metaversalId passed
+	 * 
+	 * @param metaversalId
+	 *            String replicaId + UNID
+	 * @return ToDo deserialized from the document
+	 * @throws StoreNotFoundException
+	 *             error if Store NSF could not be found
+	 * @throws DocumentNotFoundException
+	 *             error if document could not be found (e.g. already deleted)
+	 * @throws InvalidMetaversalIdException
+	 *             error if the metaversalId passed is not valid
+	 */
 	public ToDo getToDoFromMetaversalId(String metaversalId)
 			throws StoreNotFoundException, DocumentNotFoundException, InvalidMetaversalIdException {
 		Document doc = getToDoDoc(metaversalId);
@@ -314,6 +447,47 @@ public class ToDoStoreFactory {
 		return todo;
 	}
 
+	/**
+	 * Gets a ToDo Notes Document based on a metaversalId
+	 * 
+	 * @param metaversalId
+	 *            passed String replicaId + UNID
+	 * @return Document for the relevant metaversalId
+	 * @throws StoreNotFoundException
+	 *             error if Store NSF could not be found
+	 * @throws DocumentNotFoundException
+	 *             error if document could not be found (e.g. already deleted)
+	 * @throws InvalidMetaversalIdException
+	 *             error if the metaversalId passed is not valid
+	 */
+	public Document getToDoDoc(String metaversalId)
+			throws StoreNotFoundException, DocumentNotFoundException, InvalidMetaversalIdException {
+		try {
+			Utils.validateMetaversalId(metaversalId);
+			Document doc = Factory.getSession(SessionType.CURRENT).getDocumentByMetaversalID(metaversalId);
+			if (null == doc) {
+				throw new DocumentNotFoundException();
+			}
+			return doc;
+		} catch (DocumentNotFoundException de) {
+			throw de;
+		} catch (Exception e) {
+			if (null != getStoreAsNative(StringUtils.left(metaversalId, 16))) {
+				throw new DocumentNotFoundException();
+			}
+			throw new WebApplicationException(e, Status.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	/**
+	 * Takes the Notes Document and converts to a ToDo. We store data in separate fields because we display the content
+	 * in a view (although we could store the full json in a single field and just store view fields separately - then
+	 * use Gson to deserialize)
+	 * 
+	 * @param doc
+	 *            Notes Document
+	 * @return ToDo deserialized from the document
+	 */
 	public ToDo deserializeToDoFromDoc(Document doc) {
 		ToDo todo = new ToDo();
 		todo.setMetaversalId(doc.getMetaversalID());
@@ -339,25 +513,19 @@ public class ToDoStoreFactory {
 		return todo;
 	}
 
-	public Document getToDoDoc(String metaversalId)
-			throws StoreNotFoundException, DocumentNotFoundException, InvalidMetaversalIdException {
-		try {
-			Utils.validateMetaversalId(metaversalId);
-			Document doc = Factory.getSession(SessionType.CURRENT).getDocumentByMetaversalID(metaversalId);
-			if (null == doc) {
-				throw new DocumentNotFoundException();
-			}
-			return doc;
-		} catch (DocumentNotFoundException de) {
-			throw de;
-		} catch (Exception e) {
-			if (null != getStoreAsNative(StringUtils.left(metaversalId, 16))) {
-				throw new DocumentNotFoundException();
-			}
-			throw new WebApplicationException(e, Status.INTERNAL_SERVER_ERROR);
-		}
-	}
-
+	/**
+	 * Deletes a ToDo Notes Document
+	 * 
+	 * @param metaversalId
+	 *            passed String replicaId + UNID
+	 * @return boolean success or failure
+	 * @throws StoreNotFoundException
+	 *             error if Store NSF could not be found
+	 * @throws DocumentNotFoundException
+	 *             error if document could not be found (e.g. already deleted)
+	 * @throws InvalidMetaversalIdException
+	 *             error if the metaversalId passed is not valid
+	 */
 	public boolean deleteToDoDoc(String metaversalId)
 			throws StoreNotFoundException, DocumentNotFoundException, InvalidMetaversalIdException {
 		Document doc = getToDoDoc(metaversalId);
@@ -366,7 +534,7 @@ public class ToDoStoreFactory {
 
 	/**
 	 * Load all stores from ToDo Catalog or creates ToDo Catalog database, done via HttpService 30 seconds after server
-	 * starts
+	 * starts or first HTTP call, if sooner
 	 */
 	public void loadStores() {
 		if (stores != null) {
@@ -375,7 +543,7 @@ public class ToDoStoreFactory {
 		Future<Map<String, Store>> result = Xots.getService().submit(new StoreLoader());
 		stores = new ConcurrentHashMap<String, Store>();
 
-		// There is only
+		// There is only one
 		synchronized (stores) {
 			try {
 				stores.clear();
@@ -388,6 +556,14 @@ public class ToDoStoreFactory {
 		}
 	}
 
+	/**
+	 * Marks ToDos due before now as Overdue in all ToDo NSFs
+	 * 
+	 * @param nextUrl
+	 *            URL to send list of updated ToDos to
+	 * @throws DatabaseModuleException
+	 *             error if Store could not be found
+	 */
 	public void markOverdue(String nextUrl) throws DatabaseModuleException {
 		try {
 			for (String replicaId : getStores().keySet()) {
@@ -399,18 +575,40 @@ public class ToDoStoreFactory {
 		}
 	}
 
+	/**
+	 * Changes the title of a Store NSF
+	 * 
+	 * @param store
+	 *            Store to update
+	 */
 	public void updateToDoNSFTitle(Store store) {
 		Database db = Factory.getSession(SessionType.NATIVE).getDatabase(store.getReplicaId());
 		db.setTitle(store.getTitle());
 	}
 
+	/**
+	 * Creates a ToDo NSF instance
+	 * 
+	 * @param title
+	 *            for the new ToDo NSF
+	 * @param name
+	 *            filepath for the new ToDo NSF
+	 * @param type
+	 *            StoreType, Personal or Team
+	 * @return Store corresponding to ToDo NSF
+	 * @throws DatabaseModuleException
+	 *             error if the ToDo NSF could not be created
+	 */
 	public Store createToDoNSF(String title, String name, StoreType type) throws DatabaseModuleException {
 		try {
+			// Create a blank NSF and set basic properties
 			Database db = Factory.getSession(SessionType.NATIVE)
 					.createBlankDatabase(name);
 			db.setTitle(title);
 			db.setCategories(type.getValue());
 			db.setListInDbCatalog(false);
+
+			// Some properties can only be set via DXL. Get the DatabaseDesign and set them.
 			DatabaseDesign dbDesign = (DatabaseDesign) db.getDesign();
 			HashMap<DbProperties, Boolean> props = new HashMap<DbProperties, Boolean>();
 			props.put(DbProperties.USE_JS, false);
@@ -420,6 +618,7 @@ public class ToDoStoreFactory {
 			dbDesign.save();
 
 			// Create views
+			// Create byStatus view
 			DesignView byStatus = dbDesign.createView();
 			byStatus.setSelectionFormula("SELECT Form=\"ToDo\"");
 			byStatus.setName("byStatus");
@@ -438,6 +637,7 @@ public class ToDoStoreFactory {
 			byStatus.save();
 			db.getView("byStatus").setDefaultView(true);
 
+			// Create byAssignee view
 			DesignView byAssignee = dbDesign.createView();
 			byAssignee.setSelectionFormula("SELECT Form=\"ToDo\"");
 			byAssignee.setName("byAssignee");
@@ -460,6 +660,7 @@ public class ToDoStoreFactory {
 			col.setItemName("taskName");
 			byAssignee.save();
 
+			// Create byPriority view
 			DesignView byPriority = dbDesign.createView();
 			byPriority.setSelectionFormula("SELECT Form=\"ToDo\"");
 			byPriority.setName("byPriority");
@@ -482,6 +683,7 @@ public class ToDoStoreFactory {
 			col.setItemName("taskName");
 			byPriority.save();
 
+			// Create byDueDate view
 			DesignView byDueDate = dbDesign.createView();
 			byDueDate.setSelectionFormula("SELECT Form=\"ToDo\"");
 			byDueDate.setName("byDueDate");
@@ -494,7 +696,7 @@ public class ToDoStoreFactory {
 			col.setItemName("taskName");
 			byDueDate.save();
 
-			// Set ACL access
+			// Set ACL access - LocalDomainAdmins, LocalDomainServers, Anonymous
 			ACL acl = db.getACL();
 			acl.addRole("Admin");
 			ACLEntry servers = acl.getEntry("LocalDomainServers");
@@ -510,7 +712,7 @@ public class ToDoStoreFactory {
 			admins.enableRole("Admin");
 			acl.createACLEntry("Anonymous", Level.NOACCESS);
 
-			// Add user to access
+			// Add current user to access
 			DatabaseAccess access = new DatabaseAccess();
 			access.setAllowDelete(true);
 			access.setDbName(db.getFilePath().toLowerCase());
@@ -526,16 +728,44 @@ public class ToDoStoreFactory {
 		}
 	}
 
+	/**
+	 * Update ACL for a Store based on the User passed. Runs as server
+	 * 
+	 * @param store
+	 *            Store to update
+	 * @param user
+	 *            User object containing username and updated DatabaseAccess
+	 * @throws DatabaseModuleException
+	 *             error if ToDo instance NSF can't be retrieved
+	 */
 	public void updateAccess(Store store, User user) throws DatabaseModuleException {
 		Database db = Factory.getSession(SessionType.NATIVE).getDatabase(store.getReplicaId());
 		ACL acl = db.getACL();
 		addAccess(acl, user.getUsername(), user.getAccess());
 	}
 
+	/**
+	 * Updates the ACL for a given username and DatabaseAccess
+	 * 
+	 * @param acl
+	 *            ACL object for the ToDo instance NSF
+	 * @param username
+	 *            for the new ACL entry
+	 * @param access
+	 *            DatabaseAccess object to use to set access levels
+	 * @throws DatabaseModuleException
+	 *             if ACL could not be set
+	 */
 	public void addAccess(ACL acl, String username, DatabaseAccess access) throws DatabaseModuleException {
 		try {
-			ACLEntry user = acl.createACLEntry(username, Level.NOACCESS);
-			user.setUserType(ACLEntry.TYPE_PERSON);
+			// Get or create ACLEntry
+			ACLEntry user = acl.getEntry(username);
+			if (null == user) {
+				user = acl.createACLEntry(username, Level.NOACCESS);
+				user.setUserType(ACLEntry.TYPE_PERSON);
+			}
+
+			// Update ACL level
 			switch (access.getLevel()) {
 			case ADMIN:
 				user.setLevel(Level.EDITOR);
@@ -549,6 +779,8 @@ public class ToDoStoreFactory {
 			default:
 				// No access is fine
 			}
+
+			// Set delete rights
 			if (access.getAllowDelete()) {
 				user.setCanDeleteDocuments(true);
 			} else {
@@ -561,6 +793,15 @@ public class ToDoStoreFactory {
 		}
 	}
 
+	/**
+	 * Check access for specific username for a ToDo instance NSF
+	 * 
+	 * @param store
+	 *            to which to query access
+	 * @param username
+	 *            for whom to query
+	 * @return DatabaseAccess object for the relevant user
+	 */
 	public DatabaseAccess queryAccess(Store store, String username) {
 		Database db = Factory.getSession(SessionType.NATIVE).getDatabase(store.getReplicaId());
 		Vector<String> roles = db.queryAccessRoles(username);
@@ -586,6 +827,15 @@ public class ToDoStoreFactory {
 		return dbAccess;
 	}
 
+	/**
+	 * Checks whether the user has [Admin] role for the ToDo instance NSF
+	 * 
+	 * @param store
+	 *            for the ToDo instance
+	 * @param username
+	 *            to check for
+	 * @return boolean whether or not the user has the [Admin] role
+	 */
 	public boolean userIsAdmin(Store store, String username) {
 		Database db = Factory.getSession(SessionType.NATIVE).getDatabase(store.getReplicaId());
 		Vector<String> roles = db.queryAccessRoles(username);

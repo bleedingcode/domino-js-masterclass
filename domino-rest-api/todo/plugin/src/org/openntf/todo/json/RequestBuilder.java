@@ -25,6 +25,7 @@ import com.google.gson.Gson;
  * @author Paul Withers
  *
  * @param <T>
+ *            Class for Gson conversion
  */
 public class RequestBuilder<T> {
 	private Class<T> clazz;
