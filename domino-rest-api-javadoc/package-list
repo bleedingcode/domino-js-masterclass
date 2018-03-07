@@ -1,0 +1,8 @@
+org.openntf.todo
+org.openntf.todo.authentication
+org.openntf.todo.domino
+org.openntf.todo.exceptions
+org.openntf.todo.httpService
+org.openntf.todo.json
+org.openntf.todo.model
+org.openntf.todo.v1
