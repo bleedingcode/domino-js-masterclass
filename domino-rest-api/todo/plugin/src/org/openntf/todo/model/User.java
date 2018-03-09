@@ -37,7 +37,7 @@ public class User implements Serializable {
 	public User(String username) {
 		setUsername(username);
 		setCommonName(Utils.getCommonName(username));
-		DatabaseAccess access = new DatabaseAccess();
+		access = new DatabaseAccess();
 	}
 
 	/**

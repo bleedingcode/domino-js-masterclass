@@ -31,7 +31,7 @@ public class HttpServiceFactory implements IServiceFactory {
 	@Override
 	public HttpService[] getServices(final LCDEnvironment lcdEnv) {
 		final HttpService[] ret = new HttpService[1];
-		ret[0] = org.openntf.todo.httpService.HttpService.createInstance(lcdEnv);
+		ret[0] = org.openntf.todo.httpService.ToDoHttpService.createInstance(lcdEnv);
 		return ret;
 	}
 

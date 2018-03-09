@@ -73,20 +73,17 @@ import org.openntf.todo.v1.ToDosResource.ViewType;
  *
  */
 public class ToDoStoreFactory {
-	private Map<String, Store> stores = null;
+	private ConcurrentHashMap<String, Store> stores = null;
 	public static String STORE_NOT_FOUND_OR_ACCESS_ERROR = "The store could not be found with the name or replicaId passed, or you do not have access to that store";
 	public static String DOCUMENT_NOT_FOUND_ERROR = "The ToDo with that ID could not be found";
 	public static String USER_NOT_AUTHORIZED_ERROR = "You are not authorized to perform this operation";
 	public static String INVALID_METAVERSAL_ID_ERROR = "The value passed is not a valid metaversal id";
-	private static ToDoStoreFactory INSTANCE;
+	private static ToDoStoreFactory INSTANCE = new ToDoStoreFactory();
 
 	/**
 	 * @return ToDoStoreFactory instance
 	 */
 	public static ToDoStoreFactory getInstance() {
-		if (null == INSTANCE) {
-			INSTANCE = new ToDoStoreFactory();
-		}
 		return INSTANCE;
 	}
 
@@ -134,9 +131,7 @@ public class ToDoStoreFactory {
 	 */
 	public Store addStore(Database db) {
 		Store store = initialiseStoreFromDatabase(db);
-		synchronized (stores) {
-			stores.put(store.getReplicaId(), store);
-		}
+		stores.put(store.getReplicaId(), store);
 		return store;
 	}
 
@@ -544,15 +539,13 @@ public class ToDoStoreFactory {
 		stores = new ConcurrentHashMap<String, Store>();
 
 		// There is only one
-		synchronized (stores) {
-			try {
-				stores.clear();
-				stores.putAll(result.get());
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			} catch (ExecutionException e) {
-				e.printStackTrace();
-			}
+		try {
+			stores.clear();
+			stores.putAll(result.get());
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		} catch (ExecutionException e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -602,8 +595,7 @@ public class ToDoStoreFactory {
 	public Store createToDoNSF(String title, String name, StoreType type) throws DatabaseModuleException {
 		try {
 			// Create a blank NSF and set basic properties
-			Database db = Factory.getSession(SessionType.NATIVE)
-					.createBlankDatabase(name);
+			Database db = Factory.getSession(SessionType.NATIVE).createBlankDatabase(name);
 			db.setTitle(title);
 			db.setCategories(type.getValue());
 			db.setListInDbCatalog(false);

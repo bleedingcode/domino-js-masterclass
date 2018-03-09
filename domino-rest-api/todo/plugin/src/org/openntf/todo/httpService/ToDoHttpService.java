@@ -35,12 +35,12 @@ import com.ibm.designer.runtime.domino.bootstrap.adapter.HttpSessionAdapter;
  *         HttpService allows us to run code every 30 seconds
  *
  */
-public class HttpService extends com.ibm.designer.runtime.domino.adapter.HttpService {
-	public static HttpService INSTANCE;
+public class ToDoHttpService extends com.ibm.designer.runtime.domino.adapter.HttpService {
+	public static ToDoHttpService INSTANCE;
 	public boolean hasRun;
 
-	public static HttpService createInstance(final LCDEnvironment lcdEnv) {
-		INSTANCE = new HttpService(lcdEnv);
+	public static ToDoHttpService createInstance(final LCDEnvironment lcdEnv) {
+		INSTANCE = new ToDoHttpService(lcdEnv);
 		return INSTANCE;
 		// This runs before ODA starts and ODA won't start until this completes,
 		// so don't use any ODA code here
@@ -49,7 +49,7 @@ public class HttpService extends com.ibm.designer.runtime.domino.adapter.HttpSer
 	/**
 	 * @return this HttpService
 	 */
-	public static HttpService getInstance() {
+	public static ToDoHttpService getInstance() {
 		return INSTANCE;
 	}
 
@@ -59,7 +59,7 @@ public class HttpService extends com.ibm.designer.runtime.domino.adapter.HttpSer
 	 * @param lcdEnv
 	 *            passed from HttpServiceFactory
 	 */
-	public HttpService(final LCDEnvironment lcdEnv) {
+	public ToDoHttpService(final LCDEnvironment lcdEnv) {
 		super(lcdEnv);
 	}
 
