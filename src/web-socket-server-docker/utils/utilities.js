@@ -108,7 +108,8 @@ const authenticateUser = function(data, callback){
       if(err.response){
           callback(err.response.data);
       }else{
-          callback({success:false, messages:[err], data:{}});
+        console.log(err.stack);
+        callback({success:false, messages:[err.stack], data:{}});
       }
   });
 

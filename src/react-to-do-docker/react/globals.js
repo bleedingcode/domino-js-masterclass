@@ -3,7 +3,7 @@ let protocol = location.protocol;
 let port = location.port;
 
 let deployment = {
-  deployType:"minikube",
+  deployType:"local",
   minikube:{
     apiUrl:protocol + "//" + hostName + ":30010",
     nodeRedUrl:protocol + "//" + hostName + ":30011",

@@ -13,22 +13,33 @@ import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 
 class ToDoForm extends React.Component {
-	constructor(){
-		super();
+	constructor(props){
+		super(props);
+
 		this.state = {
 			entry:tempData.toDo.activeEntry,
-			priority:tempData.toDo.activeEntry.data.priority
+			priority:tempData.toDo.activeEntry.data.priority,
+			storeId:tempData.toDo.activeEntry.data.storeId
 		};
 
 		this.setPriority = this.setPriority.bind(this);
+		this.setStoreId = this.setStoreId.bind(this);
 	}
 
 	setPriority(value){
 		this.setState({priority:value});
 	}
 
+	setStoreId(value){
+		this.setState({storeId:value});
+	}
+
 	onChange(key, value){
 		switch(key){
+			case "inputStoreId":
+				this.state.entry.data.storeId = value;
+				this.setStoreId(value);
+				break;			
 			case "inputTaskName":
 				this.state.entry.data.taskName = value;
 				break;
@@ -67,6 +78,20 @@ class ToDoForm extends React.Component {
 					<CardText>
 						<div className="row">
 							<div className="col-md-6" style={{marginTop:20}}>
+								<SelectField
+									floatingLabelText="Store"
+									floatingLabelFixed={true}
+									value={this.state.entry.data.storeId}
+									autoWidth={true}
+									onChange={(e, index, value) => {
+										this.onChange("inputStoreId", value)
+									}}
+								>
+									<MenuItem value={""} primaryText="-Select-" />
+									{this.props.storeList.map(entry =>
+										<MenuItem key={entry.value} value={entry.value} primaryText={entry.text} />
+									)}									
+								</SelectField>							
 								<TextField
 									hintText="Task Name"
 									floatingLabelText="Task Name"

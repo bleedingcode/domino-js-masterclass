@@ -19,7 +19,8 @@ const tempData = {
 			custom:customTemplate,
 			data:{
 				metaversalId:"",
-	      		author:"",
+				author:"",
+				storeId:"",
 				taskName:"",
 				description:"",
 				dueDate:"",

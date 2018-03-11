@@ -6,7 +6,8 @@ import ToDoForm from '../../components/to-do-form/to-do-form';
 const mapStateToProps = (state) => {
   return {
     state:state.toDo,
-    theme:state.main.theme
+    theme:state.main.theme,
+    storeList:state.toDo.storeList
   }
 }
 

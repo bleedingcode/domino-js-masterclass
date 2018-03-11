@@ -1,13 +1,8 @@
 const Globals = require('../utils/globals');
+const _ = require('lodash');
 
 const fetchAllData = function(data, callback){
-    const Axios = require('axios');
-    const _ = require('lodash');
-
     let reqType = data.reqType;
-    let isUnauthorized = false;
-    let resultData = [];
-    let resultData2 = [];
 
     let result = {
         success:true,
@@ -39,24 +34,11 @@ const fetchAllData = function(data, callback){
             result.messages.push(err);
             return callback(result);
         }
-
+    
         result.storeList = storeList;
 
         //Next, we loop through Store List to fetch To Dos for each Store
-        switch(data.reqType){
-            case "1"://Fetch All Data New
-                params.headers["route-key"] = Globals.config.agilite.routeFetchToDosNew;
-                break;
-            case "2"://Fetch All Data Assigned
-                params.headers["route-key"] = Globals.config.agilite.routeFetchToDosAssigned;
-                break;        
-            case "3"://Fetch All Data Complete
-                params.headers["route-key"] = Globals.config.agilite.routeFetchToDosComplete;
-                break;
-            case "4"://Fetch All Data Overdue 
-                params.headers["route-key"] = Globals.config.agilite.routeFetchToDosOverdue;
-                break;               
-        }
+        params.headers["route-key"] = Globals.config.agilite.routeFetchToDos;
 
         _fetchToDos(params, reqType, storeList, [], 0, function(err2, toDoList){
             if(err2){
@@ -129,7 +111,8 @@ const createRecord = function(data, callback){
         if(err.response){
             callback(err.response.data);
         }else{
-            callback({success:false, messages:[err], data:{}});
+            console.log(err.stack);
+            callback({success:false, messages:[err.stack], data:{}});
         }
     });
   
@@ -187,7 +170,8 @@ const updateRecord = function(data, callback){
         if(err.response){
             callback(err.response.data);
         }else{
-            callback({success:false, messages:[err], data:{}});
+            console.log(err.stack);
+            callback({success:false, messages:[err.stack], data:{}});
         }
     });
   
@@ -197,7 +181,8 @@ exports.updateRecord = updateRecord;
 
 //Private Functions
 const _fetchStores = function(params, callback){
-    let storeList = {};
+    const Axios = require('axios');
+    let storeList = [];
     let isUnauthorized = false;
 
     Axios.request(params)
@@ -223,22 +208,40 @@ const _fetchStores = function(params, callback){
         }          
 
         storeList = _.orderBy(storeList, ['text'], ['asc']);
-        return callback(null, result);
+
+        return callback(null, storeList);
 
     })
     .catch(function (err) {
         if(err.response){
             callback(err.response.data, null);
         }else{
-            callback(err, null);
+            console.log(err.stack);
+            callback(err.stack, null);
         }
     });
 }
 
 const _fetchToDos = function(params, reqType, storeList, toDoList, startIndex, callback){
+    const Axios = require('axios');
     let result = [];
 
     params.data.storeId = storeList[startIndex].value;
+
+    switch(reqType){
+        case "1"://Fetch All Data New
+            params.data.status = "New";
+            break;
+        case "2"://Fetch All Data Assigned
+            params.data.status = "Reassigned";
+            break;        
+        case "3"://Fetch All Data Complete
+            params.data.status = "Complete";
+            break;
+        case "4"://Fetch All Data Overdue 
+            params.data.status = "Overdue";
+            break;               
+    }
 
     Axios.request(params)
     .then(function (response) {
@@ -257,14 +260,15 @@ const _fetchToDos = function(params, reqType, storeList, toDoList, startIndex, c
         if(startIndex >= storeList.length){
             callback(null, toDoList);
         }else{
-            _fetchToDos = function(params, reqType, storeList, toDoList, startIndex, callback);
+            _fetchToDos(params, reqType, storeList, toDoList, startIndex, callback);
         }
     })
     .catch(function (err) {
         if(err.response){
             callback(err.response.data, null);
         }else{
-            callback(err, null);
+            console.log(err.stack);
+            callback(err.stack, null);
         }
     });
 }

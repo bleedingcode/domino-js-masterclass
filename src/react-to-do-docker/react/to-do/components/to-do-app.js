@@ -15,7 +15,7 @@ class ToDoApp extends React.Component {
 		//Pace.restart();
 
 		connectWebSocket(function(){
-			props.fetchAllData();
+			props.fetchAllData(props.app);
 
 			if(tempData.globals.resetToDo){
 				props.resetState();
