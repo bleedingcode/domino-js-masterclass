@@ -9,6 +9,14 @@ const fetchAllData = function(data, callback){
     let resultData = [];
     let resultData2 = [];
 
+    let result = {
+        success:true,
+        messages: [],
+        reqType: reqType,
+        storeList: [],
+        data: []
+    };
+
     let params = {
         method:"post",
         url:Globals.config.agilite.apiUrl + Globals.config.agilite.urlSuffixConnectors,
@@ -22,81 +30,49 @@ const fetchAllData = function(data, callback){
         }
     };
   
-    switch(data.reqType){
-        case "1"://Fetch All Data New
-            params.headers["route-key"] = Globals.config.agilite.routeFetchToDosNew;
-            break;
-        case "2"://Fetch All Data Assigned
-            params.headers["route-key"] = Globals.config.agilite.routeFetchToDosAssigned;
-            break;        
-        case "3"://Fetch All Data Complete
-            params.headers["route-key"] = Globals.config.agilite.routeFetchToDosComplete;
-            break;
-        case "4"://Fetch All Data Overdue 
-            params.headers["route-key"] = Globals.config.agilite.routeFetchToDosOverdue;
-            break;               
-    }
+    //First we get the Stores Ascended
+    params.headers["route-key"] = Globals.config.agilite.routeFetchStores;
 
-    Axios.request(params)
-    .then(function (response) {
-      try {
-        if(response.data.data.substring(0, 1) === "<"){
-            isUnauthorized = true;
-        }
-      } catch (error) {}
-  
-      if(isUnauthorized){
-        response.data.success = false;
-        response.data.messages.push("Incorrect Username/Password. Please try again");
-      }else{
-        //Fix up Data Entries to be compatible with React
-        for(var x in response.data.data){
-                resultData.push(
-                    {
-                        _id:response.data.data[x].metaversalId,
-                        data:response.data.data[x]
-                    }
-                )
+    _fetchStores(params, function(err, storeList){
+        if(err){
+            result.success = false;
+            result.messages.push(err);
+            return callback(result);
         }
 
-        response.data.data = resultData;
+        result.storeList = storeList;
 
-        //Fetch Store List Next
-        params.headers["route-key"] = Globals.config.agilite.routeFetchStores;
+        //Next, we loop through Store List to fetch To Dos for each Store
+        switch(data.reqType){
+            case "1"://Fetch All Data New
+                params.headers["route-key"] = Globals.config.agilite.routeFetchToDosNew;
+                break;
+            case "2"://Fetch All Data Assigned
+                params.headers["route-key"] = Globals.config.agilite.routeFetchToDosAssigned;
+                break;        
+            case "3"://Fetch All Data Complete
+                params.headers["route-key"] = Globals.config.agilite.routeFetchToDosComplete;
+                break;
+            case "4"://Fetch All Data Overdue 
+                params.headers["route-key"] = Globals.config.agilite.routeFetchToDosOverdue;
+                break;               
+        }
 
-        Axios.request(params)
-        .then(function (response2) {
-            //Fix up Data To only return a list of Stores sorted ascending
-            for(var x in response2.data.data){
-                    resultData2.push(
-                        {
-                            text:response2.data.data[x].title,
-                            value:response2.data.data[x].replicaId
-                        }
-                    )
+        _fetchToDos(params, reqType, storeList, [], 0, function(err2, toDoList){
+            if(err2){
+                result.success = false;
+                result.messages.push(err2);
+                return callback(result);
             }
-    
-            resultData2 = _.orderBy(resultData2, ['text'], ['asc']);
-            response.data.storeList = resultData2;
-    
-            response.data.reqType = reqType;
-            callback(response.data);
-        })
-        .catch(function (err2) {
-            if(err2.response){
-                callback(err2.response.data);
-            }else{
-                callback({success:false, messages:[err], data:{}});
-            }
-        });        
-      }
-    })
-    .catch(function (err) {
-        if(err.response){
-            callback(err.response.data);
-        }else{
-            callback({success:false, messages:[err], data:{}});
-        }
+
+            //Sort To Do List
+            toDoList = _.orderBy(toDoList, ['text'], ['asc']);
+
+            //Finalize the Result
+            result.data = toDoList;
+
+            callback(result);
+        });
     });
   
     return null;
@@ -218,3 +194,77 @@ const updateRecord = function(data, callback){
     return null;
 }
 exports.updateRecord = updateRecord;
+
+//Private Functions
+const _fetchStores = function(params, callback){
+    let storeList = {};
+    let isUnauthorized = false;
+
+    Axios.request(params)
+    .then(function (response) {
+        try {
+            if(response.data.data.substring(0, 1) === "<"){
+                isUnauthorized = true;
+            }
+          } catch (error) {}
+      
+          if(isUnauthorized){
+              return callback("Incorrect Username/Password. Please try again", null);
+          }else{
+            //Fix up Data To only return a list of Stores sorted ascending
+            for(var x in response.data.data){
+                storeList.push(
+                    {
+                        text:response.data.data[x].title,
+                        value:response.data.data[x].replicaId
+                    }
+                )
+            }
+        }          
+
+        storeList = _.orderBy(storeList, ['text'], ['asc']);
+        return callback(null, result);
+
+    })
+    .catch(function (err) {
+        if(err.response){
+            callback(err.response.data, null);
+        }else{
+            callback(err, null);
+        }
+    });
+}
+
+const _fetchToDos = function(params, reqType, storeList, toDoList, startIndex, callback){
+    let result = [];
+
+    params.data.storeId = storeList[startIndex].value;
+
+    Axios.request(params)
+    .then(function (response) {
+        //Fix up Data Entries to be compatible with React
+        for(var x in response.data.data){
+            toDoList.push(
+                {
+                    _id:response.data.data[x].metaversalId,
+                    data:response.data.data[x]
+                }
+            )
+        }
+
+        startIndex++;
+
+        if(startIndex >= storeList.length){
+            callback(null, toDoList);
+        }else{
+            _fetchToDos = function(params, reqType, storeList, toDoList, startIndex, callback);
+        }
+    })
+    .catch(function (err) {
+        if(err.response){
+            callback(err.response.data, null);
+        }else{
+            callback(err, null);
+        }
+    });
+}

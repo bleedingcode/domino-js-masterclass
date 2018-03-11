@@ -3,7 +3,7 @@ let protocol = location.protocol;
 let port = location.port;
 
 let deployment = {
-  deployType:"local",
+  deployType:"minikube",
   minikube:{
     apiUrl:protocol + "//" + hostName + ":30010",
     nodeRedUrl:protocol + "//" + hostName + ":30011",
@@ -30,8 +30,8 @@ const globals = {
       commonName:""
     },
     title:"React To Do Portal",
-    version:"0.0.1",
-    releaseDate:"22nd February 2018",
+    version:"0.0.2",
+    releaseDate:"8th March 2018",
     apiUrl:deployment[deployment.deployType].apiUrl,
     imgUrl:deployment[deployment.deployType].imgUrl,
     nodeRedUrl:deployment[deployment.deployType].nodeRedUrl,

@@ -39,11 +39,11 @@ spec:
     metadata:
       labels:
         app: agilite-api-server
-        version: v522
+        version: v523
     spec:
       containers:
-      - name: agilite-api-server-522
-        image: agilite/agilite-api-server-docker:5.2.2
+      - name: agilite-api-server-523
+        image: agilite/agilite-api-server-docker:5.2.3
         imagePullPolicy: Never
         ports:
         - name: a-api-port
@@ -62,11 +62,11 @@ spec:
     metadata:
       labels:
         app: agilite-admin-portal
-        version: v522
+        version: v523
     spec:
       containers:
-      - name: agilite-admin-portal-522
-        image: agilite/agilite-admin-portal-docker:5.2.2
+      - name: agilite-admin-portal-523
+        image: agilite/agilite-admin-portal-docker:5.2.3
         imagePullPolicy: Never
         ports:
         - name: a-admin-port

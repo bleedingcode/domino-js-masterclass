@@ -4,7 +4,7 @@
         "portalUrl":"http://192.168.99.100:30013",
         "apiUrl": "http://agilite-api-service:30010",
         "urlSuffixConnectors": "/connectors/execute",
-        "apiKey": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1YThlYTcyOWE1Y2MwZjAwMTA3N2Y1OGEiLCJpYXQiOjE1MTkzMDkyNjcyNjZ9.A0_NvBdT_AD1EbylXHRDybECsudwiB2PWjPAO3iNRrs",
+        "apiKey": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1YWEwZjlmYWFkNmZkYTAwMTBiODEyZTciLCJpYXQiOjE1MjA0OTkzNjgyNDR9._Y3cCPZaWvAP32r0G8ul55vBsOtvujWMaasQ3p7eyR4",
         "dominoProfileKey":"paul_domino_dev",
         "routeLogin":"login",
         "routeFetchStores":"get_my_stores",

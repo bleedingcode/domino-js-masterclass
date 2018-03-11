@@ -12,7 +12,7 @@ import ToDoStoreFormContainer from '../containers/to-do-store-form/to-do-store-f
 class ToDoStoreApp extends React.Component {
 	componentDidMount(){
 		let props = this.props;
-		Pace.restart();
+		//Pace.restart();
 
 		connectWebSocket(function(){
 			props.fetchAllData();
