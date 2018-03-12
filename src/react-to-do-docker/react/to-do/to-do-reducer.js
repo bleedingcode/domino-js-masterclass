@@ -1,6 +1,7 @@
 import toDoState from './to-do-state';
 import tempData from '../temp-data-store/temp-data';
 import {actions} from './to-do-actions';
+import Moment from 'moment';
 
 const toDo = (state = toDoState, action) => {
   switch (action.type) {
@@ -23,6 +24,10 @@ const toDo = (state = toDoState, action) => {
       var tempEntry = state.data.find(t => t._id === action.id);
 
       tempData.toDo.activeEntry = JSON.parse(JSON.stringify(tempEntry));
+
+      if(tempData.toDo.activeEntry.data.dueDate !== ""){
+        tempData.toDo.activeEntry.data.dueDate = Moment(tempData.toDo.activeEntry.data.dueDate).toDate();
+      }
 
       return Object.assign({}, state, {
         header:{

@@ -23,7 +23,7 @@ const tempData = {
 				storeId:"",
 				taskName:"",
 				description:"",
-				dueDate:"",
+				dueDate:null,
 				priority:"",
 				assignedTo:"",
 				status:"New"

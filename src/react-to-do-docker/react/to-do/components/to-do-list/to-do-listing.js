@@ -103,7 +103,7 @@ class ToDoListing extends React.Component {
                   <TableHeaderColumn>Due Date</TableHeaderColumn>
                   <TableHeaderColumn>Responsible Person</TableHeaderColumn>
                   <TableHeaderColumn>Priority</TableHeaderColumn>
-                  <TableHeaderColumn>Actions</TableHeaderColumn>
+                  <TableHeaderColumn></TableHeaderColumn>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -112,10 +112,10 @@ class ToDoListing extends React.Component {
     				      	key={entry._id}
                     theme={this.props.theme}
                     author={entry.data.author}
-                    taskName={entry.data.name}
+                    taskName={entry.data.taskName}
                     description={entry.data.description}
                     dueDate={entry.data.dueDate}
-                    responsiblePerson={entry.data.responsiblePerson}
+                    assignedTo={entry.data.assignedTo}
                     priority={entry.data.priority}
                     className={entry.custom ? entry.custom.status : ""}
     				        onEditProfile={() => this.props.onEditProfile(entry._id)}

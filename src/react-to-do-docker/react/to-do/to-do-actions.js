@@ -2,6 +2,7 @@ import tempData from '../temp-data-store/temp-data';
 import Globals from '../globals';
 import { postPendingData } from '../core/core-logic';
 import axios from 'axios';
+import Moment from 'moment';
 
 /*
   ENUMS
@@ -77,6 +78,10 @@ export const submitProfile = (state) => {
     activeEntry.data.taskName = _.trim(activeEntry.data.taskName);
     activeEntry.data.description = _.trim(activeEntry.data.description);
 
+    if(activeEntry.data.dueDate){
+      activeEntry.data.dueDate = Moment(activeEntry.data.dueDate).format("YYYY-MM-DD");
+    }
+
     //Change status of record to Pending
     activeEntry.custom.status = 'warning';
 
@@ -120,7 +125,7 @@ export const submitProfile = (state) => {
 
     for(var x in dupArray){
       entry = dupArray[x];
-      reqType = entry.custom.action === "create" ? "2" : "3";
+      reqType = entry.custom.action === "create" ? "5" : "6";
 
       let params = {
         reqType:reqType,
@@ -237,7 +242,8 @@ export const processWSResponse = (data) => {
           data.data[x].custom = JSON.parse(JSON.stringify(tempData.toDo.dataTemplate.custom));
           data.data[x].custom.isSavedDoc = true;
           data.data[x].custom.isNewDoc = false;
-          data.data[x].custom.status = ""
+          data.data[x].custom.status = "";
+          data.data[x].data.storeId = data.data[x].data.metaversalId.substring(0, 16);//TODO: Paul needs to provide the Store Id for me
         }
       
         Globals.dispatch({type: actions.FETCH_ALL_DATA, payload:{data:data.data, storeList:data.storeList}});

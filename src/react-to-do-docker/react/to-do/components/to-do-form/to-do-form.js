@@ -11,6 +11,7 @@ import Checkbox from 'material-ui/Checkbox';
 import TextField from 'material-ui/TextField';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
+import DatePicker from 'material-ui/DatePicker';
 
 class ToDoForm extends React.Component {
 	constructor(props){
@@ -19,11 +20,14 @@ class ToDoForm extends React.Component {
 		this.state = {
 			entry:tempData.toDo.activeEntry,
 			priority:tempData.toDo.activeEntry.data.priority,
-			storeId:tempData.toDo.activeEntry.data.storeId
+			storeId:tempData.toDo.activeEntry.data.storeId,
+			dueDate:tempData.toDo.activeEntry.data.dueDate,
+			isNewDoc:tempData.toDo.activeEntry.custom.isNewDoc
 		};
 
 		this.setPriority = this.setPriority.bind(this);
 		this.setStoreId = this.setStoreId.bind(this);
+		this.setDueDate = this.setDueDate.bind(this);
 	}
 
 	setPriority(value){
@@ -32,6 +36,10 @@ class ToDoForm extends React.Component {
 
 	setStoreId(value){
 		this.setState({storeId:value});
+	}
+
+	setDueDate(value){
+		this.setState({dueDate:value});
 	}
 
 	onChange(key, value){
@@ -48,10 +56,11 @@ class ToDoForm extends React.Component {
 				break;
 			case "inputDueDate":
 				this.state.entry.data.dueDate = value;
+				this.setDueDate(value);
 				break;
-			case "inputResponsiblePerson":
-				this.state.entry.data.responsiblePerson = value;
-				break;
+			case "inputAssignedTo":
+				this.state.entry.data.assignedTo = value;
+				break;				
 			case "inputPriority":
 				this.state.entry.data.priority = value;
 				this.setPriority(value);
@@ -81,6 +90,7 @@ class ToDoForm extends React.Component {
 								<SelectField
 									floatingLabelText="Store"
 									floatingLabelFixed={true}
+									disabled={!this.state.isNewDoc}
 									value={this.state.entry.data.storeId}
 									autoWidth={true}
 									onChange={(e, index, value) => {
@@ -112,22 +122,21 @@ class ToDoForm extends React.Component {
 										this.onChange("inputDescription", value)
 									}}
 								/><br />
-								<TextField
+								<DatePicker
 									hintText="Provide a Due Date"
-									floatingLabelText="Due Date (optional)"
-									fullWidth={true}
-									defaultValue={this.state.entry.data.dueDate}
+									autoOk={true}
+									value={this.state.dueDate}
 									onChange={(e, value) => {
 										this.onChange("inputDueDate", value)
 									}}
-								/><br />
+								/>	
 								<TextField
 									hintText="Provide a Responsible Person"
 									floatingLabelText="Responsible Person"
 									fullWidth={true}
-									defaultValue={this.state.entry.data.responsiblePerson}
+									defaultValue={this.state.entry.data.assignedTo}
 									onChange={(e, value) => {
-										this.onChange("inputResponsiblePerson", value)
+										this.onChange("inputAssignedTo", value)
 									}}
 								/><br />
 								<SelectField
