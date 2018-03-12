@@ -5,6 +5,7 @@ metadata:
 spec:
   ports:
   - port: 30020
+    name: http
     nodePort: 30020
     targetPort: todo-port
     protocol: TCP
@@ -25,11 +26,11 @@ spec:
     metadata:
       labels:
         app: react-to-do-docker
-        version: v001
+        version: v002
     spec:
       containers:
-      - name: todo-001
-        image: agilite/react-to-do-docker:0.0.1
+      - name: todo-002
+        image: agilite/react-to-do-docker:0.0.2
         imagePullPolicy: Never
         ports:
         - name: todo-port

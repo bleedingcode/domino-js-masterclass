@@ -53,7 +53,8 @@ const fetchAllData = function(data, callback){
         if(err.response){
             callback(err.response.data);
         }else{
-            callback({success:false, messages:[err], data:{}});
+            console.log(err.stack);
+            callback({success:false, messages:[err.stack], data:{}});
         }
     });
   
@@ -111,7 +112,8 @@ const createRecord = function(data, callback){
         if(err.response){
             callback(err.response.data);
         }else{
-            callback({success:false, messages:[err], data:{}});
+            console.log(err.stack);
+            callback({success:false, messages:[err.stack], data:{}});
         }
     });
   
@@ -169,7 +171,8 @@ const updateRecord = function(data, callback){
         if(err.response){
             callback(err.response.data);
         }else{
-            callback({success:false, messages:[err], data:{}});
+            console.log(err.stack);
+            callback({success:false, messages:[err.stack], data:{}});
         }
     });
   

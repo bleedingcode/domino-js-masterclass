@@ -239,7 +239,7 @@ export const processWSResponse = (data) => {
           data.data[x].custom.isNewDoc = false;
           data.data[x].custom.status = ""
         }
-
+      
         Globals.dispatch({type: actions.FETCH_ALL_DATA, payload:{data:data.data, storeList:data.storeList}});
         break;
       case "5"://Submit Record Reponse

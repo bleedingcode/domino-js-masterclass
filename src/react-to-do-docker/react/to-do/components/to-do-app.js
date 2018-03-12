@@ -12,10 +12,10 @@ import ToDoFormContainer from '../containers/to-do-form/to-do-form-container';
 class ToDoApp extends React.Component {
 	componentDidMount(){
 		let props = this.props;		
-		Pace.restart();
+		//Pace.restart();
 
 		connectWebSocket(function(){
-			props.fetchAllData();
+			props.fetchAllData(props.app);
 
 			if(tempData.globals.resetToDo){
 				props.resetState();

@@ -33,7 +33,6 @@ const initEvents = function(io){
                     break;
                 case "3"://Update Record
                     Store.updateRecord(data, function(result){
-                        console.log(result);
                         io.sockets.sockets[data.socketId].emit("to-do-store-response", result);
                     });
                     break;                                       
@@ -58,7 +57,6 @@ const initEvents = function(io){
                     break;
                 case "6"://Update Record
                     ToDo.updateRecord(data, function(result){
-                        console.log(result);
                         io.sockets.sockets[data.socketId].emit("to-do-response", result);
                     });
                     break;                                       
