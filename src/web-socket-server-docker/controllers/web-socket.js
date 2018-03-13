@@ -41,6 +41,8 @@ const initEvents = function(io){
 
         //Process requests related to To Dos
         socket.on('to-do-requests', function (data) {
+            console.log("To Do Requests");
+            console.log(data);
             switch(data.reqType){
                 case "1"://Fetch All Data New
                 case "2"://Fetch All Data Assigned

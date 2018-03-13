@@ -1,7 +1,7 @@
 const theme = {
-  primary:'#d32f2f',
-  primaryLight:'#ffa4a2',
-  primaryDark:'#9a0007',
+  primary:'#3d6da8',
+  primaryLight:'#c3dbfd',
+  primaryDark:'#1c29cb',
   secondary:'#9e9e9e',
   secondaryLight:'#cfcfcf',
   secondaryLight2:'#eeeeee',

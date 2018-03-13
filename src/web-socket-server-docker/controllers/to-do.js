@@ -82,9 +82,10 @@ const createRecord = function(data, callback){
           record:data.record.data
         }
     };
-  
+
     Axios.request(params)
     .then(function (response) {
+        console.log(response.data);
         try {
             if(response.data.data.substring(0, 1) === "<"){
                 isUnauthorized = true;
@@ -109,6 +110,7 @@ const createRecord = function(data, callback){
     })
     .catch(function (err) {
         if(err.response){
+            console.log(err.response);
             callback(err.response.data);
         }else{
             console.log(err.stack);

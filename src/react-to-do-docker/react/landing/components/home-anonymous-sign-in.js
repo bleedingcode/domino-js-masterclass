@@ -43,8 +43,8 @@ class HomeAnonymousSignIn extends React.Component {
       <div>
         <div className="col-xs-12">
           <center>
-            <img src={globals.imgUrl + "/agilite/agilite-logo-full-web.png"} style={{width:400}} />
-            <h1>Welcome to the To Do App Portal</h1>
+            <img src={globals.imgUrl + "/ibm-think-banner.jpg"} style={{width:400}} />
+            <h1>Welcome to the React To Do App Portal</h1>
             <h3>Sign in below to access the Portal</h3>
           </center>
         </div>      
