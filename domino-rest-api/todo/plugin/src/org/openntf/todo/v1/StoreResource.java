@@ -19,7 +19,6 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.WebApplicationException;
@@ -217,7 +216,7 @@ public class StoreResource {
 	 *            User to update with access level
 	 * @return Response containing boolean success or error
 	 */
-	@PUT
+	@POST
 	@Path("/{store}/access")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response updateAccess(final @PathParam(value = "store") String storeKey, final String body) {

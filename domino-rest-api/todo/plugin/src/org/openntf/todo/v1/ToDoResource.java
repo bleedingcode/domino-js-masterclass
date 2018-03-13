@@ -19,7 +19,6 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.WebApplicationException;
@@ -211,7 +210,7 @@ public class ToDoResource {
 	 *            JSON object containing User to reassign to
 	 * @return Response {"success":true} or error
 	 */
-	@PUT
+	@POST
 	@Path("/{toDoId}/reassign")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response reassignToDo(@PathParam(value = "toDoId") final String metaversalId, final String body) {
@@ -256,7 +255,7 @@ public class ToDoResource {
 	 *            String metaversalId of the ToDo
 	 * @return Response ["success":true} or error
 	 */
-	@PUT
+	@POST
 	@Path("/{toDoId}/complete")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response completeToDo(@PathParam(value = "toDoId") final String metaversalId) {
@@ -291,7 +290,7 @@ public class ToDoResource {
 	 *            String metaversalId of the ToDo
 	 * @return Response {"success":true} or error
 	 */
-	@PUT
+	@POST
 	@Path("/{toDoId}/reopen")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response reopenToDo(@PathParam(value = "toDoId") final String metaversalId) {

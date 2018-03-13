@@ -340,7 +340,7 @@
           }
         ]
       },
-      "put": {
+      "post": {
         "tags": [
           "store",
           "user"
@@ -778,7 +778,7 @@
           }
         ]
       },
-      "put": {
+      "patch": {
         "tags": [
           "todo"
         ],
@@ -880,7 +880,7 @@
       }
     },
     "/v1/todo/{toDoId}/reassign": {
-      "put": {
+      "post": {
         "tags": [
           "todo"
         ],
@@ -937,7 +937,7 @@
       }
     },
     "/v1/todo/{toDoId}/complete": {
-      "put": {
+      "post": {
         "tags": [
           "todo"
         ],
@@ -985,7 +985,7 @@
       }
     },
     "/v1/todo/{toDoId}/reopen": {
-      "put": {
+      "post": {
         "tags": [
           "todo"
         ],

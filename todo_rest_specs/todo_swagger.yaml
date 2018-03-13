@@ -217,7 +217,7 @@ paths:
         - domino_auth: []
         - application_auth: []
           user_auth: []
-    put:
+    post:
       tags:
         - store
         - user
@@ -514,7 +514,7 @@ paths:
         - domino_auth: []
         - application_auth: []
           user_auth: []
-    put:
+    patch:
       tags:
         - todo
       description: update a ToDo in the store
@@ -578,7 +578,7 @@ paths:
         - application_auth: []
           user_auth: []
   '/v1/todo/{toDoId}/reassign':
-    put:
+    post:
       tags:
         - todo
       description: 'Reassign a todo to another user, changes status to reassigned'
@@ -614,7 +614,7 @@ paths:
         - application_auth: []
           user_auth: []
   '/v1/todo/{toDoId}/complete':
-    put:
+    post:
       tags:
         - todo
       description: Complete a todo
@@ -644,7 +644,7 @@ paths:
         - application_auth: []
           user_auth: []
   '/v1/todo/{toDoId}/reopen':
-    put:
+    post:
       tags:
         - todo
       description: Reopen a todo
