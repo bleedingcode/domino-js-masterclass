@@ -139,6 +139,7 @@ public class ToDoResource {
 		try {
 			Store store = ToDoStoreFactory.getInstance().getStore(Utils.getReplicaIdFromMetaversalId(metaversalId));
 			ToDo todo = new ResultParser<ToDo>(ToDo.class).parse(body);
+			todo.setMetaversalId(metaversalId);
 			if (StringUtils.isNotEmpty(todo.getAssignedTo())) {
 				ToDo oldTodo = ToDoStoreFactory.getInstance().getToDoFromMetaversalId(todo.getMetaversalId());
 				if (!StringUtils.equals(todo.getAssignedTo(), oldTodo.getAssignedTo())) {
@@ -148,7 +149,6 @@ public class ToDoResource {
 					}
 				}
 			}
-			todo.setMetaversalId(metaversalId);
 			todo = todo.compareAndUpdateFromPrevious();
 			todo = ToDoStoreFactory.getInstance().updateToDo(todo);
 

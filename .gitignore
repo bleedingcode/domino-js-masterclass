@@ -7,4 +7,7 @@ bundle.js
 bundle.js.map
 src/web-socket-server-docker/node_modules
 anrd-config.json
-*/buildNumber.properties
+domino-rest-api/todo/buildNumber.properties
+domino-rest-api/todo/feature/buildNumber.properties
+domino-rest-api/todo/update/buildNumber.properties
+domino-rest-api/todo/plugin/buildNumber.properties
