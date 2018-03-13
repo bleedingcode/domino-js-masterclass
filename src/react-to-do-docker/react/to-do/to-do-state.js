@@ -3,9 +3,10 @@ const toDoState = {
     facet:"view",
     viewTitle:"To Dos",
     listFilter:"",
-    storeList:[]
+    dataLoaded:false
   },
-  data:[]
+  data:[],
+  storeList:[]
 }
 
 export default toDoState;

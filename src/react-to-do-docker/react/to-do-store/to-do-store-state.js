@@ -2,7 +2,8 @@ const toDoStoreState = {
   header:{
     facet:"view",
     viewTitle:"Store",
-    listFilter:""
+    listFilter:"",
+    dataLoaded:false
   },
   data:[]
 }

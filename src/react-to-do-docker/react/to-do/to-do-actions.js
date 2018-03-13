@@ -16,7 +16,8 @@ export const actions = {
   SAVE_DOCUMENT: 'SAVE_TODO_PROFILE',
   FILTER_LIST: 'FILTER_TODO_LIST',
   FETCH_ALL_DATA: 'FETCH_ALL_TODO_DATA',
-  UPDATE_DATA: 'UPDATE_TODO_DATA'
+  UPDATE_DATA: 'UPDATE_TODO_DATA',
+  RESET_LOADING: 'RESET_TODO_LOADING'
 }
 
 /*
@@ -253,6 +254,7 @@ export const processWSResponse = (data) => {
           data.data.custom.action = "";
           data.data.custom.isSavedDoc = true;
           data.data.custom.status = "";
+          data.data.data.storeId = data.data.data.metaversalId.substring(0, 16);//TODO: Paul needs to provide the Store Id for me
 
           Globals.dispatch(updateData(data.data));
         }      
@@ -262,6 +264,7 @@ export const processWSResponse = (data) => {
           data.data.custom.action = "";
           data.data.custom.isSavedDoc = true;
           data.data.custom.status = "";
+          data.data.data.storeId = data.data.data.metaversalId.substring(0, 16);//TODO: Paul needs to provide the Store Id for me
 
           Globals.dispatch(updateData(data.data));
         }      

@@ -2,7 +2,8 @@ import tempData from '../temp-data-store/temp-data';
 import Globals from '../globals';
 
 import axios from 'axios';
-import {actions as landingActions} from '../landing/landing-actions';
+import {actions as toDoActions} from '../to-do/to-do-actions';
+import {actions as toDoStoreActions} from '../to-do-store/to-do-store-actions';
 import {toProperCase} from '../utilities';
 import validate from 'validate.js';
 import _ from 'lodash';
@@ -26,6 +27,13 @@ export const switchMenu = (dataId) => {
       dataId = null;
       window.open(Globals.nodeRedUrl);
     default:
+      dispatch({
+        type: toDoActions.RESET_LOADING
+      });
+      dispatch({
+        type: toDoStoreActions.RESET_LOADING
+      });
+
       dispatch({
         type: actions.SWITCH_MENU,
         dataId
@@ -54,8 +62,9 @@ export const initPreviousApp = () => {
   }
 }
 
-export const signInUser = () => {
+export const signInUser = (callback) => {
   return dispatch => {
+    Globals.tempCallback = callback;
     let result = true;
     let htmlContent = "";
     let htmlStart = "<div><ul>"
@@ -97,6 +106,7 @@ export const signInUser = () => {
       html = "";
     }else{
       html = htmlStart + htmlContent + htmlEnd;
+      Globals.tempCallback();
     }
 
     tmpDiv.innerHTML = html;
@@ -117,7 +127,6 @@ export const processSignInResult = (data) => {
     Globals.dispatch({
       type: actions.SIGN_IN_USER
     })
-
   }else{
     Globals.user.username = "";
     Globals.user.password = "";
@@ -128,5 +137,6 @@ export const processSignInResult = (data) => {
 
     html = htmlStart + htmlContent + htmlEnd;
     tmpDiv.innerHTML = html;
+    Globals.tempCallback();
   }
 }

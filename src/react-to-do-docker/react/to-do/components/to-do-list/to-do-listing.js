@@ -1,6 +1,7 @@
 import React from 'react';
 
-import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow} from 'material-ui/Table';
+import LinearProgress from 'material-ui/LinearProgress';
+import {Table, TableBody, TableHeader, TableHeaderColumn, TableRowColumn, TableRow} from 'material-ui/Table';
 import {Card, CardTitle, CardText} from 'material-ui/Card';
 import TextField from 'material-ui/TextField';
 import SelectField from 'material-ui/SelectField';
@@ -16,8 +17,8 @@ import AppBar from 'material-ui/AppBar';
 import ToDoListEntry from './to-do-list-entry';
 
 class ToDoListing extends React.Component {
-  constructor(){
-		super();
+  constructor(props){
+		super(props);
 
 		this.state = this.initState();
 
@@ -66,22 +67,26 @@ class ToDoListing extends React.Component {
             titleStyle={{color:this.props.theme.black}}
 						title={this.props.title}
             iconElementRight={
-              <FlatButton
-                icon={<AVLibraryBooks color={this.props.theme.primary} />}
-                label="New To Do"
-                labelStyle={{color:this.props.theme.primary}}
-                onTouchTap={e => {
-                    e.preventDefault()
-                    this.props.onCreateProfile()
-                }}
-              />
+              <div>
+                {this.props.state.header.dataLoaded?
+                  <FlatButton
+                  icon={<AVLibraryBooks color={this.props.theme.primary} />}
+                  label="New To Do"
+                  labelStyle={{color:this.props.theme.primary}}
+                  onTouchTap={e => {
+                      e.preventDefault()
+                      this.props.onCreateProfile()
+                  }}
+                />           
+                :null}
+              </div>
             }
 					/>
           <CardText>
             <Table selectable={false}>
               <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
                 <TableRow>
-                  <TableHeaderColumn colSpan="6">
+                  <TableHeaderColumn colSpan="7">
                     <div>
                       <div className="col-sm-12">
                         <TextField
@@ -106,22 +111,31 @@ class ToDoListing extends React.Component {
                   <TableHeaderColumn></TableHeaderColumn>
                 </TableRow>
               </TableHeader>
-              <TableBody>
-                {this.props.listing.map(entry =>
-    				      <ToDoListEntry
-    				      	key={entry._id}
-                    theme={this.props.theme}
-                    author={entry.data.author}
-                    taskName={entry.data.taskName}
-                    description={entry.data.description}
-                    dueDate={entry.data.dueDate}
-                    assignedTo={entry.data.assignedTo}
-                    priority={entry.data.priority}
-                    className={entry.custom ? entry.custom.status : ""}
-    				        onEditProfile={() => this.props.onEditProfile(entry._id)}
-                    onDeleteConfirm={() => this.deleteConfirm(entry._id, entry.data.name)}
-    				      />
-    				    )}
+              <TableBody displayRowCheckbox={false}>
+              {!this.props.state.header.dataLoaded?
+                  <TableRow>
+                    <TableRowColumn colSpan="4">
+                      <LinearProgress color="#3d6da8" mode="indeterminate" />
+                    </TableRowColumn>
+                  </TableRow>                
+                :
+                  this.props.listing.map(entry =>
+                    <ToDoListEntry
+                      key={entry._id}
+                      theme={this.props.theme}
+                      author={entry.data.author}
+                      taskName={entry.data.taskName}
+                      description={entry.data.description}
+                      dueDate={entry.data.dueDate}
+                      assignedTo={entry.data.assignedTo}
+                      priority={entry.data.priority}
+                      className={entry.custom ? entry.custom.status : ""}
+                      onEditProfile={() => this.props.onEditProfile(entry._id)}
+                      onDeleteConfirm={() => this.deleteConfirm(entry._id, entry.data.name)}
+                    />
+                  )   
+                }                
+
               </TableBody>
             </Table>
           </CardText>

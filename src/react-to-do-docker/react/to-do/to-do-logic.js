@@ -11,7 +11,6 @@ export const connectWebSocket = (callback) => {
   Globals.ws = IOClient.connect(Globals.wsUrl, {reconnect: true});
 
   Globals.ws.on('connect', function (socket) {
-    Globals.wsConnected = true;
     console.log("To Do Web Socket Connected!");
 
     Globals.ws.on('init-user-session', function (id) {
@@ -27,7 +26,6 @@ export const connectWebSocket = (callback) => {
 
 export const disconnectWebSocket = () => {
   console.log("To Do Web Socket Disconnected");
-  Globals.wsConnected = false;
   Globals.ws.disconnect();
   Globals.ws = null;
 
@@ -62,7 +60,7 @@ export const validateSubmit = (dispatch, state) => {
     htmlContent += "<li>Please provide a Description</li>";
   }
 
-  if(entry.dueDate === ""){
+  if(!entry.dueDate){
     result = false;
     htmlContent += "<li>Please provide a Due Date</li>";
   }

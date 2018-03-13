@@ -76,17 +76,16 @@ const loadConfig = function(callback){
   return null;
 };
 
-const authenticateUser = function(data, callback){
+const authenticateUser = function(connectionType, data, callback){
   const Axios = require('axios');
 
   let params = {
       method:"post",
-      url:Globals.config.agilite.apiUrl + Globals.config.agilite.urlSuffixConnectors,
+      url:Globals.config.nodeRedWebhook,
       headers:{
         "Content-Type":"application/json",
-        "api-key": Globals.config.agilite.apiKey,
-        "profile-key": Globals.config.agilite.dominoProfileKey,
-        "route-key": Globals.config.agilite.routeLogin
+        "connection-type": connectionType,
+        "req-type":data.reqType
       },
       data:{
         credentials:Buffer.from(data.username + ":" + data.password).toString('base64')
@@ -95,13 +94,6 @@ const authenticateUser = function(data, callback){
 
   Axios.request(params)
   .then(function (response) {
-    try {
-      if(response.data.data.substring(0, 1) === "<"){
-        response.data.success = false;
-        response.data.messages.push("Incorrect Username/Password. Please try again");
-      }      
-    } catch (error) {}
-
     callback(response.data);
   })
   .catch(function (err) {

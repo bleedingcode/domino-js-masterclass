@@ -83,10 +83,18 @@ const toDo = (state = toDoState, action) => {
     case actions.FETCH_ALL_DATA:
       return Object.assign({}, state, {
         header:{
-          ...state.header
+          ...state.header,
+          dataLoaded:true
         },
         data:action.payload.data,
         storeList:action.payload.storeList
+      })
+    case actions.RESET_LOADING:
+      return Object.assign({}, state, {
+        header:{
+          ...state.header,
+          dataLoaded:false
+        }
       })
     case actions.UPDATE_DATA:
       var tempIndex = 0;
@@ -99,11 +107,11 @@ const toDo = (state = toDoState, action) => {
       tempIndex = -1;
 
       if(entry.custom.tempId){
-        tempIndex = tempArray.findIndex(t => t._id === entry.custom.tempId);
+        tempIndex = tempArray.findIndex(t => t._id.toLowerCase() === entry.custom.tempId.toLowerCase());
       }
 
       if(tempIndex < 0){
-        tempIndex = tempArray.findIndex(t => t._id === entry._id);
+        tempIndex = tempArray.findIndex(t => t._id.toLowerCase() === entry._id.toLowerCase());
       }
 
       if(tempIndex >= 0){
