@@ -69,8 +69,11 @@ public class ToDoResource {
 			Store store = ToDoStoreFactory.getInstance().getStore(storeKey);
 			ToDo todo = new ResultParser<ToDo>(ToDo.class).parse(body);
 			todo.setAuthor(Utils.getCurrentUsername());
-			if (StringUtils.isNotEmpty(todo.getAssignedTo()) || StoreType.PERSONAL.equals(store.getType())) {
+			if (StringUtils.isEmpty(todo.getAssignedTo()) || StoreType.PERSONAL.equals(store.getType())) {
 				todo.setAssignedTo(todo.getAuthor());
+			} else {
+				// TODO: For a full app, we would need to check the user has access and, if not, add access
+				todo.setAssignedTo(Utils.getAsUsername(todo.getAssignedTo()));
 			}
 			todo.setStatus(ToDo.Status.NEW);
 			todo.validateForUpdate();
@@ -147,6 +150,7 @@ public class ToDoResource {
 						return Response.status(Status.BAD_REQUEST).entity("Personal ToDos cannot be reassigned")
 								.build();
 					}
+					// TODO: For a full app, we would need to check the user has access and, if not, add access
 				}
 			}
 			todo = todo.compareAndUpdateFromPrevious();
@@ -226,6 +230,7 @@ public class ToDoResource {
 			if (StringUtils.isEmpty(newUser.getUsername())) {
 				return Response.status(Status.BAD_REQUEST).entity("Username must be supplied").build();
 			}
+			// TODO: For a full app, we would need to check the user has access and, if not, add access
 			ToDo todo = ToDoStoreFactory.getInstance().getToDoFromMetaversalId(metaversalId);
 			todo.setAssignedTo(Utils.getAsUsername(newUser.getUsername()));
 			ToDoStoreFactory.getInstance().updateToDo(todo);
