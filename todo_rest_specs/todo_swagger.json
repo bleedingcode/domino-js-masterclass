@@ -782,7 +782,7 @@
         "tags": [
           "todo"
         ],
-        "description": "update a ToDo in the store",
+        "description": "update a ToDo in the store. Note, changes to the assignedTo person on a ToDo in a Personal Store will throw a 400 error",
         "operationId": "updateToDo",
         "consumes": [
           "application/json"
@@ -816,7 +816,7 @@
             }
           },
           "400": {
-            "description": "Invalid id supplied"
+            "description": "Invalid id supplied or attempt to run on a ToDo in a Personal store"
           },
           "401": {
             "description": "Not authorised"
@@ -884,7 +884,7 @@
         "tags": [
           "todo"
         ],
-        "description": "Reassign a todo to another user, changes status to reassigned",
+        "description": "Reassign a todo to another user, changes status to reassigned. Note, changes to the assignedTo person on a ToDo in a Personal Store will throw a 400 error",
         "operationId": "reassignToDo",
         "consumes": [
           "application/json"
@@ -919,7 +919,7 @@
             }
           },
           "400": {
-            "description": "Invalid id supplied"
+            "description": "Invalid id supplied or attempt to run on a ToDo in a Personal store"
           },
           "401": {
             "description": "Not authorised"

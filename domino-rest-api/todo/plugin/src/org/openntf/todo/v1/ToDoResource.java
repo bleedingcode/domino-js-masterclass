@@ -141,8 +141,7 @@ public class ToDoResource {
 			ToDo todo = new ResultParser<ToDo>(ToDo.class).parse(body);
 			if (StringUtils.isNotEmpty(todo.getAssignedTo())) {
 				if (StoreType.PERSONAL.equals(store.getType())) {
-					throw new WebApplicationException(
-							Response.status(Status.BAD_REQUEST).entity("Personal ToDos cannot be reassigned").build());
+					return Response.status(Status.BAD_REQUEST).entity("Personal ToDos cannot be reassigned").build();
 				}
 			}
 			todo.setMetaversalId(metaversalId);
@@ -183,7 +182,7 @@ public class ToDoResource {
 			Store store = ToDoStoreFactory.getInstance().getStore(Utils.getReplicaIdFromMetaversalId(metaversalId));
 			DatabaseAccess dbAccess = ToDoStoreFactory.getInstance().queryAccess(store, Utils.getCurrentUsername());
 			if (!dbAccess.getAllowDelete()) {
-				throw new WebApplicationException(Status.FORBIDDEN);
+				return Response.status(Status.FORBIDDEN).build();
 			}
 			
 			JsonJavaObject jjo = new JsonJavaObject();
@@ -217,13 +216,11 @@ public class ToDoResource {
 		try {
 			Store store = ToDoStoreFactory.getInstance().getStore(Utils.getReplicaIdFromMetaversalId(metaversalId));
 			if (StoreType.PERSONAL.equals(store.getType())) {
-				throw new WebApplicationException(
-						Response.status(Status.FORBIDDEN).entity("Personal ToDos cannot be reassigned").build());
+				return Response.status(Status.FORBIDDEN).entity("Personal ToDos cannot be reassigned").build();
 			}
 			User newUser = new ResultParser<User>(User.class).parse(body);
 			if (StringUtils.isEmpty(newUser.getUsername())) {
-				throw new WebApplicationException(
-						Response.status(Status.BAD_REQUEST).entity("Username must be supplied").build());
+				return Response.status(Status.BAD_REQUEST).entity("Username must be supplied").build();
 			}
 			ToDo todo = ToDoStoreFactory.getInstance().getToDoFromMetaversalId(metaversalId);
 			todo.setAssignedTo(Utils.getAsUsername(newUser.getUsername()));

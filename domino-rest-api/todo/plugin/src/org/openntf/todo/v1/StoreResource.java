@@ -162,7 +162,6 @@ public class StoreResource {
 	 */
 	@GET
 	@Path("/{store}")
-	@Consumes(MediaType.APPLICATION_JSON)
 	public Response getStoreInfo(final @PathParam(value = "store") String storeKey) {
 		try {
 			Store store = ToDoStoreFactory.getInstance().getStore(storeKey);
