@@ -2,6 +2,7 @@ import React from 'react';
 import tempData from '../../temp-data-store/temp-data';
 import { connectWebSocket, disconnectWebSocket } from '../landing-logic';
 
+import RefreshIndicator from 'material-ui/RefreshIndicator';
 import {Card, CardActions, CardTitle, CardText} from 'material-ui/Card';
 import FlatButton from 'material-ui/FlatButton';
 import TextField from 'material-ui/TextField';
@@ -14,7 +15,11 @@ import globals from '../../globals';
 class HomeAnonymousSignIn extends React.Component {
   constructor(){
 		super();
-		this.entry = tempData.signInForm;
+    this.entry = tempData.signInForm;
+    this.state = {authenticating:false}
+
+    this.onChange = this.onChange.bind(this);
+    this.authenticate = this.authenticate.bind(this);
 	}
 
 	onChange(key, value){
@@ -26,6 +31,15 @@ class HomeAnonymousSignIn extends React.Component {
 				this.entry.password = value;
 				break;
 		}
+	}
+
+	authenticate(){
+    let tempThis = this;
+    tempThis.setState({authenticating:true});
+
+    this.props.signInUser(function(){
+      tempThis.setState({authenticating:false});
+    });
 	}
 
 	componentDidMount(){
@@ -52,7 +66,7 @@ class HomeAnonymousSignIn extends React.Component {
           className="col-md-6 col-md-offset-3"
           onSubmit={e => {
               e.preventDefault()
-              this.props.signInUser()
+              this.authenticate()
           }}
           >
           <Card>
@@ -85,12 +99,23 @@ class HomeAnonymousSignIn extends React.Component {
               <div className="row">
               <div id="divMessages" className="col-xs-11 col-xs-offset-1 messagesError"></div>
               <div className="col-xs-11 col-xs-offset-1">
-              <FlatButton
-                type="submit"
-                icon={<ActionDone />}
-                label="Sign In"
-                style={{color:theme.successColor}}
-              />
+                <FlatButton
+                  type="submit"
+                  disabled={this.state.authenticating}
+                  icon={<ActionDone />}
+                  label="Sign In"
+                  style={{color:theme.successColor}}
+                />  
+              {this.state.authenticating ? 
+                <RefreshIndicator
+                  size={30}
+                  left={10}
+                  top={5}
+                  loadingColor="#3d6da8"
+                  status="loading"
+                  style={{display:'inline-block', position:'relative'}}
+                />              
+              :null}
             </div>
             </div>
             </CardActions>

@@ -1,17 +1,4 @@
 {
     "fileSizeLimit":"100mb",
-    "agilite":{
-        "portalUrl":"http://192.168.99.100:30013",
-        "apiUrl": "http://agilite-api-service:30010",
-        "urlSuffixConnectors": "/connectors/execute",
-        "apiKey": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1YWEwZjlmYWFkNmZkYTAwMTBiODEyZTciLCJpYXQiOjE1MjA0OTkzNjgyNDR9._Y3cCPZaWvAP32r0G8ul55vBsOtvujWMaasQ3p7eyR4",
-        "dominoProfileKey":"paul_domino_dev",
-        "routeLogin":"login",
-        "routeFetchStores":"get_my_stores",
-        "routeCreateStore":"create_store",
-        "routeUpdateStore":"update_store",
-        "routeFetchToDos":"get_todos",
-        "routeCreateToDo":"create_todo",
-        "routeUpdateToDo":"update_todo"        
-    }
+    "nodeRedWebhook":"http://anrd-service:30011/api/webhook/todo"
 }

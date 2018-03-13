@@ -121,7 +121,7 @@ class ToDoForm extends React.Component {
 									onChange={(e, value) => {
 										this.onChange("inputDescription", value)
 									}}
-								/><br />
+								/><br /><br />
 								<DatePicker
 									hintText="Provide a Due Date"
 									autoOk={true}
@@ -129,7 +129,7 @@ class ToDoForm extends React.Component {
 									onChange={(e, value) => {
 										this.onChange("inputDueDate", value)
 									}}
-								/>	
+								/>
 								<TextField
 									hintText="Provide a Responsible Person"
 									floatingLabelText="Responsible Person"

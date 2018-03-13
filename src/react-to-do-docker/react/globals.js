@@ -21,8 +21,8 @@ let deployment = {
 const globals = {
     deployType:deployment.deployType,
     ws:null,
-    wsConnected:false,
     dispatch:null,
+    tempCallback:null,
     user:{
       socketId:"",
       username:"",

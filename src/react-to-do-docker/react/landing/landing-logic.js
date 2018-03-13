@@ -6,7 +6,6 @@ export const connectWebSocket = () => {
   Globals.ws = IOClient.connect(Globals.wsUrl, {reconnect: true});
 
   Globals.ws.on('connect', function (socket) {
-    Globals.wsConnected = true;
     console.log("Main Web Socket Connected!");
   });
 
@@ -21,7 +20,6 @@ export const connectWebSocket = () => {
 
 export const disconnectWebSocket = () => {
   console.log("Main Web Socket Disconnected");
-  Globals.wsConnected = false;
   Globals.ws.disconnect();
   Globals.ws = null;
   return true;

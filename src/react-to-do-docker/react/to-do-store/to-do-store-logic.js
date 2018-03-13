@@ -11,7 +11,6 @@ export const connectWebSocket = (callback) => {
   Globals.ws = IOClient.connect(Globals.wsUrl, {reconnect: true});
 
   Globals.ws.on('connect', function (socket) {
-    Globals.wsConnected = true;
     console.log("Store Web Socket Connected!");
 
     Globals.ws.on('init-user-session', function (id) {
@@ -27,7 +26,6 @@ export const connectWebSocket = (callback) => {
 
 export const disconnectWebSocket = () => {
   console.log("Store Web Socket Disconnected");
-  Globals.wsConnected = false;
   Globals.ws.disconnect();
   Globals.ws = null;
 

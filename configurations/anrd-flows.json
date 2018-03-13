@@ -1,0 +1,1236 @@
+[
+    {
+        "id": "9e8643b4.332fc",
+        "type": "tab",
+        "label": "To Do",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "7101d4a7.05e83c",
+        "type": "agilite-login",
+        "z": "",
+        "serverType": "2",
+        "server": "http://192.168.99.100:30010",
+        "name": "JJ-Minikube",
+        "username": "john.jardin@gmail.com"
+    },
+    {
+        "id": "45e1b833.b4f36",
+        "type": "http in",
+        "z": "9e8643b4.332fc",
+        "name": "TD-Webhook",
+        "url": "/webhook/todo",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 110,
+        "y": 120,
+        "wires": [
+            [
+                "70d9135f.79533c"
+            ]
+        ]
+    },
+    {
+        "id": "a62676e8.0c645",
+        "type": "debug",
+        "z": "9e8643b4.332fc",
+        "name": "TD-Debug",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "x": 1130,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "9d21fd15.10554",
+        "type": "http response",
+        "z": "9e8643b4.332fc",
+        "name": "TD-API Response",
+        "statusCode": "",
+        "headers": {},
+        "x": 1150,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "3b99311a.94bc56",
+        "type": "link in",
+        "z": "9e8643b4.332fc",
+        "name": "TD-Finalize",
+        "links": [
+            "55184be0.78d874",
+            "8c6f42ed.3f05b8"
+        ],
+        "x": 1015,
+        "y": 360,
+        "wires": [
+            [
+                "a62676e8.0c645",
+                "9d21fd15.10554"
+            ]
+        ]
+    },
+    {
+        "id": "c811478.e0adab8",
+        "type": "comment",
+        "z": "9e8643b4.332fc",
+        "name": "TD-Process Errors",
+        "info": "",
+        "x": 1070,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "5ad48c37.fe2cd4",
+        "type": "catch",
+        "z": "9e8643b4.332fc",
+        "name": "TD-Error Handler",
+        "scope": null,
+        "x": 1080,
+        "y": 200,
+        "wires": [
+            [
+                "b1bde2f.dc068a"
+            ]
+        ]
+    },
+    {
+        "id": "b1bde2f.dc068a",
+        "type": "function",
+        "z": "9e8643b4.332fc",
+        "name": "TD-Prepare Error Result",
+        "func": "msg.payload = {\n    reqType:msg.req.headers[\"req-type\"],\n    success:false,\n    messages:[msg.error.message],\n    data:msg.error.source\n};\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1090,
+        "y": 240,
+        "wires": [
+            [
+                "8c6f42ed.3f05b8"
+            ]
+        ]
+    },
+    {
+        "id": "8c6f42ed.3f05b8",
+        "type": "link out",
+        "z": "9e8643b4.332fc",
+        "name": "Run TD-Finalize",
+        "links": [
+            "3b99311a.94bc56"
+        ],
+        "x": 1255,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "894cf92b.65b2c",
+        "type": "comment",
+        "z": "9e8643b4.332fc",
+        "name": "TD-Finalize",
+        "info": "",
+        "x": 1040,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "b61bc7d6.d24a88",
+        "type": "comment",
+        "z": "9e8643b4.332fc",
+        "name": "TD-Process Success Result",
+        "info": "",
+        "x": 1100,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "b1679686.0368b8",
+        "type": "function",
+        "z": "9e8643b4.332fc",
+        "name": "TD-Prepare Success Result",
+        "func": "msg.payload = {\n    reqType:msg.req.headers[\"req-type\"],\n    success:true,\n    messages:[],\n    data:msg.payload\n};\n\nif(msg.storeList){\n    msg.payload.storeList = msg.storeList;\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1180,
+        "y": 100,
+        "wires": [
+            [
+                "55184be0.78d874"
+            ]
+        ]
+    },
+    {
+        "id": "55184be0.78d874",
+        "type": "link out",
+        "z": "9e8643b4.332fc",
+        "name": "Run TD-Finalize",
+        "links": [
+            "3b99311a.94bc56"
+        ],
+        "x": 1375,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "e4099329.fcc3",
+        "type": "link in",
+        "z": "9e8643b4.332fc",
+        "name": "TD-Process Result",
+        "links": [
+            "824007d0.b5f778",
+            "9837d67c.030cf8",
+            "3e6fc812.d11d18",
+            "adedddba.3dafd",
+            "352f4a48.d70f0e",
+            "b71be5a3.6e2a98",
+            "7f3bae36.a6a3e8",
+            "b05e091e.afdd08"
+        ],
+        "x": 995,
+        "y": 100,
+        "wires": [
+            [
+                "b1679686.0368b8"
+            ]
+        ]
+    },
+    {
+        "id": "70d9135f.79533c",
+        "type": "switch",
+        "z": "9e8643b4.332fc",
+        "name": "TD-Connection Type",
+        "property": "req.headers[\"connection-type\"]",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "to-do-app-requests",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "to-do-store-requests",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "to-do-requests",
+                "vt": "str"
+            }
+        ],
+        "checkall": "false",
+        "repair": false,
+        "outputs": 3,
+        "x": 320,
+        "y": 120,
+        "wires": [
+            [
+                "d6fd0124.a1be"
+            ],
+            [
+                "7eca0e9.3867f7"
+            ],
+            [
+                "c6260965.15d23"
+            ]
+        ]
+    },
+    {
+        "id": "d6fd0124.a1be",
+        "type": "link out",
+        "z": "9e8643b4.332fc",
+        "name": "Run TD1-Authenticate",
+        "links": [
+            "5db4f9b1.310b4"
+        ],
+        "x": 475,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "e88af82d.65fda8",
+        "type": "comment",
+        "z": "9e8643b4.332fc",
+        "name": "TD-Start",
+        "info": "",
+        "x": 100,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "1d9f3b89.afc944",
+        "type": "comment",
+        "z": "9e8643b4.332fc",
+        "name": "TD1-Authenticate",
+        "info": "",
+        "x": 120,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "5db4f9b1.310b4",
+        "type": "link in",
+        "z": "9e8643b4.332fc",
+        "name": "TD1-Authenticate",
+        "links": [
+            "d6fd0124.a1be"
+        ],
+        "x": 55,
+        "y": 240,
+        "wires": [
+            [
+                "f370a0f7.3f34d8"
+            ]
+        ]
+    },
+    {
+        "id": "f370a0f7.3f34d8",
+        "type": "function",
+        "z": "9e8643b4.332fc",
+        "name": "TD1-Prep",
+        "func": "msg.payload = msg.req.body;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 160,
+        "y": 240,
+        "wires": [
+            [
+                "61f52ee9.cb08b8"
+            ]
+        ]
+    },
+    {
+        "id": "61f52ee9.cb08b8",
+        "type": "connectors",
+        "z": "9e8643b4.332fc",
+        "server": "7101d4a7.05e83c",
+        "profileKey": "paul_domino_dev",
+        "routeKey": "login",
+        "name": "TD1-Connector",
+        "x": 340,
+        "y": 240,
+        "wires": [
+            [
+                "3b237cdd.aecc8c"
+            ]
+        ]
+    },
+    {
+        "id": "3b237cdd.aecc8c",
+        "type": "function",
+        "z": "9e8643b4.332fc",
+        "name": "TD1-Finalize",
+        "func": "if(msg.agilite.success){\n    try {\n      if(msg.payload.substring(0, 1) === \"<\"){\n        return node.error(\"Incorrect Username/Password. Please try again\", msg);\n      }  \n    } catch (error) {}    \n    \n    return msg;    \n}else{\n    return node.error(msg.agilite.messages[0], msg);\n}\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 530,
+        "y": 240,
+        "wires": [
+            [
+                "9837d67c.030cf8"
+            ]
+        ]
+    },
+    {
+        "id": "9837d67c.030cf8",
+        "type": "link out",
+        "z": "9e8643b4.332fc",
+        "name": "Run TD-Process Result",
+        "links": [
+            "e4099329.fcc3"
+        ],
+        "x": 655,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "7eca0e9.3867f7",
+        "type": "link out",
+        "z": "9e8643b4.332fc",
+        "name": "Run TD2-Store Requests",
+        "links": [
+            "5148c338.a7d304"
+        ],
+        "x": 475,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "a8252270.393048",
+        "type": "comment",
+        "z": "9e8643b4.332fc",
+        "name": "TD2-Store Requests",
+        "info": "",
+        "x": 130,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "1ecd122b.b3515e",
+        "type": "comment",
+        "z": "9e8643b4.332fc",
+        "name": "TD2-1-Fetch Data",
+        "info": "",
+        "x": 170,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "5148c338.a7d304",
+        "type": "link in",
+        "z": "9e8643b4.332fc",
+        "name": "TD2-Store Requests",
+        "links": [
+            "7eca0e9.3867f7"
+        ],
+        "x": 55,
+        "y": 360,
+        "wires": [
+            [
+                "642526bd.a43aa8"
+            ]
+        ]
+    },
+    {
+        "id": "642526bd.a43aa8",
+        "type": "switch",
+        "z": "9e8643b4.332fc",
+        "name": "TD2-Req Type",
+        "property": "req.headers[\"req-type\"]",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "1",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "2",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "3",
+                "vt": "str"
+            }
+        ],
+        "checkall": "false",
+        "repair": false,
+        "outputs": 3,
+        "x": 180,
+        "y": 380,
+        "wires": [
+            [
+                "6ec9482a.243ea"
+            ],
+            [
+                "9fc8cca.e87603"
+            ],
+            [
+                "c378f01a.9d22b8"
+            ]
+        ]
+    },
+    {
+        "id": "6ec9482a.243ea",
+        "type": "link out",
+        "z": "9e8643b4.332fc",
+        "name": "Run TD2-1-Fetch Data",
+        "links": [
+            "2ff53f9.4edefc"
+        ],
+        "x": 315,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "2ff53f9.4edefc",
+        "type": "link in",
+        "z": "9e8643b4.332fc",
+        "name": "TD2-1-Fetch Data",
+        "links": [
+            "6ec9482a.243ea"
+        ],
+        "x": 95,
+        "y": 500,
+        "wires": [
+            [
+                "b7ed2adb.06bc4"
+            ]
+        ]
+    },
+    {
+        "id": "b7ed2adb.06bc4",
+        "type": "function",
+        "z": "9e8643b4.332fc",
+        "name": "TD2-1-Prep",
+        "func": "msg.payload = msg.req.body;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 210,
+        "y": 500,
+        "wires": [
+            [
+                "9ff744aa.2d064"
+            ]
+        ]
+    },
+    {
+        "id": "9ff744aa.2d064",
+        "type": "connectors",
+        "z": "9e8643b4.332fc",
+        "server": "7101d4a7.05e83c",
+        "profileKey": "paul_domino_dev",
+        "routeKey": "get_my_stores",
+        "name": "TD2-1-Connector",
+        "x": 410,
+        "y": 500,
+        "wires": [
+            [
+                "b022f8f.8e91508"
+            ]
+        ]
+    },
+    {
+        "id": "b022f8f.8e91508",
+        "type": "function",
+        "z": "9e8643b4.332fc",
+        "name": "TD2-1-Finalize",
+        "func": "if(msg.agilite.success){\n    try {\n      if(msg.payload.substring(0, 1) === \"<\"){\n        return node.error(\"Incorrect Username/Password. Please try again\", msg);\n      }  \n    } catch (error) {}    \n    \n    //Fix up Data Entries to be compatible with React\n    var resultData = [];\n    \n    for(var x in msg.payload){\n        resultData.push(\n            {\n                _id:msg.payload[x].replicaId,\n                data:msg.payload[x]\n            }\n        )\n    }\n    \n    msg.payload = resultData;\n    \n    return msg;    \n}else{\n    return node.error(msg.agilite.messages[0], msg);\n}\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 620,
+        "y": 500,
+        "wires": [
+            [
+                "3e6fc812.d11d18"
+            ]
+        ]
+    },
+    {
+        "id": "3e6fc812.d11d18",
+        "type": "link out",
+        "z": "9e8643b4.332fc",
+        "name": "Run TD-Process Result",
+        "links": [
+            "e4099329.fcc3"
+        ],
+        "x": 755,
+        "y": 500,
+        "wires": []
+    },
+    {
+        "id": "e0623925.712278",
+        "type": "comment",
+        "z": "9e8643b4.332fc",
+        "name": "TD2-2-Create Record",
+        "info": "",
+        "x": 180,
+        "y": 560,
+        "wires": []
+    },
+    {
+        "id": "fb527e24.b8416",
+        "type": "link in",
+        "z": "9e8643b4.332fc",
+        "name": "TD2-2-Create Record",
+        "links": [
+            "9fc8cca.e87603"
+        ],
+        "x": 95,
+        "y": 600,
+        "wires": [
+            [
+                "73324a60.675cdc"
+            ]
+        ]
+    },
+    {
+        "id": "73324a60.675cdc",
+        "type": "function",
+        "z": "9e8643b4.332fc",
+        "name": "TD2-2-Prep",
+        "func": "msg.payload = msg.req.body;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 210,
+        "y": 600,
+        "wires": [
+            [
+                "8c2c96dd.c4534"
+            ]
+        ]
+    },
+    {
+        "id": "8c2c96dd.c4534",
+        "type": "connectors",
+        "z": "9e8643b4.332fc",
+        "server": "7101d4a7.05e83c",
+        "profileKey": "paul_domino_dev",
+        "routeKey": "create_store",
+        "name": "TD2-2-Connector",
+        "x": 410,
+        "y": 600,
+        "wires": [
+            [
+                "ea42840f.fdd29"
+            ]
+        ]
+    },
+    {
+        "id": "ea42840f.fdd29",
+        "type": "function",
+        "z": "9e8643b4.332fc",
+        "name": "TD2-2-Finalize",
+        "func": "if(msg.agilite.success){\n    try {\n      if(msg.payload.substring(0, 1) === \"<\"){\n        return node.error(\"Incorrect Username/Password. Please try again\", msg);\n      }  \n    } catch (error) {}    \n    \n    //Fix up Data Entries to be compatible with React\n    var resultData = {\n        _id:msg.payload.replicaId,\n        custom:msg.req.body.custom,\n        data:msg.payload \n    };\n    \n    msg.payload = resultData;    \n    \n    return msg;    \n}else{\n    return node.error(msg.agilite.messages[0], msg);\n}\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 620,
+        "y": 600,
+        "wires": [
+            [
+                "adedddba.3dafd"
+            ]
+        ]
+    },
+    {
+        "id": "adedddba.3dafd",
+        "type": "link out",
+        "z": "9e8643b4.332fc",
+        "name": "Run TD-Process Result",
+        "links": [
+            "e4099329.fcc3"
+        ],
+        "x": 755,
+        "y": 600,
+        "wires": []
+    },
+    {
+        "id": "9fc8cca.e87603",
+        "type": "link out",
+        "z": "9e8643b4.332fc",
+        "name": "Run TD2-2-Create Record",
+        "links": [
+            "fb527e24.b8416"
+        ],
+        "x": 315,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "95460af9.bb4348",
+        "type": "comment",
+        "z": "9e8643b4.332fc",
+        "name": "TD2-3-Update Record",
+        "info": "",
+        "x": 180,
+        "y": 660,
+        "wires": []
+    },
+    {
+        "id": "606ed200.8d24b8",
+        "type": "link in",
+        "z": "9e8643b4.332fc",
+        "name": "TD2-3-Update Record",
+        "links": [
+            "c378f01a.9d22b8"
+        ],
+        "x": 95,
+        "y": 700,
+        "wires": [
+            [
+                "114a2500.3c487b"
+            ]
+        ]
+    },
+    {
+        "id": "114a2500.3c487b",
+        "type": "function",
+        "z": "9e8643b4.332fc",
+        "name": "TD2-3-Prep",
+        "func": "msg.payload = msg.req.body;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 210,
+        "y": 700,
+        "wires": [
+            [
+                "af8c59f4.b51bb8"
+            ]
+        ]
+    },
+    {
+        "id": "af8c59f4.b51bb8",
+        "type": "connectors",
+        "z": "9e8643b4.332fc",
+        "server": "7101d4a7.05e83c",
+        "profileKey": "paul_domino_dev",
+        "routeKey": "update_store",
+        "name": "TD2-3-Connector",
+        "x": 410,
+        "y": 700,
+        "wires": [
+            [
+                "1e3fbee2.9991a1"
+            ]
+        ]
+    },
+    {
+        "id": "1e3fbee2.9991a1",
+        "type": "function",
+        "z": "9e8643b4.332fc",
+        "name": "TD2-3-Finalize",
+        "func": "if(msg.agilite.success){\n    try {\n      if(msg.payload.substring(0, 1) === \"<\"){\n        return node.error(\"Incorrect Username/Password. Please try again\", msg);\n      }  \n    } catch (error) {}    \n    \n    //Fix up Data Entries to be compatible with React\n    var resultData = {\n        _id:msg.payload.replicaId,\n        custom:msg.req.body.custom,\n        data:msg.payload   \n    };\n    \n    msg.payload = resultData;    \n    \n    return msg;    \n}else{\n    return node.error(msg.agilite.messages[0], msg);\n}\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 620,
+        "y": 700,
+        "wires": [
+            [
+                "352f4a48.d70f0e"
+            ]
+        ]
+    },
+    {
+        "id": "352f4a48.d70f0e",
+        "type": "link out",
+        "z": "9e8643b4.332fc",
+        "name": "Run TD-Process Result",
+        "links": [
+            "e4099329.fcc3"
+        ],
+        "x": 755,
+        "y": 700,
+        "wires": []
+    },
+    {
+        "id": "c378f01a.9d22b8",
+        "type": "link out",
+        "z": "9e8643b4.332fc",
+        "name": "Run TD2-3-Create Record",
+        "links": [
+            "606ed200.8d24b8"
+        ],
+        "x": 315,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "2d170faf.7d1d48",
+        "type": "comment",
+        "z": "9e8643b4.332fc",
+        "name": "TD3-To Do Requests",
+        "info": "",
+        "x": 130,
+        "y": 780,
+        "wires": []
+    },
+    {
+        "id": "7c1fb16e.3d4b4",
+        "type": "link in",
+        "z": "9e8643b4.332fc",
+        "name": "TD3-To Do Requests",
+        "links": [
+            "c6260965.15d23"
+        ],
+        "x": 55,
+        "y": 820,
+        "wires": [
+            [
+                "600a5f6b.cafd08"
+            ]
+        ]
+    },
+    {
+        "id": "600a5f6b.cafd08",
+        "type": "switch",
+        "z": "9e8643b4.332fc",
+        "name": "TD3-Req Type",
+        "property": "req.headers[\"req-type\"]",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "btwn",
+                "v": "1",
+                "vt": "num",
+                "v2": "4",
+                "v2t": "num"
+            },
+            {
+                "t": "eq",
+                "v": "5",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "6",
+                "vt": "str"
+            }
+        ],
+        "checkall": "false",
+        "repair": false,
+        "outputs": 3,
+        "x": 180,
+        "y": 840,
+        "wires": [
+            [
+                "2b68c2cb.5b209e"
+            ],
+            [
+                "7e811a8e.55ba54"
+            ],
+            [
+                "eee9e070.3c6808"
+            ]
+        ]
+    },
+    {
+        "id": "2b68c2cb.5b209e",
+        "type": "link out",
+        "z": "9e8643b4.332fc",
+        "name": "Run TD3-1.1-Fetch Data",
+        "links": [
+            "a8fbc522.a7bc78"
+        ],
+        "x": 315,
+        "y": 800,
+        "wires": []
+    },
+    {
+        "id": "7e811a8e.55ba54",
+        "type": "link out",
+        "z": "9e8643b4.332fc",
+        "name": "Run TD3-2-Create Record",
+        "links": [
+            "c3d04d23.b982c8"
+        ],
+        "x": 315,
+        "y": 840,
+        "wires": []
+    },
+    {
+        "id": "eee9e070.3c6808",
+        "type": "link out",
+        "z": "9e8643b4.332fc",
+        "name": "Run TD3-3-Update Record",
+        "links": [
+            "319b5a34.c1e5fe"
+        ],
+        "x": 315,
+        "y": 880,
+        "wires": []
+    },
+    {
+        "id": "c6260965.15d23",
+        "type": "link out",
+        "z": "9e8643b4.332fc",
+        "name": "Run TD3-To Do Requests",
+        "links": [
+            "7c1fb16e.3d4b4"
+        ],
+        "x": 475,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "e8c50f68.38d98",
+        "type": "comment",
+        "z": "9e8643b4.332fc",
+        "name": "TD3-1-Fetch Data",
+        "info": "",
+        "x": 170,
+        "y": 920,
+        "wires": []
+    },
+    {
+        "id": "a8fbc522.a7bc78",
+        "type": "link in",
+        "z": "9e8643b4.332fc",
+        "name": "TD3-1.1-Fetch Data",
+        "links": [
+            "2b68c2cb.5b209e"
+        ],
+        "x": 115,
+        "y": 1000,
+        "wires": [
+            [
+                "7328ea9e.48094c"
+            ]
+        ]
+    },
+    {
+        "id": "7328ea9e.48094c",
+        "type": "function",
+        "z": "9e8643b4.332fc",
+        "name": "TD3-1.1-Prep",
+        "func": "msg.payload = msg.req.body;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 240,
+        "y": 1000,
+        "wires": [
+            [
+                "171e8f53.3aa839"
+            ]
+        ]
+    },
+    {
+        "id": "171e8f53.3aa839",
+        "type": "connectors",
+        "z": "9e8643b4.332fc",
+        "server": "7101d4a7.05e83c",
+        "profileKey": "paul_domino_dev",
+        "routeKey": "get_my_stores",
+        "name": "TD3-1.1-Connector",
+        "x": 450,
+        "y": 1000,
+        "wires": [
+            [
+                "f7f937b8.c9bd88"
+            ]
+        ]
+    },
+    {
+        "id": "f7f937b8.c9bd88",
+        "type": "function",
+        "z": "9e8643b4.332fc",
+        "name": "TD3-1.1-Finalize",
+        "func": "if(msg.agilite.success){\n    try {\n      if(msg.payload.substring(0, 1) === \"<\"){\n        return node.error(\"Incorrect Username/Password. Please try again\", msg);\n      }  \n    } catch (error) {}    \n    \n    //Fix up Data Entries to be compatible with React\n    var resultData = [];\n    \n    for(var x in msg.payload){\n        resultData.push(\n            {\n                text:msg.payload[x].title,\n                value:msg.payload[x].replicaId\n            }\n        )\n    }\n    \n    msg.storeList = resultData.sort(sortBy(\"text\", false, function(a){return a.toUpperCase()}));\n    \n    //Setup To Do Variables for Looping\n    msg.toDoList = [];\n    msg.startIndex = 0;\n    msg.isComplete = false;\n\n    return msg;    \n}else{\n    return node.error(msg.agilite.messages[0], msg);\n}\n\n//PRIVATE FUNCTIONS\nfunction sortBy(field, reverse, primer){\n   var key = primer ? \n       function(x) {return primer(x[field])} : \n       function(x) {return x[field]};\n\n   reverse = !reverse ? 1 : -1;\n\n   return function (a, b) {\n       return a = key(a), b = key(b), reverse * ((a > b) - (b > a));\n     } \n}",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 660,
+        "y": 1000,
+        "wires": [
+            [
+                "49c6b065.6f7708"
+            ]
+        ]
+    },
+    {
+        "id": "49c6b065.6f7708",
+        "type": "link out",
+        "z": "9e8643b4.332fc",
+        "name": "Run TD3-1.2-Loop",
+        "links": [
+            "e9b83537.9a4218"
+        ],
+        "x": 795,
+        "y": 1000,
+        "wires": []
+    },
+    {
+        "id": "9823589.cff0e28",
+        "type": "comment",
+        "z": "9e8643b4.332fc",
+        "name": "TD3-1.1-Get Store List",
+        "info": "",
+        "x": 200,
+        "y": 960,
+        "wires": []
+    },
+    {
+        "id": "68ddb4c4.90ad4c",
+        "type": "comment",
+        "z": "9e8643b4.332fc",
+        "name": "TD3-1.2-Get To Dos Per Store",
+        "info": "",
+        "x": 220,
+        "y": 1060,
+        "wires": []
+    },
+    {
+        "id": "e9b83537.9a4218",
+        "type": "link in",
+        "z": "9e8643b4.332fc",
+        "name": "TD3-1.2-Loop",
+        "links": [
+            "49c6b065.6f7708",
+            "9791fd41.edc6e"
+        ],
+        "x": 115,
+        "y": 1100,
+        "wires": [
+            [
+                "b9c4fd42.68a61"
+            ]
+        ]
+    },
+    {
+        "id": "b9c4fd42.68a61",
+        "type": "function",
+        "z": "9e8643b4.332fc",
+        "name": "TD3-1.2-Prep",
+        "func": "var status = \"\";\n\nswitch(msg.req.headers[\"req-type\"]){\n    case \"1\":\n        status = \"New\";\n        break;\n    case \"2\":\n        status = \"Reassigned\";\n        break;\n    case \"3\":\n        status = \"Complete\";\n        break;\n    case \"4\":\n        status = \"Overdue\";\n        break;\n}\n\nmsg.payload = {\n    credentials:msg.req.body.credentials,\n    status:status,\n    storeId:msg.storeList[msg.startIndex].value\n};\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 240,
+        "y": 1100,
+        "wires": [
+            [
+                "8dea248b.152fc8"
+            ]
+        ]
+    },
+    {
+        "id": "8dea248b.152fc8",
+        "type": "connectors",
+        "z": "9e8643b4.332fc",
+        "server": "7101d4a7.05e83c",
+        "profileKey": "paul_domino_dev",
+        "routeKey": "get_todos",
+        "name": "TD3-1.2-Connector",
+        "x": 450,
+        "y": 1100,
+        "wires": [
+            [
+                "3b44cc1c.710964"
+            ]
+        ]
+    },
+    {
+        "id": "3b44cc1c.710964",
+        "type": "function",
+        "z": "9e8643b4.332fc",
+        "name": "TD3-1.2-Finalize",
+        "func": "if(msg.agilite.success){\n    //Add To Dos to global list\n    for(var x in msg.payload){\n        msg.toDoList.push(\n            {\n                _id:msg.payload[x].metaversalId,\n                taskName:msg.payload[x].taskName,\n                data:msg.payload[x]\n            }\n        )\n    }\n    \n    //Setup Loop Parameters\n    msg.startIndex++;\n    \n    if(msg.startIndex >= msg.storeList.length){\n        msg.isComplete = true;\n        \n        //Sort To Do List\n        msg.payload = msg.toDoList.sort(sortBy(\"taskName\", false, function(a){return a.toUpperCase()}));\n    }\n    \n    return msg;    \n}else{\n    return node.error(msg.agilite.messages[0], msg);\n}\n\n//PRIVATE FUNCTIONS\nfunction sortBy(field, reverse, primer){\n   var key = primer ? \n       function(x) {return primer(x[field])} : \n       function(x) {return x[field]};\n\n   reverse = !reverse ? 1 : -1;\n\n   return function (a, b) {\n       return a = key(a), b = key(b), reverse * ((a > b) - (b > a));\n     } \n}",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 660,
+        "y": 1100,
+        "wires": [
+            [
+                "4d491839.f03948"
+            ]
+        ]
+    },
+    {
+        "id": "4d491839.f03948",
+        "type": "switch",
+        "z": "9e8643b4.332fc",
+        "name": "TD3-1.2-Looper",
+        "property": "isComplete",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "true"
+            },
+            {
+                "t": "false"
+            }
+        ],
+        "checkall": "false",
+        "repair": false,
+        "outputs": 2,
+        "x": 860,
+        "y": 1100,
+        "wires": [
+            [
+                "b71be5a3.6e2a98"
+            ],
+            [
+                "9791fd41.edc6e"
+            ]
+        ]
+    },
+    {
+        "id": "9791fd41.edc6e",
+        "type": "link out",
+        "z": "9e8643b4.332fc",
+        "name": "Run TD3-1.2-Loop",
+        "links": [
+            "e9b83537.9a4218"
+        ],
+        "x": 1015,
+        "y": 1120,
+        "wires": []
+    },
+    {
+        "id": "b71be5a3.6e2a98",
+        "type": "link out",
+        "z": "9e8643b4.332fc",
+        "name": "Run TD-Process Result",
+        "links": [
+            "e4099329.fcc3"
+        ],
+        "x": 1015,
+        "y": 1080,
+        "wires": []
+    },
+    {
+        "id": "1d480712.539f11",
+        "type": "comment",
+        "z": "9e8643b4.332fc",
+        "name": "TD3-2-Create Record",
+        "info": "",
+        "x": 180,
+        "y": 1160,
+        "wires": []
+    },
+    {
+        "id": "c3d04d23.b982c8",
+        "type": "link in",
+        "z": "9e8643b4.332fc",
+        "name": "TD3-2-Create Record",
+        "links": [
+            "7e811a8e.55ba54"
+        ],
+        "x": 95,
+        "y": 1200,
+        "wires": [
+            [
+                "e7aac46.3c32f38"
+            ]
+        ]
+    },
+    {
+        "id": "e7aac46.3c32f38",
+        "type": "function",
+        "z": "9e8643b4.332fc",
+        "name": "TD3-2-Prep",
+        "func": "msg.payload = msg.req.body;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 210,
+        "y": 1200,
+        "wires": [
+            [
+                "da2c70d9.919878"
+            ]
+        ]
+    },
+    {
+        "id": "da2c70d9.919878",
+        "type": "connectors",
+        "z": "9e8643b4.332fc",
+        "server": "7101d4a7.05e83c",
+        "profileKey": "paul_domino_dev",
+        "routeKey": "create_todo",
+        "name": "TD3-2-Connector",
+        "x": 410,
+        "y": 1200,
+        "wires": [
+            [
+                "eadc3608.d19418"
+            ]
+        ]
+    },
+    {
+        "id": "eadc3608.d19418",
+        "type": "function",
+        "z": "9e8643b4.332fc",
+        "name": "TD3-2-Finalize",
+        "func": "if(msg.agilite.success){\n    try {\n      if(msg.payload.substring(0, 1) === \"<\"){\n        return node.error(\"Incorrect Username/Password. Please try again\", msg);\n      }  \n    } catch (error) {}    \n    \n    //Fix up Data Entries to be compatible with React\n    var resultData = {\n        _id:msg.payload.metaversalId,\n        custom:msg.req.body.custom,\n        data:msg.payload \n    };\n    \n    msg.payload = resultData;    \n    \n    return msg;    \n}else{\n    return node.error(msg.agilite.messages[0], msg);\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 620,
+        "y": 1200,
+        "wires": [
+            [
+                "7f3bae36.a6a3e8"
+            ]
+        ]
+    },
+    {
+        "id": "7f3bae36.a6a3e8",
+        "type": "link out",
+        "z": "9e8643b4.332fc",
+        "name": "Run TD-Process Result",
+        "links": [
+            "e4099329.fcc3"
+        ],
+        "x": 755,
+        "y": 1200,
+        "wires": []
+    },
+    {
+        "id": "8f1b2d63.52758",
+        "type": "comment",
+        "z": "9e8643b4.332fc",
+        "name": "TD3-3-Update Record",
+        "info": "",
+        "x": 180,
+        "y": 1260,
+        "wires": []
+    },
+    {
+        "id": "319b5a34.c1e5fe",
+        "type": "link in",
+        "z": "9e8643b4.332fc",
+        "name": "TD3-3-Update Record",
+        "links": [
+            "eee9e070.3c6808"
+        ],
+        "x": 95,
+        "y": 1300,
+        "wires": [
+            [
+                "658394cb.46bf54"
+            ]
+        ]
+    },
+    {
+        "id": "658394cb.46bf54",
+        "type": "function",
+        "z": "9e8643b4.332fc",
+        "name": "TD3-3-Prep",
+        "func": "msg.payload = msg.req.body;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 210,
+        "y": 1300,
+        "wires": [
+            [
+                "5577195f.2f39c"
+            ]
+        ]
+    },
+    {
+        "id": "5577195f.2f39c",
+        "type": "connectors",
+        "z": "9e8643b4.332fc",
+        "server": "7101d4a7.05e83c",
+        "profileKey": "paul_domino_dev",
+        "routeKey": "update_todo",
+        "name": "TD3-3-Connector",
+        "x": 410,
+        "y": 1300,
+        "wires": [
+            [
+                "95a7f8f4.a65628"
+            ]
+        ]
+    },
+    {
+        "id": "95a7f8f4.a65628",
+        "type": "function",
+        "z": "9e8643b4.332fc",
+        "name": "TD3-3-Finalize",
+        "func": "if(msg.agilite.success){\n    try {\n      if(msg.payload.substring(0, 1) === \"<\"){\n        return node.error(\"Incorrect Username/Password. Please try again\", msg);\n      }  \n    } catch (error) {}    \n    \n    //Fix up Data Entries to be compatible with React\n    var resultData = {\n        _id:msg.payload.metaversalId,\n        custom:msg.req.body.custom,\n        data:msg.payload   \n    };\n    \n    msg.payload = resultData;    \n    \n    return msg;    \n}else{\n    return node.error(msg.agilite.messages[0], msg);\n}\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 620,
+        "y": 1300,
+        "wires": [
+            [
+                "b05e091e.afdd08"
+            ]
+        ]
+    },
+    {
+        "id": "b05e091e.afdd08",
+        "type": "link out",
+        "z": "9e8643b4.332fc",
+        "name": "Run TD-Process Result",
+        "links": [
+            "e4099329.fcc3"
+        ],
+        "x": 755,
+        "y": 1300,
+        "wires": []
+    }
+]

@@ -1,0 +1,1014 @@
+{
+    "_id" : ObjectId("5a8ed0d1fc1b390010007439"),
+    "updatedAt" : ISODate("2018-03-12T16:41:20.668Z"),
+    "createdAt" : ISODate("2018-02-22T14:16:49.324Z"),
+    "createdBy" : "John Jardin",
+    "modifiedBy" : "John Jardin",
+    "data" : {
+        "webAPI" : {
+            "urlParams" : [ 
+                {
+                    "paramKey" : "",
+                    "paramValue" : ""
+                }
+            ],
+            "headerParams" : [ 
+                {
+                    "paramKey" : "Authorization",
+                    "paramValue" : "Basic {{{credentials}}}"
+                }
+            ],
+            "bodyData" : "",
+            "baseURL" : "https://hermes.intec.co.uk/todoApp/v1"
+        },
+        "feb" : {
+            "password" : "",
+            "username" : "",
+            "baseURL" : ""
+        },
+        "connections" : {
+            "password" : "",
+            "username" : "",
+            "baseURL" : ""
+        },
+        "domino" : {
+            "password" : "",
+            "username" : "",
+            "baseURL" : ""
+        },
+        "cymon" : {
+            "token" : "",
+            "baseURL" : ""
+        },
+        "imap" : {
+            "password" : "",
+            "username" : "",
+            "smtpSecure" : "0",
+            "smtpIgnoreTLS" : "0",
+            "smtpPort" : "",
+            "smtpHost" : ""
+        },
+        "sql" : {
+            "password" : "",
+            "username" : "",
+            "port" : "",
+            "host" : ""
+        },
+        "ww" : {
+            "appSecret" : "",
+            "appId" : ""
+        },
+        "wc" : {
+            "password" : "",
+            "username" : "",
+            "workspaceId" : ""
+        },
+        "routes" : [ 
+            {
+                "_id" : "1519308949070",
+                "isNewEntry" : false,
+                "isActive" : true,
+                "key" : "login",
+                "name" : "Login",
+                "description" : "Login and get user details",
+                "webAPI" : {
+                    "requestType" : "get",
+                    "responseIsFile" : "0",
+                    "routePath" : "/user",
+                    "urlParams" : [ 
+                        {
+                            "paramKey" : "",
+                            "paramValue" : ""
+                        }
+                    ],
+                    "headerParams" : [ 
+                        {
+                            "paramKey" : "",
+                            "paramValue" : ""
+                        }
+                    ],
+                    "bodyData" : ""
+                },
+                "feb" : {
+                    "routeType" : "",
+                    "formId" : "",
+                    "recordId" : "",
+                    "format" : "",
+                    "sortBy" : "",
+                    "order" : "",
+                    "from" : "",
+                    "to" : "",
+                    "metadata" : "0",
+                    "bodyData" : ""
+                },
+                "connections" : {
+                    "routeType" : "",
+                    "fileName" : "",
+                    "fileId" : "",
+                    "nonceKey" : "",
+                    "communityId" : "",
+                    "sectionId" : "",
+                    "documentId" : "",
+                    "activityId" : "",
+                    "assignedTo" : "",
+                    "userId" : "",
+                    "fieldType" : "",
+                    "includeUnassigned" : "",
+                    "nodeType" : "",
+                    "priority" : "",
+                    "public" : "",
+                    "page" : 1,
+                    "pageSize" : 10,
+                    "search" : "",
+                    "sortBy" : "",
+                    "sortOrder" : "",
+                    "tag" : "",
+                    "templates" : "",
+                    "description" : "",
+                    "dueDate" : "",
+                    "isCompleted" : "0",
+                    "isPrivate" : "0",
+                    "position" : "",
+                    "body" : "",
+                    "email" : "",
+                    "content" : ""
+                },
+                "domino" : {
+                    "routeType" : "",
+                    "form" : "",
+                    "filePath" : "",
+                    "parentId" : "",
+                    "unid" : "",
+                    "ifModifiedSince" : "",
+                    "computeWithForm" : "0",
+                    "compact" : "",
+                    "hidden" : "",
+                    "markRead" : "",
+                    "multipart" : "1",
+                    "strongType" : "",
+                    "search" : "",
+                    "searchMaxDocs" : "",
+                    "since" : "",
+                    "bodyData" : "",
+                    "queryParams" : "",
+                    "docUnid" : ""
+                },
+                "cymon" : {
+                    "routeType" : "",
+                    "ipAddress" : ""
+                },
+                "imap" : {
+                    "priority" : "",
+                    "from" : "",
+                    "sendTo" : "",
+                    "copyTo" : "",
+                    "blindCopyTo" : "",
+                    "replyTo" : "",
+                    "subject" : "",
+                    "bodyType" : "html",
+                    "htmlBody" : "",
+                    "textBody" : ""
+                },
+                "sql" : {
+                    "routeType" : "",
+                    "qryType" : "0",
+                    "getQuery" : "0",
+                    "data" : "",
+                    "templateKey" : ""
+                },
+                "ww" : {
+                    "routeType" : "",
+                    "webhookSecret" : "",
+                    "spaceId" : "",
+                    "token" : "",
+                    "cacheToken" : false,
+                    "useCachedToken" : false,
+                    "colorCode" : "",
+                    "title" : "",
+                    "message" : "",
+                    "actorName" : ""
+                },
+                "wc" : {
+                    "routeType" : "",
+                    "message" : "",
+                    "cacheId" : "",
+                    "cacheContextTimeout" : 5,
+                    "contextProperties" : "",
+                    "context" : "",
+                    "triggerWords" : ""
+                }
+            }, 
+            {
+                "wc" : {
+                    "triggerWords" : "",
+                    "context" : "",
+                    "contextProperties" : "",
+                    "cacheContextTimeout" : 5,
+                    "cacheId" : "",
+                    "message" : "",
+                    "routeType" : ""
+                },
+                "ww" : {
+                    "actorName" : "",
+                    "message" : "",
+                    "title" : "",
+                    "colorCode" : "",
+                    "useCachedToken" : false,
+                    "cacheToken" : false,
+                    "token" : "",
+                    "spaceId" : "",
+                    "webhookSecret" : "",
+                    "routeType" : ""
+                },
+                "sql" : {
+                    "templateKey" : "",
+                    "data" : "",
+                    "getQuery" : "0",
+                    "qryType" : "0",
+                    "routeType" : ""
+                },
+                "imap" : {
+                    "textBody" : "",
+                    "htmlBody" : "",
+                    "bodyType" : "html",
+                    "subject" : "",
+                    "replyTo" : "",
+                    "blindCopyTo" : "",
+                    "copyTo" : "",
+                    "sendTo" : "",
+                    "from" : "",
+                    "priority" : ""
+                },
+                "cymon" : {
+                    "ipAddress" : "",
+                    "routeType" : ""
+                },
+                "domino" : {
+                    "docUnid" : "",
+                    "queryParams" : "",
+                    "bodyData" : "",
+                    "since" : "",
+                    "searchMaxDocs" : "",
+                    "search" : "",
+                    "strongType" : "",
+                    "multipart" : "1",
+                    "markRead" : "",
+                    "hidden" : "",
+                    "compact" : "",
+                    "computeWithForm" : "0",
+                    "ifModifiedSince" : "",
+                    "unid" : "",
+                    "parentId" : "",
+                    "filePath" : "",
+                    "form" : "",
+                    "routeType" : ""
+                },
+                "connections" : {
+                    "content" : "",
+                    "email" : "",
+                    "body" : "",
+                    "position" : "",
+                    "isPrivate" : "0",
+                    "isCompleted" : "0",
+                    "dueDate" : "",
+                    "description" : "",
+                    "templates" : "",
+                    "tag" : "",
+                    "sortOrder" : "",
+                    "sortBy" : "",
+                    "search" : "",
+                    "pageSize" : 10,
+                    "page" : 1,
+                    "public" : "",
+                    "priority" : "",
+                    "nodeType" : "",
+                    "includeUnassigned" : "",
+                    "fieldType" : "",
+                    "userId" : "",
+                    "assignedTo" : "",
+                    "activityId" : "",
+                    "documentId" : "",
+                    "sectionId" : "",
+                    "communityId" : "",
+                    "nonceKey" : "",
+                    "fileId" : "",
+                    "fileName" : "",
+                    "routeType" : ""
+                },
+                "feb" : {
+                    "bodyData" : "",
+                    "metadata" : "0",
+                    "to" : "",
+                    "from" : "",
+                    "order" : "",
+                    "sortBy" : "",
+                    "format" : "",
+                    "recordId" : "",
+                    "formId" : "",
+                    "routeType" : ""
+                },
+                "webAPI" : {
+                    "bodyData" : "",
+                    "headerParams" : [ 
+                        {
+                            "paramValue" : "",
+                            "paramKey" : ""
+                        }
+                    ],
+                    "urlParams" : [ 
+                        {
+                            "paramValue" : "",
+                            "paramKey" : ""
+                        }
+                    ],
+                    "routePath" : "/stores",
+                    "responseIsFile" : "0",
+                    "requestType" : "get"
+                },
+                "description" : "Get all stores the user has access to",
+                "name" : "Get My Stores",
+                "key" : "get_my_stores",
+                "isActive" : true,
+                "isNewEntry" : false,
+                "_id" : "1519309959984"
+            }, 
+            {
+                "wc" : {
+                    "triggerWords" : "",
+                    "context" : "",
+                    "contextProperties" : "",
+                    "cacheContextTimeout" : 5,
+                    "cacheId" : "",
+                    "message" : "",
+                    "routeType" : ""
+                },
+                "ww" : {
+                    "actorName" : "",
+                    "message" : "",
+                    "title" : "",
+                    "colorCode" : "",
+                    "useCachedToken" : false,
+                    "cacheToken" : false,
+                    "token" : "",
+                    "spaceId" : "",
+                    "webhookSecret" : "",
+                    "routeType" : ""
+                },
+                "sql" : {
+                    "templateKey" : "",
+                    "data" : "",
+                    "getQuery" : "0",
+                    "qryType" : "0",
+                    "routeType" : ""
+                },
+                "imap" : {
+                    "textBody" : "",
+                    "htmlBody" : "",
+                    "bodyType" : "html",
+                    "subject" : "",
+                    "replyTo" : "",
+                    "blindCopyTo" : "",
+                    "copyTo" : "",
+                    "sendTo" : "",
+                    "from" : "",
+                    "priority" : ""
+                },
+                "cymon" : {
+                    "ipAddress" : "",
+                    "routeType" : ""
+                },
+                "domino" : {
+                    "docUnid" : "",
+                    "queryParams" : "",
+                    "bodyData" : "",
+                    "since" : "",
+                    "searchMaxDocs" : "",
+                    "search" : "",
+                    "strongType" : "",
+                    "multipart" : "1",
+                    "markRead" : "",
+                    "hidden" : "",
+                    "compact" : "",
+                    "computeWithForm" : "0",
+                    "ifModifiedSince" : "",
+                    "unid" : "",
+                    "parentId" : "",
+                    "filePath" : "",
+                    "form" : "",
+                    "routeType" : ""
+                },
+                "connections" : {
+                    "content" : "",
+                    "email" : "",
+                    "body" : "",
+                    "position" : "",
+                    "isPrivate" : "0",
+                    "isCompleted" : "0",
+                    "dueDate" : "",
+                    "description" : "",
+                    "templates" : "",
+                    "tag" : "",
+                    "sortOrder" : "",
+                    "sortBy" : "",
+                    "search" : "",
+                    "pageSize" : 10,
+                    "page" : 1,
+                    "public" : "",
+                    "priority" : "",
+                    "nodeType" : "",
+                    "includeUnassigned" : "",
+                    "fieldType" : "",
+                    "userId" : "",
+                    "assignedTo" : "",
+                    "activityId" : "",
+                    "documentId" : "",
+                    "sectionId" : "",
+                    "communityId" : "",
+                    "nonceKey" : "",
+                    "fileId" : "",
+                    "fileName" : "",
+                    "routeType" : ""
+                },
+                "feb" : {
+                    "bodyData" : "",
+                    "metadata" : "0",
+                    "to" : "",
+                    "from" : "",
+                    "order" : "",
+                    "sortBy" : "",
+                    "format" : "",
+                    "recordId" : "",
+                    "formId" : "",
+                    "routeType" : ""
+                },
+                "webAPI" : {
+                    "bodyData" : "{\n  \"title\": \"{{{record.title}}}\",\n  \"name\": \"{{{record.name}}}\",\n  \"type\": \"{{{record.type}}}\"\n}",
+                    "headerParams" : [ 
+                        {
+                            "paramValue" : "",
+                            "paramKey" : ""
+                        }
+                    ],
+                    "urlParams" : [ 
+                        {
+                            "paramValue" : "",
+                            "paramKey" : ""
+                        }
+                    ],
+                    "routePath" : "/store",
+                    "responseIsFile" : "0",
+                    "requestType" : "post"
+                },
+                "description" : "\nAdd a new ToDo NSF instance - Store Type: [Personal, Team]",
+                "name" : "Create Store",
+                "key" : "create_store",
+                "isActive" : true,
+                "isNewEntry" : false,
+                "_id" : "1519309992855"
+            }, 
+            {
+                "wc" : {
+                    "triggerWords" : "",
+                    "context" : "",
+                    "contextProperties" : "",
+                    "cacheContextTimeout" : 5,
+                    "cacheId" : "",
+                    "message" : "",
+                    "routeType" : ""
+                },
+                "ww" : {
+                    "actorName" : "",
+                    "message" : "",
+                    "title" : "",
+                    "colorCode" : "",
+                    "useCachedToken" : false,
+                    "cacheToken" : false,
+                    "token" : "",
+                    "spaceId" : "",
+                    "webhookSecret" : "",
+                    "routeType" : ""
+                },
+                "sql" : {
+                    "templateKey" : "",
+                    "data" : "",
+                    "getQuery" : "0",
+                    "qryType" : "0",
+                    "routeType" : ""
+                },
+                "imap" : {
+                    "textBody" : "",
+                    "htmlBody" : "",
+                    "bodyType" : "html",
+                    "subject" : "",
+                    "replyTo" : "",
+                    "blindCopyTo" : "",
+                    "copyTo" : "",
+                    "sendTo" : "",
+                    "from" : "",
+                    "priority" : ""
+                },
+                "cymon" : {
+                    "ipAddress" : "",
+                    "routeType" : ""
+                },
+                "domino" : {
+                    "docUnid" : "",
+                    "queryParams" : "",
+                    "bodyData" : "",
+                    "since" : "",
+                    "searchMaxDocs" : "",
+                    "search" : "",
+                    "strongType" : "",
+                    "multipart" : "1",
+                    "markRead" : "",
+                    "hidden" : "",
+                    "compact" : "",
+                    "computeWithForm" : "0",
+                    "ifModifiedSince" : "",
+                    "unid" : "",
+                    "parentId" : "",
+                    "filePath" : "",
+                    "form" : "",
+                    "routeType" : ""
+                },
+                "connections" : {
+                    "content" : "",
+                    "email" : "",
+                    "body" : "",
+                    "position" : "",
+                    "isPrivate" : "0",
+                    "isCompleted" : "0",
+                    "dueDate" : "",
+                    "description" : "",
+                    "templates" : "",
+                    "tag" : "",
+                    "sortOrder" : "",
+                    "sortBy" : "",
+                    "search" : "",
+                    "pageSize" : 10,
+                    "page" : 1,
+                    "public" : "",
+                    "priority" : "",
+                    "nodeType" : "",
+                    "includeUnassigned" : "",
+                    "fieldType" : "",
+                    "userId" : "",
+                    "assignedTo" : "",
+                    "activityId" : "",
+                    "documentId" : "",
+                    "sectionId" : "",
+                    "communityId" : "",
+                    "nonceKey" : "",
+                    "fileId" : "",
+                    "fileName" : "",
+                    "routeType" : ""
+                },
+                "feb" : {
+                    "bodyData" : "",
+                    "metadata" : "0",
+                    "to" : "",
+                    "from" : "",
+                    "order" : "",
+                    "sortBy" : "",
+                    "format" : "",
+                    "recordId" : "",
+                    "formId" : "",
+                    "routeType" : ""
+                },
+                "webAPI" : {
+                    "bodyData" : "",
+                    "headerParams" : [ 
+                        {
+                            "paramValue" : "{{{record.title}}}",
+                            "paramKey" : "title"
+                        }
+                    ],
+                    "urlParams" : [ 
+                        {
+                            "paramValue" : "",
+                            "paramKey" : ""
+                        }
+                    ],
+                    "routePath" : "/store/{{{record.replicaId}}}/updateTitle",
+                    "responseIsFile" : "0",
+                    "requestType" : "patch"
+                },
+                "description" : "",
+                "name" : "Update Store",
+                "key" : "update_store",
+                "isActive" : true,
+                "isNewEntry" : false,
+                "_id" : "1519391647882"
+            }, 
+            {
+                "wc" : {
+                    "triggerWords" : "",
+                    "context" : "",
+                    "contextProperties" : "",
+                    "cacheContextTimeout" : 5,
+                    "cacheId" : "",
+                    "message" : "",
+                    "routeType" : ""
+                },
+                "ww" : {
+                    "actorName" : "",
+                    "message" : "",
+                    "title" : "",
+                    "colorCode" : "",
+                    "useCachedToken" : false,
+                    "cacheToken" : false,
+                    "token" : "",
+                    "spaceId" : "",
+                    "webhookSecret" : "",
+                    "routeType" : ""
+                },
+                "sql" : {
+                    "templateKey" : "",
+                    "data" : "",
+                    "getQuery" : "0",
+                    "qryType" : "0",
+                    "routeType" : ""
+                },
+                "imap" : {
+                    "textBody" : "",
+                    "htmlBody" : "",
+                    "bodyType" : "html",
+                    "subject" : "",
+                    "replyTo" : "",
+                    "blindCopyTo" : "",
+                    "copyTo" : "",
+                    "sendTo" : "",
+                    "from" : "",
+                    "priority" : ""
+                },
+                "cymon" : {
+                    "ipAddress" : "",
+                    "routeType" : ""
+                },
+                "domino" : {
+                    "docUnid" : "",
+                    "queryParams" : "",
+                    "bodyData" : "",
+                    "since" : "",
+                    "searchMaxDocs" : "",
+                    "search" : "",
+                    "strongType" : "",
+                    "multipart" : "1",
+                    "markRead" : "",
+                    "hidden" : "",
+                    "compact" : "",
+                    "computeWithForm" : "0",
+                    "ifModifiedSince" : "",
+                    "unid" : "",
+                    "parentId" : "",
+                    "filePath" : "",
+                    "form" : "",
+                    "routeType" : ""
+                },
+                "connections" : {
+                    "content" : "",
+                    "email" : "",
+                    "body" : "",
+                    "position" : "",
+                    "isPrivate" : "0",
+                    "isCompleted" : "0",
+                    "dueDate" : "",
+                    "description" : "",
+                    "templates" : "",
+                    "tag" : "",
+                    "sortOrder" : "",
+                    "sortBy" : "",
+                    "search" : "",
+                    "pageSize" : 10,
+                    "page" : 1,
+                    "public" : "",
+                    "priority" : "",
+                    "nodeType" : "",
+                    "includeUnassigned" : "",
+                    "fieldType" : "",
+                    "userId" : "",
+                    "assignedTo" : "",
+                    "activityId" : "",
+                    "documentId" : "",
+                    "sectionId" : "",
+                    "communityId" : "",
+                    "nonceKey" : "",
+                    "fileId" : "",
+                    "fileName" : "",
+                    "routeType" : ""
+                },
+                "feb" : {
+                    "bodyData" : "",
+                    "metadata" : "0",
+                    "to" : "",
+                    "from" : "",
+                    "order" : "",
+                    "sortBy" : "",
+                    "format" : "",
+                    "recordId" : "",
+                    "formId" : "",
+                    "routeType" : ""
+                },
+                "webAPI" : {
+                    "bodyData" : "",
+                    "headerParams" : [ 
+                        {
+                            "paramValue" : "",
+                            "paramKey" : ""
+                        }
+                    ],
+                    "urlParams" : [ 
+                        {
+                            "paramValue" : "{{{status}}}",
+                            "paramKey" : "status"
+                        }
+                    ],
+                    "routePath" : "/todos/{{{storeId}}}/findByStatus",
+                    "responseIsFile" : "0",
+                    "requestType" : "get"
+                },
+                "description" : "",
+                "name" : "Get To Dos",
+                "key" : "get_todos",
+                "isActive" : true,
+                "isNewEntry" : false,
+                "_id" : "1520776740805"
+            }, 
+            {
+                "wc" : {
+                    "triggerWords" : "",
+                    "context" : "",
+                    "contextProperties" : "",
+                    "cacheContextTimeout" : 5,
+                    "cacheId" : "",
+                    "message" : "",
+                    "routeType" : ""
+                },
+                "ww" : {
+                    "actorName" : "",
+                    "message" : "",
+                    "title" : "",
+                    "colorCode" : "",
+                    "useCachedToken" : false,
+                    "cacheToken" : false,
+                    "token" : "",
+                    "spaceId" : "",
+                    "webhookSecret" : "",
+                    "routeType" : ""
+                },
+                "sql" : {
+                    "templateKey" : "",
+                    "data" : "",
+                    "getQuery" : "0",
+                    "qryType" : "0",
+                    "routeType" : ""
+                },
+                "imap" : {
+                    "textBody" : "",
+                    "htmlBody" : "",
+                    "bodyType" : "html",
+                    "subject" : "",
+                    "replyTo" : "",
+                    "blindCopyTo" : "",
+                    "copyTo" : "",
+                    "sendTo" : "",
+                    "from" : "",
+                    "priority" : ""
+                },
+                "cymon" : {
+                    "ipAddress" : "",
+                    "routeType" : ""
+                },
+                "domino" : {
+                    "docUnid" : "",
+                    "queryParams" : "",
+                    "bodyData" : "",
+                    "since" : "",
+                    "searchMaxDocs" : "",
+                    "search" : "",
+                    "strongType" : "",
+                    "multipart" : "1",
+                    "markRead" : "",
+                    "hidden" : "",
+                    "compact" : "",
+                    "computeWithForm" : "0",
+                    "ifModifiedSince" : "",
+                    "unid" : "",
+                    "parentId" : "",
+                    "filePath" : "",
+                    "form" : "",
+                    "routeType" : ""
+                },
+                "connections" : {
+                    "content" : "",
+                    "email" : "",
+                    "body" : "",
+                    "position" : "",
+                    "isPrivate" : "0",
+                    "isCompleted" : "0",
+                    "dueDate" : "",
+                    "description" : "",
+                    "templates" : "",
+                    "tag" : "",
+                    "sortOrder" : "",
+                    "sortBy" : "",
+                    "search" : "",
+                    "pageSize" : 10,
+                    "page" : 1,
+                    "public" : "",
+                    "priority" : "",
+                    "nodeType" : "",
+                    "includeUnassigned" : "",
+                    "fieldType" : "",
+                    "userId" : "",
+                    "assignedTo" : "",
+                    "activityId" : "",
+                    "documentId" : "",
+                    "sectionId" : "",
+                    "communityId" : "",
+                    "nonceKey" : "",
+                    "fileId" : "",
+                    "fileName" : "",
+                    "routeType" : ""
+                },
+                "feb" : {
+                    "bodyData" : "",
+                    "metadata" : "0",
+                    "to" : "",
+                    "from" : "",
+                    "order" : "",
+                    "sortBy" : "",
+                    "format" : "",
+                    "recordId" : "",
+                    "formId" : "",
+                    "routeType" : ""
+                },
+                "webAPI" : {
+                    "bodyData" : "{\n  \"taskName\": \"{{{record.taskName}}}\",\n  \"description\": \"{{{record.description}}}\",\n  \"dueDate\": \"{{{record.dueDate}}}\",\n  \"priority\": \"{{{record.priority}}}\",\n  \"assignedTo\": \"{{{record.assignedTo}}}\"\n}",
+                    "headerParams" : [ 
+                        {
+                            "paramValue" : "application/json",
+                            "paramKey" : "Content-Type"
+                        }
+                    ],
+                    "urlParams" : [ 
+                        {
+                            "paramValue" : "",
+                            "paramKey" : ""
+                        }
+                    ],
+                    "routePath" : "/todo/{{{record.storeId}}}",
+                    "responseIsFile" : "0",
+                    "requestType" : "post"
+                },
+                "description" : "",
+                "name" : "Create To Do",
+                "key" : "create_todo",
+                "isActive" : true,
+                "isNewEntry" : false,
+                "_id" : "1520791461103"
+            }, 
+            {
+                "wc" : {
+                    "triggerWords" : "",
+                    "context" : "",
+                    "contextProperties" : "",
+                    "cacheContextTimeout" : 5,
+                    "cacheId" : "",
+                    "message" : "",
+                    "routeType" : ""
+                },
+                "ww" : {
+                    "actorName" : "",
+                    "message" : "",
+                    "title" : "",
+                    "colorCode" : "",
+                    "useCachedToken" : false,
+                    "cacheToken" : false,
+                    "token" : "",
+                    "spaceId" : "",
+                    "webhookSecret" : "",
+                    "routeType" : ""
+                },
+                "sql" : {
+                    "templateKey" : "",
+                    "data" : "",
+                    "getQuery" : "0",
+                    "qryType" : "0",
+                    "routeType" : ""
+                },
+                "imap" : {
+                    "textBody" : "",
+                    "htmlBody" : "",
+                    "bodyType" : "html",
+                    "subject" : "",
+                    "replyTo" : "",
+                    "blindCopyTo" : "",
+                    "copyTo" : "",
+                    "sendTo" : "",
+                    "from" : "",
+                    "priority" : ""
+                },
+                "cymon" : {
+                    "ipAddress" : "",
+                    "routeType" : ""
+                },
+                "domino" : {
+                    "docUnid" : "",
+                    "queryParams" : "",
+                    "bodyData" : "",
+                    "since" : "",
+                    "searchMaxDocs" : "",
+                    "search" : "",
+                    "strongType" : "",
+                    "multipart" : "1",
+                    "markRead" : "",
+                    "hidden" : "",
+                    "compact" : "",
+                    "computeWithForm" : "0",
+                    "ifModifiedSince" : "",
+                    "unid" : "",
+                    "parentId" : "",
+                    "filePath" : "",
+                    "form" : "",
+                    "routeType" : ""
+                },
+                "connections" : {
+                    "content" : "",
+                    "email" : "",
+                    "body" : "",
+                    "position" : "",
+                    "isPrivate" : "0",
+                    "isCompleted" : "0",
+                    "dueDate" : "",
+                    "description" : "",
+                    "templates" : "",
+                    "tag" : "",
+                    "sortOrder" : "",
+                    "sortBy" : "",
+                    "search" : "",
+                    "pageSize" : 10,
+                    "page" : 1,
+                    "public" : "",
+                    "priority" : "",
+                    "nodeType" : "",
+                    "includeUnassigned" : "",
+                    "fieldType" : "",
+                    "userId" : "",
+                    "assignedTo" : "",
+                    "activityId" : "",
+                    "documentId" : "",
+                    "sectionId" : "",
+                    "communityId" : "",
+                    "nonceKey" : "",
+                    "fileId" : "",
+                    "fileName" : "",
+                    "routeType" : ""
+                },
+                "feb" : {
+                    "bodyData" : "",
+                    "metadata" : "0",
+                    "to" : "",
+                    "from" : "",
+                    "order" : "",
+                    "sortBy" : "",
+                    "format" : "",
+                    "recordId" : "",
+                    "formId" : "",
+                    "routeType" : ""
+                },
+                "webAPI" : {
+                    "bodyData" : "{\n  \"taskName\": \"{{{record.taskName}}}\",\n  \"description\": \"{{{record.description}}}\",\n  \"dueDate\": \"{{{record.dueDate}}}\",\n  \"priority\": \"{{{record.priority}}}\",\n  \"assignedTo\": \"{{{record.assignedTo}}}\"\n}",
+                    "headerParams" : [ 
+                        {
+                            "paramValue" : "application/json",
+                            "paramKey" : "Content-Type"
+                        }
+                    ],
+                    "urlParams" : [ 
+                        {
+                            "paramValue" : "",
+                            "paramKey" : ""
+                        }
+                    ],
+                    "routePath" : "/todo/{{{record.metaversalId}}}",
+                    "responseIsFile" : "0",
+                    "requestType" : "patch"
+                },
+                "description" : "",
+                "name" : "Update To  Do",
+                "key" : "update_todo",
+                "isActive" : true,
+                "isNewEntry" : false,
+                "_id" : "1520870621679"
+            }
+        ],
+        "connectionType" : "1",
+        "groupName" : "",
+        "description" : "",
+        "name" : "Paul Wither Domino Dev Server",
+        "key" : "paul_domino_dev",
+        "isActive" : true
+    },
+    "__v" : 0
+}
