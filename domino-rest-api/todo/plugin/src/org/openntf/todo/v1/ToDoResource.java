@@ -140,8 +140,12 @@ public class ToDoResource {
 			Store store = ToDoStoreFactory.getInstance().getStore(Utils.getReplicaIdFromMetaversalId(metaversalId));
 			ToDo todo = new ResultParser<ToDo>(ToDo.class).parse(body);
 			if (StringUtils.isNotEmpty(todo.getAssignedTo())) {
-				if (StoreType.PERSONAL.equals(store.getType())) {
-					return Response.status(Status.BAD_REQUEST).entity("Personal ToDos cannot be reassigned").build();
+				ToDo oldTodo = ToDoStoreFactory.getInstance().getToDoFromMetaversalId(todo.getMetaversalId());
+				if (!StringUtils.equals(todo.getAssignedTo(), oldTodo.getAssignedTo())) {
+					if (StoreType.PERSONAL.equals(store.getType())) {
+						return Response.status(Status.BAD_REQUEST).entity("Personal ToDos cannot be reassigned")
+								.build();
+					}
 				}
 			}
 			todo.setMetaversalId(metaversalId);
