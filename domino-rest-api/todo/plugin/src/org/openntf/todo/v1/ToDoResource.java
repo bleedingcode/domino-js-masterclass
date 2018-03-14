@@ -55,6 +55,8 @@ import com.ibm.domino.httpmethod.PATCH;
 public class ToDoResource {
 
 	/**
+	 * Creates a ToDo, setting it to Active or Overdue, based on due date
+	 * 
 	 * @param storeKey
 	 *            String store replicaId or name
 	 * @param body
@@ -75,7 +77,7 @@ public class ToDoResource {
 				// TODO: For a full app, we would need to check the user has access and, if not, add access
 				todo.setAssignedTo(Utils.getAsUsername(todo.getAssignedTo()));
 			}
-			todo.setStatus(ToDo.Status.NEW);
+			todo.setStatus(ToDo.Status.ACTIVE);
 			todo.validateForUpdate();
 			todo = ToDoStoreFactory.getInstance().serializeToStore(store, todo);
 
@@ -129,6 +131,8 @@ public class ToDoResource {
 	}
 
 	/**
+	 * Updates ToDo and also checks if it's now overdue
+	 * 
 	 * @param metaversalId
 	 *            String metaversalId of the ToDo
 	 * @param body
@@ -233,6 +237,7 @@ public class ToDoResource {
 			// TODO: For a full app, we would need to check the user has access and, if not, add access
 			ToDo todo = ToDoStoreFactory.getInstance().getToDoFromMetaversalId(metaversalId);
 			todo.setAssignedTo(Utils.getAsUsername(newUser.getUsername()));
+			todo.checkOverdue();
 			ToDoStoreFactory.getInstance().updateToDo(todo);
 
 			JsonJavaObject jjo = new JsonJavaObject();
@@ -292,6 +297,8 @@ public class ToDoResource {
 	}
 
 	/**
+	 * Sets status to Active or Overdue (based on due date)
+	 * 
 	 * @param metaversalId
 	 *            String metaversalId of the ToDo
 	 * @return Response {"success":true} or error
@@ -302,7 +309,8 @@ public class ToDoResource {
 	public Response reopenToDo(@PathParam(value = "toDoId") final String metaversalId) {
 		try {
 			ToDo todo = ToDoStoreFactory.getInstance().getToDoFromMetaversalId(metaversalId);
-			todo.setStatus(ToDo.Status.NEW);
+			todo.setStatus(ToDo.Status.ACTIVE);
+			todo.checkOverdue();
 			ToDoStoreFactory.getInstance().updateToDo(todo);
 
 			JsonJavaObject jjo = new JsonJavaObject();

@@ -79,11 +79,11 @@ public class StoreMarkToDosOverdueRunner extends AbstractXotsRunnable {
 			List<ToDo> todos = new ArrayList<ToDo>();
 			Date dt = new Date();
 			for (ViewEntry ent : nav) {
-				// If due before now and New or Rassigned, set to Overdue. Else abort
+				// If due before now and Active, set to Overdue. Else abort
 				if (dt.after(ent.getColumnValue("byDueDate", Date.class))) {
 					Document doc = ent.getDocument();
 					String thisStatus = doc.getItemValueString("status");
-					if (Status.NEW.getValue().equals(thisStatus) || Status.REASSIGNED.getValue().equals(thisStatus)) {
+					if (Status.ACTIVE.getValue().equals(thisStatus)) {
 						doc.replaceItemValue("status", Status.OVERDUE.getValue());
 						doc.save();
 						ToDo todo = ToDoStoreFactory.getInstance().deserializeToDoFromDoc(doc);

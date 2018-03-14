@@ -60,12 +60,12 @@ public class ToDosResource {
 	}
 
 	/**
-	 * Get all ToDos in a given store for a given status (or "New")
+	 * Get all ToDos in a given store for a given status (or "Active")
 	 * 
 	 * @param storeKey
 	 *            String store id or name
 	 * @param status
-	 *            String status to look for (or New)
+	 *            String status to look for (or Active)
 	 * @return Response containing a collection of ToDos or error
 	 */
 	@GET
@@ -75,7 +75,7 @@ public class ToDosResource {
 		try {
 			Store store = ToDoStoreFactory.getInstance().getStore(storeKey);
 			if (StringUtils.isEmpty(status)) {
-				status = ToDo.Status.NEW.getValue();
+				status = ToDo.Status.ACTIVE.getValue();
 			}
 			List<ToDo> todos = ToDoStoreFactory.getInstance().getToDoCollection(store, ViewType.STATUS, status);
 
@@ -91,14 +91,14 @@ public class ToDosResource {
 	}
 
 	/**
-	 * Get all ToDos in a given store for a specific user (or current user) at a given status (or New)
+	 * Get all ToDos in a given store for a specific user (or current user) at a given status (or Active)
 	 * 
 	 * @param storeKey
 	 *            String store id or name
 	 * @param username
 	 *            String user to check for (or current user)
 	 * @param status
-	 *            String status to look for (or New)
+	 *            String status to look for (or Active)
 	 * @return Response containing a collection of ToDos or error
 	 */
 	@GET
@@ -111,7 +111,7 @@ public class ToDosResource {
 				username = Utils.getCurrentUsername();
 			}
 			if (StringUtils.isEmpty(status)) {
-				status = ToDo.Status.NEW.getValue();
+				status = ToDo.Status.ACTIVE.getValue();
 			}
 			List<String> keys = new ArrayList<String>();
 			keys.add(username);
@@ -130,14 +130,14 @@ public class ToDosResource {
 	}
 
 	/**
-	 * Get all ToDos in a given store for a specific priority (or High) at a given status (or New)
+	 * Get all ToDos in a given store for a specific priority (or High) at a given status (or Active)
 	 * 
 	 * @param storeKey
 	 *            String store id or name
 	 * @param priority
 	 *            String priority to look for (or High)
 	 * @param status
-	 *            String status to look for (or New)
+	 *            String status to look for (or Active)
 	 * @return Response containing a collection of ToDos or error
 	 */
 	@GET
@@ -150,7 +150,7 @@ public class ToDosResource {
 				priority = Priority.HIGH.getValue();
 			}
 			if (StringUtils.isEmpty(status)) {
-				status = ToDo.Status.NEW.getValue();
+				status = ToDo.Status.ACTIVE.getValue();
 			}
 			List<String> keys = new ArrayList<String>();
 			keys.add(priority);

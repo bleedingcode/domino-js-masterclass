@@ -73,10 +73,10 @@ public class ToDo implements Serializable {
 	}
 
 	/**
-	 * Current status of the ToDo. Set via workflow actions, defaulting to New
+	 * Current status of the ToDo. Set via workflow actions, defaulting to Active
 	 */
 	public enum Status {
-		NEW("New"), REASSIGNED("Reassigned"), COMPLETE("Complete"), OVERDUE("Overdue");
+		ACTIVE("Active"), COMPLETE("Complete"), OVERDUE("Overdue");
 
 		private String value;
 
@@ -206,7 +206,7 @@ public class ToDo implements Serializable {
 	}
 
 	/**
-	 * Current status of the ToDo. Set via workflow actions, defaulting to New
+	 * Current status of the ToDo. Set via workflow actions, defaulting to Active
 	 * 
 	 * @return status
 	 **/
@@ -285,7 +285,15 @@ public class ToDo implements Serializable {
 			throw new DataNotAcceptableException(
 					"The following properties must be included: " + StringUtils.join(missing, ","));
 		}
+		checkOverdue();
 		return true;
+	}
+
+	public void checkOverdue() {
+		Date dt = new Date();
+		if (dt.after(getDueDate())) {
+			setStatus(Status.OVERDUE);
+		}
 	}
 
 	public boolean serializeToStore(Store store) {
@@ -312,6 +320,10 @@ public class ToDo implements Serializable {
 		} else {
 			setAssignedTo(Utils.getAsUsername(getAssignedTo()));
 		}
+		if (null == getDueDate()) {
+			setDueDate(oldTodo.getDueDate());
+		}
+		checkOverdue();
 		return this;
 	}
 
