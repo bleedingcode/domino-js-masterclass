@@ -24,12 +24,15 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.openntf.domino.AutoMime;
 import org.openntf.domino.ext.Session.Fixes;
 import org.openntf.domino.utils.Factory;
 import org.openntf.domino.utils.Factory.ThreadConfig;
 import org.openntf.domino.xsp.ODAPlatform;
+import org.openntf.todo.authentication.ApplicationAuthenticationFactory;
 import org.openntf.todo.authentication.Authenticator;
+import org.openntf.todo.authentication.IAuthenticationFactory;
 
 import com.ibm.domino.services.AbstractRestServlet;
 
@@ -87,10 +90,18 @@ public class ODADataServlet extends AbstractRestServlet {
 			response.addHeader("Access-Control-Allow-Methods", "POST");
 			response.addHeader("Access-Control-Allow-Headers", "Content-Type");
 			response.addHeader("Access-Control-Max-Age", "86400");
-			// Check immediately to make sure either Domino authentication has been performed or X-TODO-API-KEY is
-			// valid. That method calls Factory.setSessionFactory(relevant-factory, SessionType.CURRENT);
-			if (!Authenticator.getInstance().getAuthenticationFactory().isAuthenticated(request)) {
-				response.sendError(401); // Not Authenticated, abort immediately
+			if (StringUtils.isNotEmpty(request.getHeader("X-TODO-API-KEY"))) {
+				// If X-TODO-APIP-KEY, use application-specific authentication regardless
+				IAuthenticationFactory factory = new ApplicationAuthenticationFactory();
+				if (!factory.isAuthenticated(request)) {
+					response.sendError(401); // Not Authenticated, abort immediately
+				}
+			} else {
+				// Check immediately to make sure either Domino authentication has been performed or X-TODO-API-KEY is
+				// valid. That method calls Factory.setSessionFactory(relevant-factory, SessionType.CURRENT);
+				if (!Authenticator.getInstance().getAuthenticationFactory().isAuthenticated(request)) {
+					response.sendError(401); // Not Authenticated, abort immediately
+				}
 			}
 			super.doService(request, response);
 			// Close ODA for this thread

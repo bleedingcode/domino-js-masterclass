@@ -15,8 +15,8 @@
  ******************************************************************************/
 package org.openntf.todo.domino;
 
+import java.sql.Date;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -281,7 +281,8 @@ public class ToDoStoreFactory {
 	 * @throws DatabaseModuleException
 	 *             error if Store or View could not be found
 	 */
-	public List<ToDo> getToDoCollectionRange(Store store, ViewType viewType, Date startDate, Date endDate)
+	public List<ToDo> getToDoCollectionRange(Store store, ViewType viewType, java.util.Date startDate,
+			java.util.Date endDate)
 			throws DatabaseModuleException {
 		DateRange key = Factory.getSession(SessionType.CURRENT).createDateRange(startDate, endDate);
 		return getToDoCollection(store, viewType, key);
@@ -702,6 +703,8 @@ public class ToDoStoreFactory {
 			ACLEntry admins = acl.createACLEntry("LocalDomainAdmins", Level.MANAGER);
 			admins.setCanDeleteDocuments(true);
 			admins.enableRole("Admin");
+			ACLEntry defaultUser = acl.getEntry("-Default-");
+			defaultUser.setLevel(Level.EDITOR);
 			acl.createACLEntry("Anonymous", Level.NOACCESS);
 
 			// Add current user to access

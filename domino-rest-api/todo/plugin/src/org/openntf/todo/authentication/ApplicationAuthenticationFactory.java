@@ -51,12 +51,17 @@ public class ApplicationAuthenticationFactory implements IAuthenticationFactory 
 		}
 		// Build username
 		String userKey = request.getHeader("X-TODO-USER-KEY");
-		// Temporarily set as Anonymous, so we won't get an error when accessing SessonType.NATIVE
+		String userName = userKey;
 
-		String serverName = new DasCurrentSessionFactory(null).createSession().getServerName();
-		String ORG = "/O=" + StringUtils.substringAfter(serverName, "/O=");
+		if (!StringUtils.contains(userName, "/O=")) {
+			// Temporarily set as Anonymous, so we won't get an error when accessing SessonType.NATIVE
+			String serverName = new DasCurrentSessionFactory(null).createSession().getServerName();
+			String ORG = "/O=" + StringUtils.substringAfter(serverName, "/O=");
+			userName = "CN=" + userKey + "/OU=" + OU + ORG;
+		}
+
 		// Now set the CURRENT session to who we actually want it to be
-		Factory.setSessionFactory(new XPageNamedSessionFactory("CN=" + userKey + "/OU=" + OU + ORG, false),
+		Factory.setSessionFactory(new XPageNamedSessionFactory(userName, false),
 				SessionType.CURRENT);
 		return true;
 	}

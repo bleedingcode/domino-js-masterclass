@@ -405,7 +405,7 @@
         "tags": [
           "todo"
         ],
-        "description": "get all todos in a store for a particular status, sorted by due date ascending. If no status is passed, default will be New",
+        "description": "get all todos in a store for a particular status, sorted by due date ascending. If no status is passed, default will be Active",
         "operationId": "getToDosByStatus",
         "consumes": [
           "application/json"
@@ -469,7 +469,7 @@
         "tags": [
           "todo"
         ],
-        "description": "get all todos in a store assigned to a particular user for a particular status, sorted by due date ascending. If no username or status is passed, current user and New status",
+        "description": "get all todos in a store assigned to a particular user for a particular status, sorted by due date ascending. If no username or status is passed, current user and Active status",
         "operationId": "getToDosByAssigneeAndStatus",
         "consumes": [
           "application/json"
@@ -728,7 +728,7 @@
         "tags": [
           "todo"
         ],
-        "description": "add a todo to the store",
+        "description": "add a todo to the store. Status will be Active or Overdue, if due date has passed",
         "operationId": "addToDo",
         "consumes": [
           "application/json"
@@ -782,7 +782,7 @@
         "tags": [
           "todo"
         ],
-        "description": "update a ToDo in the store. Note, changes to the assignedTo person on a ToDo in a Personal Store will throw a 400 error",
+        "description": "update a ToDo in the store. Note, changes to the assignedTo person on a ToDo in a Personal Store will throw a 400 error. This will also mark a ToDo as Overdue if the due date has passed",
         "operationId": "updateToDo",
         "consumes": [
           "application/json"
@@ -989,7 +989,7 @@
         "tags": [
           "todo"
         ],
-        "description": "Reopen a todo",
+        "description": "Reopen a todo. Status will be either Active or Overdue, if due date is passed",
         "operationId": "reopenToDo",
         "consumes": [
           "application/json"
@@ -1349,8 +1349,7 @@
           "type": "string",
           "description": "Current status of the ToDo. Set via workflow actions, defaulting to New",
           "enum": [
-            "New",
-            "Reassigned",
+            "Active",
             "Complete",
             "Overdue"
           ],

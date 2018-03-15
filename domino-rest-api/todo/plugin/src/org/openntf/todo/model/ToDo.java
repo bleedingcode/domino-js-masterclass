@@ -16,8 +16,9 @@
 package org.openntf.todo.model;
 
 import java.io.Serializable;
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
@@ -290,8 +291,9 @@ public class ToDo implements Serializable {
 	}
 
 	public void checkOverdue() {
-		Date dt = new Date();
-		if (dt.after(getDueDate())) {
+		LocalDate dt1 = LocalDate.now();
+		LocalDate dt2 = getDueDate().toLocalDate();
+		if (dt1.isAfter(dt2)) {
 			setStatus(Status.OVERDUE);
 		}
 	}

@@ -185,21 +185,29 @@ public class ToDosResource {
 			@QueryParam(value = "startDate") String startDate, @QueryParam(value = "endDate") String endDate) {
 		try {
 			Store store = ToDoStoreFactory.getInstance().getStore(storeKey);
+			Calendar cal = Calendar.getInstance();
 			String pattern = "yyyy-MM-dd";
 			SimpleDateFormat sdf = new SimpleDateFormat(pattern);
-			Date dtStart = new Date();
+			cal.setTime(new Date());
 			if (StringUtils.isNotEmpty(startDate)) {
-				dtStart = sdf.parse(startDate);
+				cal.setTime(sdf.parse(startDate));
 			}
-			Date dtEnd = null;
+			cal.set(Calendar.HOUR, 0);
+			cal.set(Calendar.MINUTE, 0);
+			cal.set(Calendar.SECOND, 0);
+			cal.set(Calendar.MILLISECOND, 0);
+			Date dtStart = cal.getTime();
 			if (StringUtils.isEmpty(endDate)) {
-				Calendar cal = Calendar.getInstance();
 				cal.setTime(new Date());
 				cal.add(Calendar.YEAR, 1);
-				dtEnd = cal.getTime();
 			} else {
-				dtEnd = sdf.parse(endDate);
+				cal.setTime(sdf.parse(endDate));
 			}
+			cal.set(Calendar.HOUR, 0);
+			cal.set(Calendar.MINUTE, 0);
+			cal.set(Calendar.SECOND, 0);
+			cal.set(Calendar.MILLISECOND, 0);
+			Date dtEnd = cal.getTime();
 			List<ToDo> todos = ToDoStoreFactory.getInstance().getToDoCollectionRange(store, ViewType.DATE, dtStart,
 					dtEnd);
 
