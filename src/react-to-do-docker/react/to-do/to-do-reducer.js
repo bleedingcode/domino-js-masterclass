@@ -2,6 +2,7 @@ import toDoState from './to-do-state';
 import tempData from '../temp-data-store/temp-data';
 import {actions} from './to-do-actions';
 import Moment from 'moment';
+import Globals from '../globals';
 
 const toDo = (state = toDoState, action) => {
   switch (action.type) {
@@ -100,6 +101,7 @@ const toDo = (state = toDoState, action) => {
       var tempIndex = 0;
       var entry = {};
       var tempArray = state.data.concat();
+      var canDelete = false;
 
       entry = action.data;
 
@@ -115,7 +117,30 @@ const toDo = (state = toDoState, action) => {
       }
 
       if(tempIndex >= 0){
-        tempArray[tempIndex] = JSON.parse(JSON.stringify(entry));
+        //Check if the doc needs to be updated or removed
+        switch(Globals.appKey){
+          case "to-do-new":
+            if(entry.data.status !== "Active"){
+              canDelete = true;
+            }
+            break;
+          case "to-do-complete":
+            if(entry.data.status !== "Complete"){
+              canDelete = true;
+            }
+            break;  
+          case "to-do-overdue":
+            if(entry.data.status !== "Overdue"){
+              canDelete = true;
+            }
+            break;                          
+        }
+
+        if(canDelete){
+          tempArray.splice(tempIndex, 1);
+        }else{
+          tempArray[tempIndex] = JSON.parse(JSON.stringify(entry));
+        }
       }
 
       return Object.assign({}, state, {
@@ -124,6 +149,79 @@ const toDo = (state = toDoState, action) => {
         },
         data:tempArray
       })
+    case actions.UPDATE_UI_DATA:
+      var tempIndex = 0;
+      var entry = {};
+      var tempArray = state.data.concat();
+      var canDelete = false;
+
+      //Loop Through List
+      for(var x in action.data){
+        entry = action.data[x];
+        tempIndex = -1;
+        canDelete = false;
+
+        if(entry.custom.tempId){
+          tempIndex = tempArray.findIndex(t => t._id.toLowerCase() === entry.custom.tempId.toLowerCase());
+        }
+
+        if(tempIndex < 0){
+          tempIndex = tempArray.findIndex(t => t._id.toLowerCase() === entry._id.toLowerCase());
+        }
+
+        if(tempIndex >= 0){
+          //Check if the doc needs to be updated or removed
+          switch(Globals.appKey){
+            case "to-do-new":
+              if(entry.data.status !== "Active"){
+                canDelete = true;
+              }
+              break;
+            case "to-do-complete":
+              if(entry.data.status !== "Complete"){
+                canDelete = true;
+              }
+              break;  
+            case "to-do-overdue":
+              if(entry.data.status !== "Overdue"){
+                canDelete = true;
+              }
+              break;                          
+          }
+
+          if(canDelete){
+            tempArray.splice(tempIndex, 1);
+          }else{
+            tempArray[tempIndex] = JSON.parse(JSON.stringify(entry));
+          }
+        }else{
+          //It's a new doc that needs to be inserted if it's the correct type
+          switch(Globals.appKey){
+            case "to-do-new":
+              if(entry.data.status === "Active"){
+                tempArray.push = JSON.parse(JSON.stringify(entry));
+              }
+              break;
+            case "to-do-complete":
+              if(entry.data.status === "Complete"){
+                tempArray.push = JSON.parse(JSON.stringify(entry));
+              }
+              break;  
+            case "to-do-overdue":
+              if(entry.data.status === "Overdue"){
+                tempArray.push = JSON.parse(JSON.stringify(entry));
+              }
+              break;                          
+          }
+        }
+      }
+
+      return Object.assign({}, state, {
+        header:{
+          ...state.header
+        },
+        data:tempArray
+      })      
     default:
       return state
   }

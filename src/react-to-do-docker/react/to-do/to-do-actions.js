@@ -17,6 +17,7 @@ export const actions = {
   FILTER_LIST: 'FILTER_TODO_LIST',
   FETCH_ALL_DATA: 'FETCH_ALL_TODO_DATA',
   UPDATE_DATA: 'UPDATE_TODO_DATA',
+  UPDATE_UI_DATA: 'UPDATE_TODO_UI_DATA',
   RESET_LOADING: 'RESET_TODO_LOADING'
 }
 
@@ -59,6 +60,13 @@ export const filterList = (key, value) => {
 export const updateData = (data) => {
   return {
     type: actions.UPDATE_DATA,
+    data
+  }
+}
+
+export const updateUIData = (data) => {
+  return {
+    type: actions.UPDATE_UI_DATA,
     data
   }
 }
@@ -268,7 +276,21 @@ export const processWSResponse = (data) => {
 
           Globals.dispatch(updateData(data.data));
         }      
-        break;        
+        break;
+      case "7"://Udpate UI Data
+        if(data.success){
+          //We need to add custom object to each record
+          for(var x in data.data){
+            data.data[x].custom = JSON.parse(JSON.stringify(tempData.toDo.dataTemplate.custom));
+            data.data[x].custom.isSavedDoc = true;
+            data.data[x].custom.isNewDoc = false;
+            data.data[x].custom.status = "";
+            data.data[x].data.storeId = data.data[x].data.metaversalId.substring(0, 16);//TODO: Paul needs to provide the Store Id for me
+          }
+
+          Globals.dispatch(updateUIData(data.data));
+        }      
+        break;              
     }
   }
 }

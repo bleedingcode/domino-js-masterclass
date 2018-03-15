@@ -1,5 +1,6 @@
 import React from 'react';
 import tempData from '../../../temp-data-store/temp-data';
+import Globals from '../../../globals';
 
 import {Tabs, Tab} from 'material-ui/Tabs';
 import {Card, CardActions, CardText} from 'material-ui/Card';
@@ -20,33 +21,18 @@ class ToDoForm extends React.Component {
 		this.state = {
 			entry:tempData.toDo.activeEntry,
 			priority:tempData.toDo.activeEntry.data.priority,
+			assignedTo:tempData.toDo.activeEntry.data.assignedTo,
 			storeId:tempData.toDo.activeEntry.data.storeId,
 			dueDate:tempData.toDo.activeEntry.data.dueDate,
 			isNewDoc:tempData.toDo.activeEntry.custom.isNewDoc
 		};
-
-		this.setPriority = this.setPriority.bind(this);
-		this.setStoreId = this.setStoreId.bind(this);
-		this.setDueDate = this.setDueDate.bind(this);
-	}
-
-	setPriority(value){
-		this.setState({priority:value});
-	}
-
-	setStoreId(value){
-		this.setState({storeId:value});
-	}
-
-	setDueDate(value){
-		this.setState({dueDate:value});
 	}
 
 	onChange(key, value){
 		switch(key){
 			case "inputStoreId":
 				this.state.entry.data.storeId = value;
-				this.setStoreId(value);
+				this.setState({storeId:value});
 				break;			
 			case "inputTaskName":
 				this.state.entry.data.taskName = value;
@@ -56,14 +42,15 @@ class ToDoForm extends React.Component {
 				break;
 			case "inputDueDate":
 				this.state.entry.data.dueDate = value;
-				this.setDueDate(value);
+				this.setState({dueDate:value});
 				break;
 			case "inputAssignedTo":
 				this.state.entry.data.assignedTo = value;
+				this.setState({assignedTo:value});
 				break;				
 			case "inputPriority":
 				this.state.entry.data.priority = value;
-				this.setPriority(value);
+				this.setState({priority:value});
 				break;
 		}
 	}
@@ -113,7 +100,7 @@ class ToDoForm extends React.Component {
 								/><br />
 								<TextField
 									hintText="A detailed description for this To Do"
-									floatingLabelText="Description (optional)"
+									floatingLabelText="Description"
 									fullWidth={true}
 									defaultValue={this.state.entry.data.description}
 									multiLine={true}
@@ -130,15 +117,20 @@ class ToDoForm extends React.Component {
 										this.onChange("inputDueDate", value)
 									}}
 								/>
-								<TextField
-									hintText="Provide a Responsible Person"
+								<SelectField
 									floatingLabelText="Responsible Person"
-									fullWidth={true}
-									defaultValue={this.state.entry.data.assignedTo}
-									onChange={(e, value) => {
+									floatingLabelFixed={true}
+									value={this.state.entry.data.assignedTo}
+									autoWidth={true}
+									onChange={(e, index, value) => {
 										this.onChange("inputAssignedTo", value)
 									}}
-								/><br />
+								>
+									<MenuItem value={""} primaryText="-Select-" />
+									{Globals.userList.map(entry =>
+										<MenuItem key={entry.value} value={entry.value} primaryText={entry.text} />
+									)}									
+								</SelectField><br />
 								<SelectField
 									floatingLabelText="Priority"
 									floatingLabelFixed={true}

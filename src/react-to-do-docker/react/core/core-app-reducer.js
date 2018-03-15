@@ -1,6 +1,7 @@
 import mainAppState from './core-app-state';
 import {actions} from './core-actions';
 import tempData from '../temp-data-store/temp-data';
+import Globals from '../globals';
 
 const main = (state = mainAppState, action) => {
   switch (action.type) {
@@ -35,11 +36,7 @@ const main = (state = mainAppState, action) => {
           break;
         case "to-do-new":
           app = action.dataId; 
-          title = "To Dos - New";
-          break;
-        case "to-do-assigned":
-          app = action.dataId; 
-          title = "To Dos - Assigned";
+          title = "To Dos - Active";
           break;
         case "to-do-complete":
           app = action.dataId; 
@@ -53,6 +50,8 @@ const main = (state = mainAppState, action) => {
           prevApp = state.app;
           break;
       }
+
+      Globals.appKey = app;
 
       return Object.assign({}, state, {
           app,

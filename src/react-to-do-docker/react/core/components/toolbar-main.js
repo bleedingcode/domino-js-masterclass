@@ -94,17 +94,10 @@ class ToolbarMain extends React.Component {
       							nestedItems={[
                         <ToolbarMenuItemContainer
                         key="to-do-new"
-                        title='New'
+                        title='Active'
                         leftIcon={<MapsLayers />}
                         dataId='to-do-new'
                         dataClass={this.props.app === 'to-do-new' ? 'active' : ''}
-                      />,
-                      <ToolbarMenuItemContainer
-                        key="to-do-assigned"
-                        title='Assigned'
-                        leftIcon={<EditorFormatListNumbered />}
-                        dataId='to-do-assigned'
-                        dataClass={this.props.app === 'to-do-assigned' ? 'active' : ''}
                       />,
                       <ToolbarMenuItemContainer
                         key="to-do-complete"

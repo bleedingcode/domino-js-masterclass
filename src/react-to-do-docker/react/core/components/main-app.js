@@ -15,7 +15,6 @@ class MainApp extends React.Component {
 	  	<ToolbarMainContainer />
 			{ this.props.app === 'home' ? <LandingWrapperContainer /> : null }
 			{ this.props.app === 'to-do-new' ? <ToDoAppContainer /> : null }
-			{ this.props.app === 'to-do-assigned' ? <ToDoAppContainer /> : null }
 			{ this.props.app === 'to-do-complete' ? <ToDoAppContainer /> : null }
 			{ this.props.app === 'to-do-overdue' ? <ToDoAppContainer /> : null }
 			{ this.props.app === 'to-do-store' ? <ToDoStoreAppContainer /> : null }
