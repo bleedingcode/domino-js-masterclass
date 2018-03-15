@@ -35,6 +35,7 @@ const globals = {
       password:"",
       commonName:""
     },
+    appKey:"home",
     userList:[],
     title:"React To Do Portal",
     version:"0.0.3",

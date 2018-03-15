@@ -81,15 +81,6 @@
         "username": "john.jardin@gmail.com"
     },
     {
-        "id": "af07bfdf.f8974",
-        "type": "agilite-login",
-        "z": "",
-        "serverType": "1",
-        "server": "https://api.agilite.io",
-        "name": "Jardin",
-        "username": "john.jardin@gmail.com"
-    },
-    {
         "id": "98b540b6.5e02e",
         "type": "http in",
         "z": "e4f3dadf.3a9fe",
@@ -255,7 +246,8 @@
         "z": "e4f3dadf.3a9fe",
         "name": "AF-Process Result",
         "links": [
-            "7b5f1881.c628a8"
+            "7b5f1881.c628a8",
+            "58a3d1c4.549968"
         ],
         "x": 995,
         "y": 100,
@@ -1058,14 +1050,14 @@
         "type": "function",
         "z": "7508f195.894c38",
         "name": "TD3-1.1-Finalize",
-        "func": "if(msg.agilite.success){\n    try {\n      if(msg.payload.substring(0, 1) === \"<\"){\n        return node.error(\"Incorrect Username/Password. Please try again\", msg);\n      }  \n    } catch (error) {}    \n    \n    //Fix up Data Entries to be compatible with React\n    var resultData = [];\n    \n    for(var x in msg.payload){\n        resultData.push(\n            {\n                text:msg.payload[x].title,\n                value:msg.payload[x].replicaId\n            }\n        )\n    }\n    \n    msg.storeList = resultData.sort(sortBy(\"text\", false, function(a){return a.toUpperCase()}));\n    \n    //Setup To Do Variables for Looping\n    msg.toDoList = [];\n    msg.startIndex = 0;\n    msg.isComplete = false;\n\n    return msg;    \n}else{\n    return node.error(msg.agilite.messages[0], msg);\n}\n\n//PRIVATE FUNCTIONS\nfunction sortBy(field, reverse, primer){\n   var key = primer ? \n       function(x) {return primer(x[field])} : \n       function(x) {return x[field]};\n\n   reverse = !reverse ? 1 : -1;\n\n   return function (a, b) {\n       return a = key(a), b = key(b), reverse * ((a > b) - (b > a));\n     } \n}",
+        "func": "if(msg.agilite.success){\n    try {\n      if(msg.payload.substring(0, 1) === \"<\"){\n        return node.error(\"Incorrect Username/Password. Please try again\", msg);\n      }  \n    } catch (error) {}    \n    \n    //Fix up Data Entries to be compatible with React\n    var resultData = [];\n    \n    for(var x in msg.payload){\n        resultData.push(\n            {\n                text:msg.payload[x].title,\n                value:msg.payload[x].replicaId\n            }\n        )\n    }\n    \n    msg.storeList = resultData.sort(sortBy(\"text\", false, function(a){return a.toUpperCase()}));\n    \n    //Setup To Do Variables for Looping\n    msg.toDoList = [];\n    msg.startIndex = 0;\n    msg.isComplete = false;\n\n    if(msg.storeList.length === 0){\n        msg.isComplete = true;\n    }\n\n    return msg;    \n}else{\n    return node.error(msg.agilite.messages[0], msg);\n}\n\n//PRIVATE FUNCTIONS\nfunction sortBy(field, reverse, primer){\n   var key = primer ? \n       function(x) {return primer(x[field])} : \n       function(x) {return x[field]};\n\n   reverse = !reverse ? 1 : -1;\n\n   return function (a, b) {\n       return a = key(a), b = key(b), reverse * ((a > b) - (b > a));\n     } \n}",
         "outputs": 1,
         "noerr": 0,
         "x": 660,
         "y": 1120,
         "wires": [
             [
-                "5484d73.bc098a8"
+                "5366f63e.66a608"
             ]
         ]
     },
@@ -1077,8 +1069,8 @@
         "links": [
             "ac9b4361.f0a8a8"
         ],
-        "x": 795,
-        "y": 1120,
+        "x": 995,
+        "y": 1140,
         "wires": []
     },
     {
@@ -1123,7 +1115,7 @@
         "type": "function",
         "z": "7508f195.894c38",
         "name": "TD3-1.2-Prep",
-        "func": "var status = \"\";\n\nswitch(msg.todo.reqType){\n    case \"1\":\n        status = \"New\";\n        break;\n    case \"2\":\n        status = \"Reassigned\";\n        break;\n    case \"3\":\n        status = \"Complete\";\n        break;\n    case \"4\":\n        status = \"Overdue\";\n        break;\n}\n\nmsg.payload = {\n    credentials:msg.todo.data.credentials,\n    status:status,\n    storeId:msg.storeList[msg.startIndex].value\n};\n\nnode.warn(msg.payload);\n\nreturn msg;",
+        "func": "var tmpStatus = \"\";\n\nswitch(msg.todo.reqType){\n    case \"1\":\n        tmpStatus = \"Active\";\n        break;\n    case \"2\":\n        tmpStatus = \"Reassigned\";\n        break;\n    case \"3\":\n        tmpStatus = \"Complete\";\n        break;\n    case \"4\":\n        tmpStatus = \"Overdue\";\n        break;\n}\n\nmsg.payload = {\n    credentials:msg.todo.data.credentials,\n    status:tmpStatus,\n    storeId:msg.storeList[msg.startIndex].value\n};\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "x": 240,
@@ -1155,7 +1147,7 @@
         "type": "function",
         "z": "7508f195.894c38",
         "name": "TD3-1.2-Finalize",
-        "func": "if(msg.agilite.success){\n    node.warn(msg.payload);\n    \n    //Add To Dos to global list\n    for(var x in msg.payload){\n        msg.toDoList.push(\n            {\n                _id:msg.payload[x].metaversalId,\n                taskName:msg.payload[x].taskName,\n                data:msg.payload[x]\n            }\n        )\n    }\n    \n    //Setup Loop Parameters\n    msg.startIndex++;\n    \n    if(msg.startIndex >= msg.storeList.length){\n        msg.isComplete = true;\n        \n        //Sort To Do List\n        msg.payload = msg.toDoList.sort(sortBy(\"taskName\", false, function(a){return a.toUpperCase()}));\n    }\n    \n    return msg;    \n}else{\n    return node.error(msg.agilite.messages[0], msg);\n}\n\n//PRIVATE FUNCTIONS\nfunction sortBy(field, reverse, primer){\n   var key = primer ? \n       function(x) {return primer(x[field])} : \n       function(x) {return x[field]};\n\n   reverse = !reverse ? 1 : -1;\n\n   return function (a, b) {\n       return a = key(a), b = key(b), reverse * ((a > b) - (b > a));\n     } \n}",
+        "func": "if(msg.agilite.success){\n    //Add To Dos to global list\n    for(var x in msg.payload){\n        msg.toDoList.push(\n            {\n                _id:msg.payload[x].metaversalId,\n                taskName:msg.payload[x].taskName,\n                data:msg.payload[x]\n            }\n        )\n    }\n    \n    //Setup Loop Parameters\n    msg.startIndex++;\n    \n    if(msg.startIndex >= msg.storeList.length){\n        msg.isComplete = true;\n        \n        //Sort To Do List\n        msg.payload = msg.toDoList.sort(sortBy(\"taskName\", false, function(a){return a.toUpperCase()}));\n    }\n    \n    return msg;    \n}else{\n    return node.error(msg.agilite.messages[0], msg);\n}\n\n//PRIVATE FUNCTIONS\nfunction sortBy(field, reverse, primer){\n   var key = primer ? \n       function(x) {return primer(x[field])} : \n       function(x) {return x[field]};\n\n   reverse = !reverse ? 1 : -1;\n\n   return function (a, b) {\n       return a = key(a), b = key(b), reverse * ((a > b) - (b > a));\n     } \n}",
         "outputs": 1,
         "noerr": 0,
         "x": 660,
@@ -1506,8 +1498,8 @@
         "id": "988bdbcc.988f08",
         "type": "connectors",
         "z": "faf978c7.e4831",
-        "server": "af07bfdf.f8974",
-        "profileKey": "wc_agilite",
+        "server": "7d449c5b.be903c",
+        "profileKey": "wc_todo",
         "routeKey": "send",
         "name": "WC: Send Msg",
         "x": 200,
@@ -1558,16 +1550,12 @@
                 "vt": "str"
             },
             {
-                "t": "eq",
-                "v": "2",
-                "vt": "str"
-            },
-            {
                 "t": "else"
             }
         ],
         "checkall": "false",
-        "outputs": 5,
+        "repair": false,
+        "outputs": 4,
         "x": 700,
         "y": 100,
         "wires": [
@@ -1579,9 +1567,6 @@
             ],
             [
                 "812871dd.d70628"
-            ],
-            [
-                "f8c9f173.6225d"
             ],
             [
                 "aab2a4e2.7be268"
@@ -1649,8 +1634,8 @@
         "id": "54480689.b7fae8",
         "type": "connectors",
         "z": "faf978c7.e4831",
-        "server": "af07bfdf.f8974",
-        "profileKey": "wc_agilite",
+        "server": "7d449c5b.be903c",
+        "profileKey": "wc_todo",
         "routeKey": "delete",
         "name": "WC: S0-Delete Context",
         "x": 470,
@@ -1668,7 +1653,7 @@
             "3d36ca00.cf216e"
         ],
         "x": 975,
-        "y": 20,
+        "y": 40,
         "wires": []
     },
     {
@@ -1695,9 +1680,9 @@
         "id": "5610f548.f705e4",
         "type": "comment",
         "z": "faf978c7.e4831",
-        "name": "WC: Workflow Step 1 - New Timesheet",
+        "name": "WC: Workflow Step 1 - New To Do",
         "info": "",
-        "x": 250,
+        "x": 240,
         "y": 440,
         "wires": []
     },
@@ -1727,12 +1712,12 @@
         "rules": [
             {
                 "t": "eq",
-                "v": "timesheet_action_submit",
+                "v": "action_submit",
                 "vt": "str"
             },
             {
                 "t": "eq",
-                "v": "timesheet_action_confirm",
+                "v": "action_confirm",
                 "vt": "str"
             },
             {
@@ -1740,12 +1725,13 @@
             }
         ],
         "checkall": "false",
+        "repair": false,
         "outputs": 3,
         "x": 290,
         "y": 500,
         "wires": [
             [
-                "28a1f784.f6e238"
+                "c7075d3a.2fdae"
             ],
             [
                 "7d125c32.45f854"
@@ -1764,7 +1750,7 @@
             "fd15598d.30a12"
         ],
         "x": 795,
-        "y": 540,
+        "y": 600,
         "wires": []
     },
     {
@@ -1772,11 +1758,11 @@
         "type": "function",
         "z": "faf978c7.e4831",
         "name": "WC: S1-Prep 2",
-        "func": "if(!msg.wc.context.hoursBilled)\n    msg.wc.context.hoursBilled = 0;\n\nmsg.wc.responseMessage += \"\\n*Date:* \" + msg.wc.context.date;\nmsg.wc.responseMessage += \"\\n*Client:* \" + msg.wc.context.client;\nmsg.wc.responseMessage += \"\\n*Type Of Work:* \" + msg.wc.context.typeOfWork;\nmsg.wc.responseMessage += \"\\n*Hours Spent:* \" + msg.wc.context.hoursSpent;\nmsg.wc.responseMessage += \"\\n*Hours Billed:* \" + msg.wc.context.hoursBilled;\nmsg.wc.responseMessage += \"\\n*Description:* \" + msg.wc.context.description;   \n\nreturn msg;",
+        "func": "msg.wc.responseMessage += \"\\n*Task Name:* \" + msg.wc.context.taskName;  \nmsg.wc.responseMessage += \"\\n*Description:* \" + msg.wc.context.description;  \nmsg.wc.responseMessage += \"\\n*Due Date:* \" + msg.wc.context.dueDate;\nmsg.wc.responseMessage += \"\\n*Assigned To:* \" + msg.wc.context.assignedTo;\nmsg.wc.responseMessage += \"\\n*Priority:* \" + msg.wc.context.priority;\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
-        "x": 560,
-        "y": 500,
+        "x": 580,
+        "y": 540,
         "wires": [
             [
                 "ad7922e5.d4754"
@@ -1787,12 +1773,12 @@
         "id": "c3166efc.9977f",
         "type": "connectors",
         "z": "faf978c7.e4831",
-        "server": "af07bfdf.f8974",
-        "profileKey": "wc_agilite",
+        "server": "7d449c5b.be903c",
+        "profileKey": "wc_todo",
         "routeKey": "save",
         "name": "WC: S1-Save Context",
         "x": 880,
-        "y": 500,
+        "y": 560,
         "wires": [
             []
         ]
@@ -1801,31 +1787,15 @@
         "id": "28a1f784.f6e238",
         "type": "function",
         "z": "faf978c7.e4831",
-        "name": "WC: S1-Prep 1",
-        "func": "msg.payload = {\n    data:JSON.stringify({data:msg.wc.context})\n};\n\nreturn msg;",
+        "name": "WC: S1-Process 1",
+        "func": "if(msg.agilite.success){\n    msg.users = msg.payload.data;\n}else{\n    return node.error(msg.agilite.messages[0], msg);\n}\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
-        "x": 540,
-        "y": 460,
+        "x": 650,
+        "y": 420,
         "wires": [
             [
-                "e7fd0eab.9f565"
-            ]
-        ]
-    },
-    {
-        "id": "e7fd0eab.9f565",
-        "type": "connectors",
-        "z": "faf978c7.e4831",
-        "server": "af07bfdf.f8974",
-        "profileKey": "timesheet_api",
-        "routeKey": "create",
-        "name": "WC: S1-Create Timesheet",
-        "x": 770,
-        "y": 460,
-        "wires": [
-            [
-                "cbe5b3f.be50bd"
+                "d05e6acd.293ea"
             ]
         ]
     },
@@ -1834,14 +1804,15 @@
         "type": "function",
         "z": "faf978c7.e4831",
         "name": "WC: S1-Prep Result",
-        "func": "if(msg.agilite.success){\n    msg.wc.responseTitle = \"New Timesheet\";\n    msg.wc.responseMessage = \"Timesheet successfully submitted.\";\n}else{\n    msg.wc.responseTitle = \"Timesheet Submission Failed\";\n    msg.wc.responseMessage = \"Apologies. Something went wrong with submitting the Timesheet. Please start over\";\n}\n\nreturn msg;",
+        "func": "if(msg.agilite.success){\n    msg.wc.responseTitle = \"New To Do\";\n    msg.wc.responseMessage = \"To Do successfully created\";\n}else{\n    msg.wc.responseTitle = \"To Do Submission Failed\";\n    msg.wc.responseMessage = \"Apologies. Something went wrong with submitting the To Do. Please start over\";\n}\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
-        "x": 1020,
-        "y": 460,
+        "x": 1100,
+        "y": 420,
         "wires": [
             [
-                "dca3d173.033cb8"
+                "dca3d173.033cb8",
+                "d0463996.3d76d8"
             ]
         ]
     },
@@ -1853,174 +1824,8 @@
         "links": [
             "3d36ca00.cf216e"
         ],
-        "x": 1175,
-        "y": 460,
-        "wires": []
-    },
-    {
-        "id": "2f04219b.dde86e",
-        "type": "comment",
-        "z": "faf978c7.e4831",
-        "name": "WC: Workflow Step 2 - Timesheet Reports",
-        "info": "",
-        "x": 260,
-        "y": 600,
-        "wires": []
-    },
-    {
-        "id": "1ad33096.e2287f",
-        "type": "link in",
-        "z": "faf978c7.e4831",
-        "name": "WC: Workflow Step 2",
-        "links": [
-            "f8c9f173.6225d"
-        ],
-        "x": 115,
-        "y": 660,
-        "wires": [
-            [
-                "e6b18c58.573f1"
-            ]
-        ]
-    },
-    {
-        "id": "e6b18c58.573f1",
-        "type": "switch",
-        "z": "faf978c7.e4831",
-        "name": "WC: S2-Check Perform Action",
-        "property": "wc.performAction",
-        "propertyType": "msg",
-        "rules": [
-            {
-                "t": "eq",
-                "v": "timesheet_report_run",
-                "vt": "str"
-            },
-            {
-                "t": "eq",
-                "v": "timesheet_report_confirm",
-                "vt": "str"
-            },
-            {
-                "t": "else"
-            }
-        ],
-        "checkall": "false",
-        "outputs": 3,
-        "x": 290,
-        "y": 660,
-        "wires": [
-            [
-                "9c7ae1a1.2a2cd"
-            ],
-            [
-                "2fc6d21b.6b42e6"
-            ],
-            [
-                "b906c0a8.983dc8"
-            ]
-        ]
-    },
-    {
-        "id": "2fc6d21b.6b42e6",
-        "type": "function",
-        "z": "faf978c7.e4831",
-        "name": "WC: S2-Prep 2",
-        "func": "msg.wc.responseMessage += \"\\n*From Date:* \" + msg.wc.context.dateFrom;\nmsg.wc.responseMessage += \"\\n*To Date:* \" + msg.wc.context.dateTo;\nmsg.wc.responseMessage += \"\\n*Client:* \" + msg.wc.context.client;\nmsg.wc.responseMessage += \"\\n*Type Of Work:* \" + msg.wc.context.typeOfWork;\nmsg.wc.responseMessage += \"\\n*Group By:* \" + msg.wc.context.groupBy;   \n\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "x": 560,
-        "y": 660,
-        "wires": [
-            [
-                "b906c0a8.983dc8"
-            ]
-        ]
-    },
-    {
-        "id": "7e875d5f.a50834",
-        "type": "connectors",
-        "z": "faf978c7.e4831",
-        "server": "af07bfdf.f8974",
-        "profileKey": "wc_agilite",
-        "routeKey": "save",
-        "name": "WC: S2-Save Context",
-        "x": 880,
-        "y": 660,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "4aa3f461.4e0454",
-        "type": "link out",
-        "z": "faf978c7.e4831",
-        "name": "WC: Run Finalize",
-        "links": [
-            "fd15598d.30a12"
-        ],
-        "x": 795,
-        "y": 700,
-        "wires": []
-    },
-    {
-        "id": "9c7ae1a1.2a2cd",
-        "type": "function",
-        "z": "faf978c7.e4831",
-        "name": "WC: S2-Prep 1",
-        "func": "msg.payload = {\n    data:JSON.stringify(msg.wc.context)\n};\n\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "x": 560,
-        "y": 620,
-        "wires": [
-            [
-                "143a8db.9e6fc72"
-            ]
-        ]
-    },
-    {
-        "id": "143a8db.9e6fc72",
-        "type": "connectors",
-        "z": "faf978c7.e4831",
-        "server": "af07bfdf.f8974",
-        "profileKey": "timesheet_api",
-        "routeKey": "reports",
-        "name": "WC: S2-Timesheet Reports",
-        "x": 800,
-        "y": 620,
-        "wires": [
-            [
-                "95b94be0.691e28"
-            ]
-        ]
-    },
-    {
-        "id": "95b94be0.691e28",
-        "type": "function",
-        "z": "faf978c7.e4831",
-        "name": "WC: S2-Prep Result",
-        "func": "if(msg.agilite.success){\n    msg.wc.responseTitle = \"Timesheet Reports\";\n    msg.wc.responseMessage = \"\";\n    \n    var data = msg.payload.data;\n    var entry = {};\n    var newEntry = {};\n    var tempKey = \"\";\n    var hrsSpent = 0;\n    var hrsBilled = 0;\n    var entryAdded = false;\n    \n    switch(msg.wc.context.groupBy){\n        case \"-\":\n            for(var x in data){\n                entry = data[x].data;\n                newEntry = \"*Date:* \" + new Date(entry.date).toDateString();\n                newEntry += \" - *Client:* \" + entry.client;\n                newEntry += \" - *Type:* \" + entry.typeOfWork;\n                newEntry += \" - *Hrs Spent:* \" + entry.hoursSpent;\n                newEntry += \" - *Hrs Billed:* \" + entry.hoursBilled;\n                newEntry += \"\\n*Desc:* \" + entry.description;\n               \n                if(parseInt(x) > 0){\n                    msg.wc.responseMessage += \"\\n\";\n                    msg.wc.responseMessage += \"----------\";\n                    msg.wc.responseMessage += \"\\n\";                \n                }\n\n                   \n                msg.wc.responseMessage += newEntry;\n            }\n            \n            break;\n        case \"by_client\":\n            for(var x in data){\n                entry = data[x].data;\n                \n                if(tempKey === \"\")\n                    tempKey = entry.client;\n\n                if(entry.client !== tempKey){\n                    newEntry = \"*\" + tempKey + \"*\";\n                    newEntry += \" - Hrs Spent: _\" + hrsSpent + \"_\";\n                    newEntry += \" - Hrs Billed: _\" + hrsBilled + \"_\";\n                    \n                    if(entryAdded){\n                        msg.wc.responseMessage += \"\\n\";\n                    }\n                    \n                    msg.wc.responseMessage += newEntry;\n                    \n                    entryAdded = true;\n                    hrsSpent = 0;\n                    hrsBilled = 0;\n                    tempKey = entry.client;\n                }\n                \n                hrsSpent += entry.hoursSpent;\n                hrsBilled += entry.hoursBilled;\n            }\n            \n            //Add final Entry\n            if(data.length > 0){\n                newEntry = \"*\" + tempKey + \"*\";\n                newEntry += \" - Hrs Spent: _\" + hrsSpent + \"_\";\n                newEntry += \" - Hrs Billed: _\" + hrsBilled + \"_\";\n\n                if(entryAdded){\n                    msg.wc.responseMessage += \"\\n\";\n                }\n                \n                msg.wc.responseMessage += newEntry;            \n            }\n            \n            break;\n        case \"by_typeofwork\":\n            for(var x in data){\n                entry = data[x].data;\n                \n                if(tempKey === \"\")\n                    tempKey = entry.typeOfWork;\n\n                if(entry.typeOfWork !== tempKey){\n                    newEntry = \"*\" + tempKey + \"*\";\n                    newEntry += \" - Hrs Spent: _\" + hrsSpent + \"_\";\n                    newEntry += \" - Hrs Billed: _\" + hrsBilled + \"_\";\n                    \n                    if(entryAdded){\n                        msg.wc.responseMessage += \"\\n\";\n                    }\n                    \n                    msg.wc.responseMessage += newEntry;\n                    \n                    entryAdded = true;\n                    hrsSpent = 0;\n                    hrsBilled = 0;\n                    tempKey = entry.typeOfWork;\n                }\n                \n                hrsSpent += entry.hoursSpent;\n                hrsBilled += entry.hoursBilled;\n            }\n            \n            //Add final Entry\n            if(data.length > 0){\n                newEntry = \"*\" + tempKey + \"*\";\n                newEntry += \" - Hrs Spent: _\" + hrsSpent + \"_\";\n                newEntry += \" - Hrs Billed: _\" + hrsBilled + \"_\";\n\n                if(entryAdded){\n                    msg.wc.responseMessage += \"\\n\";\n                }\n                \n                msg.wc.responseMessage += newEntry;            \n            }\n            \n            break;             \n        case \"by_day\":\n            for(var x in data){\n                entry = data[x].data;\n                \n                if(tempKey === \"\")\n                    tempKey = new Date(entry.date).toDateString();\n\n                if(new Date(entry.date).toDateString() !== tempKey){\n                    newEntry = \"*\" + tempKey + \"*\";\n                    newEntry += \" - Hrs Spent: _\" + hrsSpent + \"_\";\n                    newEntry += \" - Hrs Billed: _\" + hrsBilled + \"_\";\n                    \n                    if(entryAdded){\n                        msg.wc.responseMessage += \"\\n\";\n                    }\n                    \n                    msg.wc.responseMessage += newEntry;\n                    \n                    entryAdded = true;\n                    hrsSpent = 0;\n                    hrsBilled = 0;\n                    tempKey = new Date(entry.date).toDateString();\n                }\n                \n                hrsSpent += entry.hoursSpent;\n                hrsBilled += entry.hoursBilled;\n            }\n            \n            //Add final Entry\n            if(data.length > 0){\n                newEntry = \"*\" + tempKey + \"*\";\n                newEntry += \" - Hrs Spent: _\" + hrsSpent + \"_\";\n                newEntry += \" - Hrs Billed: _\" + hrsBilled + \"_\";\n\n                if(entryAdded){\n                    msg.wc.responseMessage += \"\\n\";\n                }\n                \n                msg.wc.responseMessage += newEntry;            \n            }\n            \n            break;\n    }\n}else{\n    msg.wc.responseTitle = \"Timesheet Report Failed\";\n    msg.wc.responseMessage = \"Apologies. Something went wrong with generating the Timesheet reports. Please start over\";\n}\n\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "x": 1060,
-        "y": 620,
-        "wires": [
-            [
-                "287cb4ba.dd66e4"
-            ]
-        ]
-    },
-    {
-        "id": "287cb4ba.dd66e4",
-        "type": "link out",
-        "z": "faf978c7.e4831",
-        "name": "WC: Run Workflow Step 0",
-        "links": [
-            "3d36ca00.cf216e"
-        ],
         "x": 1215,
-        "y": 620,
+        "y": 460,
         "wires": []
     },
     {
@@ -2032,19 +1837,7 @@
             "2ec33f85.ea807"
         ],
         "x": 975,
-        "y": 100,
-        "wires": []
-    },
-    {
-        "id": "f8c9f173.6225d",
-        "type": "link out",
-        "z": "faf978c7.e4831",
-        "name": "WC: Run Workflow Step 2",
-        "links": [
-            "1ad33096.e2287f"
-        ],
-        "x": 975,
-        "y": 140,
+        "y": 120,
         "wires": []
     },
     {
@@ -2056,7 +1849,7 @@
             "fd15598d.30a12"
         ],
         "x": 975,
-        "y": 180,
+        "y": 160,
         "wires": []
     },
     {
@@ -2077,8 +1870,8 @@
         "func": "msg.payload = {\n    cacheId:msg.wc.cacheId,\n    context:JSON.stringify(msg.wc.context)\n};\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
-        "x": 640,
-        "y": 540,
+        "x": 620,
+        "y": 580,
         "wires": [
             [
                 "28072731.9b65d8",
@@ -2145,8 +1938,8 @@
         "id": "9775c4ea.b8b058",
         "type": "connectors",
         "z": "faf978c7.e4831",
-        "server": "af07bfdf.f8974",
-        "profileKey": "wc_agilite",
+        "server": "7d449c5b.be903c",
+        "profileKey": "wc_todo",
         "routeKey": "save",
         "name": "WC: S0.1-Save Context",
         "x": 490,
@@ -2164,32 +1957,15 @@
             "625035f4.433854"
         ],
         "x": 975,
-        "y": 60,
+        "y": 80,
         "wires": []
-    },
-    {
-        "id": "b906c0a8.983dc8",
-        "type": "function",
-        "z": "faf978c7.e4831",
-        "name": "WC: S2-Prep 3",
-        "func": "msg.payload = {\n    cacheId:msg.wc.cacheId,\n    context:JSON.stringify(msg.wc.context)\n};\n\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "x": 620,
-        "y": 700,
-        "wires": [
-            [
-                "7e875d5f.a50834",
-                "4aa3f461.4e0454"
-            ]
-        ]
     },
     {
         "id": "c0fbc707.1c3ec",
         "type": "http in",
         "z": "50bc3390.412344",
         "name": "WW: Webhook",
-        "url": "/api/ww/execute",
+        "url": "/ww/execute",
         "method": "post",
         "upload": false,
         "swaggerDoc": "",
@@ -2236,16 +2012,12 @@
                 "vt": "str"
             },
             {
-                "t": "eq",
-                "v": "message-annotation-added",
-                "vt": "str"
-            },
-            {
                 "t": "else"
             }
         ],
         "checkall": "false",
-        "outputs": 4,
+        "repair": false,
+        "outputs": 3,
         "x": 640,
         "y": 120,
         "wires": [
@@ -2257,10 +2029,6 @@
                 "667e9ecb.7d987"
             ],
             [
-                "d0128d71.d7df88",
-                "667e9ecb.7d987"
-            ],
-            [
                 "667e9ecb.7d987"
             ]
         ]
@@ -2269,8 +2037,8 @@
         "id": "f5553ab0.b2f3e8",
         "type": "connectors",
         "z": "50bc3390.412344",
-        "server": "af07bfdf.f8974",
-        "profileKey": "ww_agilite",
+        "server": "7d449c5b.be903c",
+        "profileKey": "ww_todo",
         "routeKey": "challenge",
         "name": "WW: Challenge Request",
         "x": 230,
@@ -2286,7 +2054,7 @@
         "type": "function",
         "z": "50bc3390.412344",
         "name": "WW: Provide Response Header",
-        "func": "if(msg.agilite.success){\n    //Set outbound Header\n    if(!msg.headers)\n       msg.headers = {};\n        \n    msg.headers[\"X-OUTBOUND-TOKEN\"] = msg.payload.token;\n    msg.payload = {response:msg.payload.response};\n}else{\n    return node.error(JSON.stringify(msg.agilite.messages[0]), msg);\n}\n\nreturn msg;",
+        "func": "if(!msg.agilite.success){\n    return node.error(JSON.stringify(msg.agilite.messages[0]), msg);\n}\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "x": 530,
@@ -2437,7 +2205,7 @@
             "c6df7e8e.d56a38"
         ],
         "x": 835,
-        "y": 40,
+        "y": 80,
         "wires": []
     },
     {
@@ -2489,6 +2257,7 @@
         "repeat": "2700",
         "crontab": "",
         "once": true,
+        "onceDelay": "",
         "x": 170,
         "y": 320,
         "wires": [
@@ -2501,8 +2270,8 @@
         "id": "f9a854ab.c60778",
         "type": "connectors",
         "z": "50bc3390.412344",
-        "server": "af07bfdf.f8974",
-        "profileKey": "ww_agilite",
+        "server": "7d449c5b.be903c",
+        "profileKey": "ww_todo",
         "routeKey": "oauth",
         "name": "WW: Generate OAuth",
         "x": 460,
@@ -2534,7 +2303,7 @@
             "90cbcf8a.d2ad1"
         ],
         "x": 835,
-        "y": 80,
+        "y": 120,
         "wires": []
     },
     {
@@ -2566,7 +2335,7 @@
         "name": "WW: Send Reply",
         "info": "",
         "x": 120,
-        "y": 620,
+        "y": 520,
         "wires": []
     },
     {
@@ -2578,7 +2347,7 @@
             "7cdb58b9.396cc8"
         ],
         "x": 55,
-        "y": 660,
+        "y": 560,
         "wires": [
             [
                 "8a131a36.896b4"
@@ -2589,12 +2358,12 @@
         "id": "618a8913.dd0ef",
         "type": "connectors",
         "z": "50bc3390.412344",
-        "server": "af07bfdf.f8974",
-        "profileKey": "ww_agilite",
+        "server": "7d449c5b.be903c",
+        "profileKey": "ww_todo",
         "routeKey": "send",
         "name": "WW: Send Reply",
         "x": 450,
-        "y": 640,
+        "y": 540,
         "wires": [
             [
                 "f41bbb4d.5716c8"
@@ -2626,7 +2395,7 @@
             "c18774a6.7847b"
         ],
         "x": 635,
-        "y": 660,
+        "y": 560,
         "wires": []
     },
     {
@@ -2649,7 +2418,7 @@
         "checkall": "false",
         "outputs": 2,
         "x": 210,
-        "y": 660,
+        "y": 560,
         "wires": [
             [
                 "618a8913.dd0ef"
@@ -2706,7 +2475,7 @@
         "type": "function",
         "z": "50bc3390.412344",
         "name": "WW: Prep Msg Created",
-        "func": "msg.wc = {\n    triggerWords:\"watson,waston\",\n    workspaceId:\"8c9399aa-c68a-42e1-8c09-ee3feb935bf6\",\n    workflowStep:\"\",\n    performAction:\"\",\n    cacheId:msg.ww.spaceId + msg.ww.userId,\n    context:JSON.stringify({userId:msg.ww.userId, username:msg.ww.userName}),\n    message:msg.ww.content,\n    responseTitle:\"\",\n    responseMessage:\"\",\n    messageExamples:[],\n    titleExamples:[]\n};\n\nmsg.payload = msg.wc;\n\nreturn msg;",
+        "func": "msg.wc = {\n    workflowStep:\"\",\n    performAction:\"\",\n    cacheId:msg.ww.spaceId + msg.ww.userId,\n    context:JSON.stringify({userId:msg.ww.userId, username:msg.ww.userName}),\n    message:msg.ww.content,\n    responseTitle:\"\",\n    responseMessage:\"\",\n    messageExamples:[],\n    titleExamples:[]\n};\n\nmsg.payload = msg.wc;\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "x": 210,
@@ -2727,42 +2496,6 @@
         ],
         "x": 915,
         "y": 440,
-        "wires": []
-    },
-    {
-        "id": "834a7921.ab2de",
-        "type": "comment",
-        "z": "50bc3390.412344",
-        "name": "WW: Msg Annotation Added",
-        "info": "",
-        "x": 160,
-        "y": 500,
-        "wires": []
-    },
-    {
-        "id": "a0a37672.c7026",
-        "type": "link in",
-        "z": "50bc3390.412344",
-        "name": "WW: Msg Annotation Added",
-        "links": [
-            "d0128d71.d7df88"
-        ],
-        "x": 55,
-        "y": 540,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "d0128d71.d7df88",
-        "type": "link out",
-        "z": "50bc3390.412344",
-        "name": "WW: Run Msg Annotation Added",
-        "links": [
-            "a0a37672.c7026"
-        ],
-        "x": 835,
-        "y": 120,
         "wires": []
     },
     {
@@ -2798,6 +2531,7 @@
         "id": "322dbd3e.e633d2",
         "type": "subflow:7508f195.894c38",
         "z": "e4f3dadf.3a9fe",
+        "name": "",
         "x": 450,
         "y": 120,
         "wires": [
@@ -2830,7 +2564,8 @@
             "8e136f94.b55e48",
             "3d291272.9a1e66",
             "38c08684.d2afd2",
-            "ae627291.e35548"
+            "ae627291.e35548",
+            "167ccace.70745d"
         ],
         "x": 1175,
         "y": 100,
@@ -2847,5 +2582,205 @@
         "x": 1210,
         "y": 40,
         "wires": []
+    },
+    {
+        "id": "5366f63e.66a608",
+        "type": "switch",
+        "z": "7508f195.894c38",
+        "name": "TD3-1.1-Looper",
+        "property": "isComplete",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "true"
+            },
+            {
+                "t": "false"
+            }
+        ],
+        "checkall": "false",
+        "repair": false,
+        "outputs": 2,
+        "x": 860,
+        "y": 1120,
+        "wires": [
+            [
+                "167ccace.70745d"
+            ],
+            [
+                "5484d73.bc098a8"
+            ]
+        ]
+    },
+    {
+        "id": "167ccace.70745d",
+        "type": "link out",
+        "z": "7508f195.894c38",
+        "name": "Run TD-Finalize",
+        "links": [
+            "fa0826c8.4fddb"
+        ],
+        "x": 995,
+        "y": 1100,
+        "wires": []
+    },
+    {
+        "id": "eb45b1db.4ae248",
+        "type": "subflow:7508f195.894c38",
+        "z": "faf978c7.e4831",
+        "name": "",
+        "x": 970,
+        "y": 460,
+        "wires": [
+            [
+                "cbe5b3f.be50bd"
+            ]
+        ]
+    },
+    {
+        "id": "4955d99d.a97748",
+        "type": "debug",
+        "z": "50bc3390.412344",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "x": 1150,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "c7075d3a.2fdae",
+        "type": "keywords",
+        "z": "faf978c7.e4831",
+        "server": "7d449c5b.be903c",
+        "actionType": "1",
+        "recordId": "",
+        "profileKey": "todo_responsible_people",
+        "groupName": "",
+        "labelKey": "",
+        "valueKey": "",
+        "sortBy": "",
+        "name": "WC: S1-Users",
+        "x": 540,
+        "y": 460,
+        "wires": [
+            [
+                "28a1f784.f6e238"
+            ]
+        ]
+    },
+    {
+        "id": "e5001f0d.fc6658",
+        "type": "function",
+        "z": "faf978c7.e4831",
+        "name": "WC: S1-Prep 1",
+        "func": "var username = \"\";\nvar storeId = \"\";\n\n//Get Current user\nfor(var x in msg.users){\n    if(msg.users[x].value === msg.ww.userId){\n        username = msg.users[x].label;\n        break;\n    }\n}\n\n//Get Config Details\nfor(var x in msg.payload.data){\n    switch(msg.payload.data[x].label){\n        case \"todo_store_id\":\n            storeId = msg.payload.data[x].value;\n            break;\n    }\n}\n\nmsg.todo = {\n    connectionType:\"to-do-requests\",\n    reqType:\"5\",\n    data:{\n        credentials: \"ZGF2aWQgb2FrOlNFQVNkM20w\",\n        record:{\n            metaversalId: '',\n            author: username,\n            storeId: storeId,\n            taskName: msg.wc.context.taskName,\n            description: msg.wc.context.description,\n            dueDate: msg.wc.context.dueDate,\n            priority: msg.wc.context.priority,\n            assignedTo: msg.wc.context.assignedTo,\n            status: 'New'\n        }\n    }\n};\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 880,
+        "y": 420,
+        "wires": [
+            [
+                "eb45b1db.4ae248"
+            ]
+        ]
+    },
+    {
+        "id": "d05e6acd.293ea",
+        "type": "keywords",
+        "z": "faf978c7.e4831",
+        "server": "7d449c5b.be903c",
+        "actionType": "1",
+        "recordId": "",
+        "profileKey": "todo_config",
+        "groupName": "",
+        "labelKey": "",
+        "valueKey": "",
+        "sortBy": "",
+        "name": "WC: S1-Config",
+        "x": 780,
+        "y": 460,
+        "wires": [
+            [
+                "e5001f0d.fc6658"
+            ]
+        ]
+    },
+    {
+        "id": "f5cda3a0.e28928",
+        "type": "function",
+        "z": "e4f3dadf.3a9fe",
+        "name": "TEST",
+        "func": "var username = \"John Jardin\";\nvar storeId = \"8025825000743869\";\n\nmsg.todo = {\n    connectionType:\"to-do-requests\",\n    reqType:\"5\",\n    data:{\n        credentials: \"ZGF2aWQgb2FrOlNFQVNkM20w\",\n        record:{\n            metaversalId: \"\",\n            author: username,\n            storeId: storeId,\n            taskName: \"TEST DUMMY 1\",\n            description: \"Test Description\",\n            dueDate: \"2018-03-15\",\n            priority: \"High\",\n            assignedTo: \"CN=John Jardin/O=Intec\",\n            status: 'New'\n        }\n    }\n};\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 270,
+        "y": 240,
+        "wires": [
+            [
+                "8134816.67afc8"
+            ]
+        ]
+    },
+    {
+        "id": "2d2defc3.8aba2",
+        "type": "inject",
+        "z": "e4f3dadf.3a9fe",
+        "name": "",
+        "topic": "",
+        "payload": "{}",
+        "payloadType": "json",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 110,
+        "y": 240,
+        "wires": [
+            [
+                "f5cda3a0.e28928"
+            ]
+        ]
+    },
+    {
+        "id": "8134816.67afc8",
+        "type": "subflow:7508f195.894c38",
+        "z": "e4f3dadf.3a9fe",
+        "x": 410,
+        "y": 240,
+        "wires": [
+            [
+                "58a3d1c4.549968"
+            ]
+        ]
+    },
+    {
+        "id": "58a3d1c4.549968",
+        "type": "link out",
+        "z": "e4f3dadf.3a9fe",
+        "name": "Run AF-Process Result",
+        "links": [
+            "a82f60f5.d73d"
+        ],
+        "x": 535,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "d0463996.3d76d8",
+        "type": "function",
+        "z": "faf978c7.e4831",
+        "name": "WC: S1-Prep Result",
+        "func": "if(msg.agilite.success){\n    msg.wc.responseTitle = \"New To Do\";\n    msg.wc.responseMessage = \"To Do successfully created\";\n}else{\n    msg.wc.responseTitle = \"To Do Submission Failed\";\n    msg.wc.responseMessage = \"Apologies. Something went wrong with submitting the To Do. Please start over\";\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1160,
+        "y": 520,
+        "wires": [
+            []
+        ]
     }
 ]

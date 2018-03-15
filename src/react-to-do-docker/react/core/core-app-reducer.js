@@ -1,6 +1,7 @@
 import mainAppState from './core-app-state';
 import {actions} from './core-actions';
 import tempData from '../temp-data-store/temp-data';
+import Globals from '../globals';
 
 const main = (state = mainAppState, action) => {
   switch (action.type) {
@@ -49,6 +50,8 @@ const main = (state = mainAppState, action) => {
           prevApp = state.app;
           break;
       }
+
+      Globals.appKey = app;
 
       return Object.assign({}, state, {
           app,
