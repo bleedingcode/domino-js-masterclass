@@ -1,25 +1,99 @@
 [
     {
-        "id": "9e8643b4.332fc",
+        "id": "e4f3dadf.3a9fe",
         "type": "tab",
-        "label": "To Do",
+        "label": "API Flows",
         "disabled": false,
         "info": ""
     },
     {
-        "id": "7101d4a7.05e83c",
+        "id": "50bc3390.412344",
+        "type": "tab",
+        "label": "WW Flows",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "7508f195.894c38",
+        "type": "subflow",
+        "name": "To Do",
+        "info": "",
+        "in": [
+            {
+                "x": 60,
+                "y": 100,
+                "wires": [
+                    {
+                        "id": "eb089260.68be98"
+                    }
+                ]
+            }
+        ],
+        "out": [
+            {
+                "x": 1240,
+                "y": 100,
+                "wires": [
+                    {
+                        "id": "fa0826c8.4fddb",
+                        "port": 0
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "id": "faf978c7.e4831",
+        "type": "subflow",
+        "name": "WC: Send Msg",
+        "info": "",
+        "in": [
+            {
+                "x": 60,
+                "y": 100,
+                "wires": [
+                    {
+                        "id": "988bdbcc.988f08"
+                    }
+                ]
+            }
+        ],
+        "out": [
+            {
+                "x": 1300,
+                "y": 120,
+                "wires": [
+                    {
+                        "id": "fd15598d.30a12",
+                        "port": 0
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "id": "7d449c5b.be903c",
         "type": "agilite-login",
         "z": "",
         "serverType": "2",
-        "server": "http://192.168.99.100:30010",
-        "name": "JJ-Minikube",
+        "server": "http://52.168.105.225:30010",
+        "name": "Kubernetes",
         "username": "john.jardin@gmail.com"
     },
     {
-        "id": "45e1b833.b4f36",
+        "id": "af07bfdf.f8974",
+        "type": "agilite-login",
+        "z": "",
+        "serverType": "1",
+        "server": "https://api.agilite.io",
+        "name": "Jardin",
+        "username": "john.jardin@gmail.com"
+    },
+    {
+        "id": "98b540b6.5e02e",
         "type": "http in",
-        "z": "9e8643b4.332fc",
-        "name": "TD-Webhook",
+        "z": "e4f3dadf.3a9fe",
+        "name": "AF-Webhook",
         "url": "/webhook/todo",
         "method": "post",
         "upload": false,
@@ -28,182 +102,266 @@
         "y": 120,
         "wires": [
             [
-                "70d9135f.79533c"
+                "9806503c.fdc5a"
             ]
         ]
     },
     {
-        "id": "a62676e8.0c645",
+        "id": "6b04ec9c.3647dc",
         "type": "debug",
-        "z": "9e8643b4.332fc",
-        "name": "TD-Debug",
+        "z": "e4f3dadf.3a9fe",
+        "name": "AF-Debug",
         "active": true,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
         "complete": "true",
         "x": 1130,
-        "y": 340,
+        "y": 360,
         "wires": []
     },
     {
-        "id": "9d21fd15.10554",
+        "id": "2e83b864.eebdf8",
         "type": "http response",
-        "z": "9e8643b4.332fc",
-        "name": "TD-API Response",
+        "z": "e4f3dadf.3a9fe",
+        "name": "AF-API Response",
         "statusCode": "",
         "headers": {},
         "x": 1150,
-        "y": 380,
+        "y": 400,
         "wires": []
     },
     {
-        "id": "3b99311a.94bc56",
+        "id": "ce5b136.99fe7f",
         "type": "link in",
-        "z": "9e8643b4.332fc",
-        "name": "TD-Finalize",
+        "z": "e4f3dadf.3a9fe",
+        "name": "AF-Finalize",
         "links": [
-            "55184be0.78d874",
-            "8c6f42ed.3f05b8"
+            "41358954.1106b8",
+            "b3b4c778.4e03b"
         ],
-        "x": 1015,
-        "y": 360,
+        "x": 995,
+        "y": 380,
         "wires": [
             [
-                "a62676e8.0c645",
-                "9d21fd15.10554"
+                "6b04ec9c.3647dc",
+                "2e83b864.eebdf8"
             ]
         ]
     },
     {
-        "id": "c811478.e0adab8",
+        "id": "d0dccb1c.55648",
         "type": "comment",
-        "z": "9e8643b4.332fc",
-        "name": "TD-Process Errors",
+        "z": "e4f3dadf.3a9fe",
+        "name": "AF-Process Errors",
         "info": "",
         "x": 1070,
         "y": 160,
         "wires": []
     },
     {
-        "id": "5ad48c37.fe2cd4",
+        "id": "2a2a373e.5da2e8",
         "type": "catch",
-        "z": "9e8643b4.332fc",
-        "name": "TD-Error Handler",
+        "z": "e4f3dadf.3a9fe",
+        "name": "AF-Error Handler",
         "scope": null,
         "x": 1080,
         "y": 200,
         "wires": [
             [
-                "b1bde2f.dc068a"
+                "835d4dc.fc25d3"
             ]
         ]
     },
     {
-        "id": "b1bde2f.dc068a",
+        "id": "835d4dc.fc25d3",
         "type": "function",
-        "z": "9e8643b4.332fc",
-        "name": "TD-Prepare Error Result",
-        "func": "msg.payload = {\n    reqType:msg.req.headers[\"req-type\"],\n    success:false,\n    messages:[msg.error.message],\n    data:msg.error.source\n};\n\nreturn msg;",
+        "z": "e4f3dadf.3a9fe",
+        "name": "AF-Prepare Error Result",
+        "func": "msg.payload = {\n    reqType:msg.todo.reqType,\n    success:false,\n    messages:[msg.error.message],\n    data:msg.error.source\n};\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "x": 1090,
         "y": 240,
         "wires": [
             [
-                "8c6f42ed.3f05b8"
+                "41358954.1106b8"
             ]
         ]
     },
     {
-        "id": "8c6f42ed.3f05b8",
+        "id": "41358954.1106b8",
         "type": "link out",
-        "z": "9e8643b4.332fc",
-        "name": "Run TD-Finalize",
+        "z": "e4f3dadf.3a9fe",
+        "name": "Run AF-Finalize",
         "links": [
-            "3b99311a.94bc56"
+            "ce5b136.99fe7f"
         ],
         "x": 1255,
         "y": 240,
         "wires": []
     },
     {
-        "id": "894cf92b.65b2c",
+        "id": "47a9824c.643a6c",
         "type": "comment",
-        "z": "9e8643b4.332fc",
-        "name": "TD-Finalize",
+        "z": "e4f3dadf.3a9fe",
+        "name": "AF-Finalize",
         "info": "",
         "x": 1040,
-        "y": 300,
+        "y": 320,
         "wires": []
     },
     {
-        "id": "b61bc7d6.d24a88",
+        "id": "ba8a5aa7.3ffa48",
         "type": "comment",
-        "z": "9e8643b4.332fc",
-        "name": "TD-Process Success Result",
+        "z": "e4f3dadf.3a9fe",
+        "name": "AF-Process Success Result",
         "info": "",
         "x": 1100,
         "y": 60,
         "wires": []
     },
     {
-        "id": "b1679686.0368b8",
+        "id": "3a4f2fe4.97bcd",
         "type": "function",
-        "z": "9e8643b4.332fc",
-        "name": "TD-Prepare Success Result",
-        "func": "msg.payload = {\n    reqType:msg.req.headers[\"req-type\"],\n    success:true,\n    messages:[],\n    data:msg.payload\n};\n\nif(msg.storeList){\n    msg.payload.storeList = msg.storeList;\n}\n\nreturn msg;",
+        "z": "e4f3dadf.3a9fe",
+        "name": "AF-Prepare Success Result",
+        "func": "msg.payload = {\n    reqType:msg.todo.reqType,\n    success:true,\n    messages:[],\n    data:msg.payload\n};\n\nif(msg.storeList){\n    msg.payload.storeList = msg.storeList;\n}\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
-        "x": 1180,
+        "x": 1160,
         "y": 100,
         "wires": [
             [
-                "55184be0.78d874"
+                "b3b4c778.4e03b"
             ]
         ]
     },
     {
-        "id": "55184be0.78d874",
+        "id": "b3b4c778.4e03b",
         "type": "link out",
-        "z": "9e8643b4.332fc",
-        "name": "Run TD-Finalize",
+        "z": "e4f3dadf.3a9fe",
+        "name": "Run AF-Finalize",
         "links": [
-            "3b99311a.94bc56"
+            "ce5b136.99fe7f"
         ],
-        "x": 1375,
+        "x": 1335,
         "y": 100,
         "wires": []
     },
     {
-        "id": "e4099329.fcc3",
+        "id": "a82f60f5.d73d",
         "type": "link in",
-        "z": "9e8643b4.332fc",
-        "name": "TD-Process Result",
+        "z": "e4f3dadf.3a9fe",
+        "name": "AF-Process Result",
         "links": [
-            "824007d0.b5f778",
-            "9837d67c.030cf8",
-            "3e6fc812.d11d18",
-            "adedddba.3dafd",
-            "352f4a48.d70f0e",
-            "b71be5a3.6e2a98",
-            "7f3bae36.a6a3e8",
-            "b05e091e.afdd08"
+            "7b5f1881.c628a8"
         ],
         "x": 995,
         "y": 100,
         "wires": [
             [
-                "b1679686.0368b8"
+                "3a4f2fe4.97bcd"
             ]
         ]
     },
     {
-        "id": "70d9135f.79533c",
+        "id": "6f19358d.06b154",
+        "type": "comment",
+        "z": "e4f3dadf.3a9fe",
+        "name": "AF-Start",
+        "info": "",
+        "x": 100,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "cef78c93.aaf58",
+        "type": "inject",
+        "z": "e4f3dadf.3a9fe",
+        "name": "AF-WS Trigger",
+        "topic": "",
+        "payload": "{}",
+        "payloadType": "json",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 140,
+        "y": 40,
+        "wires": [
+            [
+                "2ab07b52.65f734"
+            ]
+        ]
+    },
+    {
+        "id": "5024f116.4445e",
+        "type": "http request",
+        "z": "e4f3dadf.3a9fe",
+        "name": "AF-WS Execute",
+        "method": "POST",
+        "ret": "obj",
+        "url": "http://127.0.0.1:6021/execute",
+        "tls": "",
+        "x": 1180,
+        "y": 480,
+        "wires": [
+            [
+                "19a6a168.f8c90f"
+            ]
+        ]
+    },
+    {
+        "id": "d76e9a4e.f666d",
+        "type": "function",
+        "z": "e4f3dadf.3a9fe",
+        "name": "AF-WS Finalize",
+        "func": "msg.payload = {\n    \"event\":\"to-do-app-response\",\n    \"data\":{\n    \t\"reqType\": \"1\",\n    \t\"success\": true,\n    \t\"messages\": [],\n    \t\"data\": {\n    \t\t\"users\": [{\n    \t\t\t\"text\": \"David Oak\",\n    \t\t\t\"value\": \"David Oak\"\n    \t\t}, {\n    \t\t\t\"text\": \"Jane Apple\",\n    \t\t\t\"value\": \"Jane Apple\"\n    \t\t}, {\n    \t\t\t\"text\": \"John Jardin\",\n    \t\t\t\"value\": \"John Jardin\"\n    \t\t}, {\n    \t\t\t\"text\": \"Paul Withers\",\n    \t\t\t\"value\": \"Paul Withers\"\n    \t\t}, {\n    \t\t\t\"text\": \"Steve Maple\",\n    \t\t\t\"value\": \"Steve Maple\"\n    \t\t}],\n    \t\t\"user\": {\n    \t\t\t\"username\": \"CN=David Oak/O=Intec\",\n    \t\t\t\"commonName\": \"David Oak\",\n    \t\t\t\"access\": {\n    \t\t\t\t\"allowDelete\": false\n    \t\t\t}\n    \t\t}\n    \t}\n    }\n};\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1140,
+        "y": 440,
+        "wires": [
+            [
+                "5024f116.4445e"
+            ]
+        ]
+    },
+    {
+        "id": "19a6a168.f8c90f",
+        "type": "debug",
+        "z": "e4f3dadf.3a9fe",
+        "name": "AF-WS Debug",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "x": 1200,
+        "y": 520,
+        "wires": []
+    },
+    {
+        "id": "2ab07b52.65f734",
+        "type": "function",
+        "z": "e4f3dadf.3a9fe",
+        "name": "AF-WS Prep",
+        "func": "msg.todo = {\n    connectionType:\"to-do-app-requests\",\n    reqType:\"1\",\n    data:{\n        credentials: \"ZGF2aWQgb2FrOlNFQVNkM20w\"\n    }\n};\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 330,
+        "y": 40,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "eb089260.68be98",
         "type": "switch",
-        "z": "9e8643b4.332fc",
+        "z": "7508f195.894c38",
         "name": "TD-Connection Type",
-        "property": "req.headers[\"connection-type\"]",
+        "property": "todo.connectionType",
         "propertyType": "msg",
         "rules": [
             {
@@ -225,182 +383,182 @@
         "checkall": "false",
         "repair": false,
         "outputs": 3,
-        "x": 320,
-        "y": 120,
+        "x": 220,
+        "y": 100,
         "wires": [
             [
-                "d6fd0124.a1be"
+                "6fe5c843.120ec"
             ],
             [
-                "7eca0e9.3867f7"
+                "eba1a042.4126b8"
             ],
             [
-                "c6260965.15d23"
+                "4637c2c2.91d754"
             ]
         ]
     },
     {
-        "id": "d6fd0124.a1be",
+        "id": "6fe5c843.120ec",
         "type": "link out",
-        "z": "9e8643b4.332fc",
+        "z": "7508f195.894c38",
         "name": "Run TD1-Authenticate",
         "links": [
-            "5db4f9b1.310b4"
+            "7573c53a.604524"
         ],
-        "x": 475,
-        "y": 80,
+        "x": 395,
+        "y": 60,
         "wires": []
     },
     {
-        "id": "e88af82d.65fda8",
+        "id": "b50d2d8a.39e8d8",
         "type": "comment",
-        "z": "9e8643b4.332fc",
+        "z": "7508f195.894c38",
         "name": "TD-Start",
         "info": "",
         "x": 100,
-        "y": 80,
+        "y": 40,
         "wires": []
     },
     {
-        "id": "1d9f3b89.afc944",
+        "id": "66a136dd.aa9f38",
         "type": "comment",
-        "z": "9e8643b4.332fc",
+        "z": "7508f195.894c38",
         "name": "TD1-Authenticate",
         "info": "",
         "x": 120,
-        "y": 200,
+        "y": 180,
         "wires": []
     },
     {
-        "id": "5db4f9b1.310b4",
+        "id": "7573c53a.604524",
         "type": "link in",
-        "z": "9e8643b4.332fc",
-        "name": "TD1-Authenticate",
+        "z": "7508f195.894c38",
+        "name": "TD1.1-Authenticate",
         "links": [
-            "d6fd0124.a1be"
+            "6fe5c843.120ec"
         ],
-        "x": 55,
-        "y": 240,
+        "x": 75,
+        "y": 260,
         "wires": [
             [
-                "f370a0f7.3f34d8"
+                "ba907bdf.dc3878"
             ]
         ]
     },
     {
-        "id": "f370a0f7.3f34d8",
+        "id": "ba907bdf.dc3878",
         "type": "function",
-        "z": "9e8643b4.332fc",
-        "name": "TD1-Prep",
-        "func": "msg.payload = msg.req.body;\nreturn msg;",
+        "z": "7508f195.894c38",
+        "name": "TD1.1-Prep",
+        "func": "msg.payload = msg.todo.data;\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
-        "x": 160,
-        "y": 240,
+        "x": 190,
+        "y": 260,
         "wires": [
             [
-                "61f52ee9.cb08b8"
+                "20c1b96f.510a7e"
             ]
         ]
     },
     {
-        "id": "61f52ee9.cb08b8",
+        "id": "20c1b96f.510a7e",
         "type": "connectors",
-        "z": "9e8643b4.332fc",
-        "server": "7101d4a7.05e83c",
+        "z": "7508f195.894c38",
+        "server": "7d449c5b.be903c",
         "profileKey": "paul_domino_dev",
         "routeKey": "login",
-        "name": "TD1-Connector",
-        "x": 340,
-        "y": 240,
+        "name": "TD1.1-Connector",
+        "x": 390,
+        "y": 260,
         "wires": [
             [
-                "3b237cdd.aecc8c"
+                "5554df25.e2d15"
             ]
         ]
     },
     {
-        "id": "3b237cdd.aecc8c",
+        "id": "5554df25.e2d15",
         "type": "function",
-        "z": "9e8643b4.332fc",
-        "name": "TD1-Finalize",
-        "func": "if(msg.agilite.success){\n    try {\n      if(msg.payload.substring(0, 1) === \"<\"){\n        return node.error(\"Incorrect Username/Password. Please try again\", msg);\n      }  \n    } catch (error) {}    \n    \n    return msg;    \n}else{\n    return node.error(msg.agilite.messages[0], msg);\n}\n",
+        "z": "7508f195.894c38",
+        "name": "TD1.1-Finalize",
+        "func": "if(msg.agilite.success){\n    try {\n      if(msg.payload.substring(0, 1) === \"<\"){\n        return node.error(\"Incorrect Username/Password. Please try again\", msg);\n      }  \n    } catch (error) {}    \n    \n    msg.user = msg.payload;\n    \n    return msg;    \n}else{\n    return node.error(msg.agilite.messages[0], msg);\n}\n",
         "outputs": 1,
         "noerr": 0,
-        "x": 530,
-        "y": 240,
+        "x": 600,
+        "y": 260,
         "wires": [
             [
-                "9837d67c.030cf8"
+                "ec3fbed1.aed76"
             ]
         ]
     },
     {
-        "id": "9837d67c.030cf8",
+        "id": "ec3fbed1.aed76",
         "type": "link out",
-        "z": "9e8643b4.332fc",
-        "name": "Run TD-Process Result",
+        "z": "7508f195.894c38",
+        "name": "Run TD1.2-Get Users",
         "links": [
-            "e4099329.fcc3"
+            "94993f80.218dd"
         ],
-        "x": 655,
-        "y": 240,
+        "x": 735,
+        "y": 260,
         "wires": []
     },
     {
-        "id": "7eca0e9.3867f7",
+        "id": "eba1a042.4126b8",
         "type": "link out",
-        "z": "9e8643b4.332fc",
+        "z": "7508f195.894c38",
         "name": "Run TD2-Store Requests",
         "links": [
-            "5148c338.a7d304"
+            "c9a4e4aa.7426c8"
         ],
-        "x": 475,
-        "y": 120,
+        "x": 395,
+        "y": 100,
         "wires": []
     },
     {
-        "id": "a8252270.393048",
+        "id": "67245edd.db9648",
         "type": "comment",
-        "z": "9e8643b4.332fc",
+        "z": "7508f195.894c38",
         "name": "TD2-Store Requests",
         "info": "",
         "x": 130,
-        "y": 320,
+        "y": 440,
         "wires": []
     },
     {
-        "id": "1ecd122b.b3515e",
+        "id": "5ef0e9e1.dfe0d8",
         "type": "comment",
-        "z": "9e8643b4.332fc",
+        "z": "7508f195.894c38",
         "name": "TD2-1-Fetch Data",
         "info": "",
         "x": 170,
-        "y": 460,
+        "y": 580,
         "wires": []
     },
     {
-        "id": "5148c338.a7d304",
+        "id": "c9a4e4aa.7426c8",
         "type": "link in",
-        "z": "9e8643b4.332fc",
+        "z": "7508f195.894c38",
         "name": "TD2-Store Requests",
         "links": [
-            "7eca0e9.3867f7"
+            "eba1a042.4126b8"
         ],
         "x": 55,
-        "y": 360,
+        "y": 480,
         "wires": [
             [
-                "642526bd.a43aa8"
+                "fa9554da.98dfa"
             ]
         ]
     },
     {
-        "id": "642526bd.a43aa8",
+        "id": "fa9554da.98dfa",
         "type": "switch",
-        "z": "9e8643b4.332fc",
+        "z": "7508f195.894c38",
         "name": "TD2-Req Type",
-        "property": "req.headers[\"req-type\"]",
+        "property": "todo.reqType",
         "propertyType": "msg",
         "rules": [
             {
@@ -423,335 +581,335 @@
         "repair": false,
         "outputs": 3,
         "x": 180,
-        "y": 380,
+        "y": 500,
         "wires": [
             [
-                "6ec9482a.243ea"
+                "647ab58.a22e14c"
             ],
             [
-                "9fc8cca.e87603"
+                "4b41138c.26bc4c"
             ],
             [
-                "c378f01a.9d22b8"
+                "691b4a6a.fca7f4"
             ]
         ]
     },
     {
-        "id": "6ec9482a.243ea",
+        "id": "647ab58.a22e14c",
         "type": "link out",
-        "z": "9e8643b4.332fc",
+        "z": "7508f195.894c38",
         "name": "Run TD2-1-Fetch Data",
         "links": [
-            "2ff53f9.4edefc"
+            "a104b13b.8f3ee8"
         ],
         "x": 315,
-        "y": 340,
+        "y": 460,
         "wires": []
     },
     {
-        "id": "2ff53f9.4edefc",
+        "id": "a104b13b.8f3ee8",
         "type": "link in",
-        "z": "9e8643b4.332fc",
+        "z": "7508f195.894c38",
         "name": "TD2-1-Fetch Data",
         "links": [
-            "6ec9482a.243ea"
+            "647ab58.a22e14c"
         ],
         "x": 95,
-        "y": 500,
+        "y": 620,
         "wires": [
             [
-                "b7ed2adb.06bc4"
+                "af34db95.e78098"
             ]
         ]
     },
     {
-        "id": "b7ed2adb.06bc4",
+        "id": "af34db95.e78098",
         "type": "function",
-        "z": "9e8643b4.332fc",
+        "z": "7508f195.894c38",
         "name": "TD2-1-Prep",
-        "func": "msg.payload = msg.req.body;\nreturn msg;",
+        "func": "msg.payload = msg.todo.data;\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "x": 210,
-        "y": 500,
+        "y": 620,
         "wires": [
             [
-                "9ff744aa.2d064"
+                "ed8f8599.6d644"
             ]
         ]
     },
     {
-        "id": "9ff744aa.2d064",
+        "id": "ed8f8599.6d644",
         "type": "connectors",
-        "z": "9e8643b4.332fc",
-        "server": "7101d4a7.05e83c",
+        "z": "7508f195.894c38",
+        "server": "7d449c5b.be903c",
         "profileKey": "paul_domino_dev",
         "routeKey": "get_my_stores",
         "name": "TD2-1-Connector",
         "x": 410,
-        "y": 500,
+        "y": 620,
         "wires": [
             [
-                "b022f8f.8e91508"
+                "4c512ac9.946adc"
             ]
         ]
     },
     {
-        "id": "b022f8f.8e91508",
+        "id": "4c512ac9.946adc",
         "type": "function",
-        "z": "9e8643b4.332fc",
+        "z": "7508f195.894c38",
         "name": "TD2-1-Finalize",
         "func": "if(msg.agilite.success){\n    try {\n      if(msg.payload.substring(0, 1) === \"<\"){\n        return node.error(\"Incorrect Username/Password. Please try again\", msg);\n      }  \n    } catch (error) {}    \n    \n    //Fix up Data Entries to be compatible with React\n    var resultData = [];\n    \n    for(var x in msg.payload){\n        resultData.push(\n            {\n                _id:msg.payload[x].replicaId,\n                data:msg.payload[x]\n            }\n        )\n    }\n    \n    msg.payload = resultData;\n    \n    return msg;    \n}else{\n    return node.error(msg.agilite.messages[0], msg);\n}\n",
         "outputs": 1,
         "noerr": 0,
         "x": 620,
-        "y": 500,
+        "y": 620,
         "wires": [
             [
-                "3e6fc812.d11d18"
+                "2e423fd7.7c099"
             ]
         ]
     },
     {
-        "id": "3e6fc812.d11d18",
+        "id": "2e423fd7.7c099",
         "type": "link out",
-        "z": "9e8643b4.332fc",
-        "name": "Run TD-Process Result",
+        "z": "7508f195.894c38",
+        "name": "Run TD-Finalize",
         "links": [
-            "e4099329.fcc3"
+            "fa0826c8.4fddb"
         ],
         "x": 755,
-        "y": 500,
+        "y": 620,
         "wires": []
     },
     {
-        "id": "e0623925.712278",
+        "id": "8545f80f.5579d",
         "type": "comment",
-        "z": "9e8643b4.332fc",
+        "z": "7508f195.894c38",
         "name": "TD2-2-Create Record",
         "info": "",
         "x": 180,
-        "y": 560,
+        "y": 680,
         "wires": []
     },
     {
-        "id": "fb527e24.b8416",
+        "id": "71f49470.be1684",
         "type": "link in",
-        "z": "9e8643b4.332fc",
+        "z": "7508f195.894c38",
         "name": "TD2-2-Create Record",
         "links": [
-            "9fc8cca.e87603"
+            "4b41138c.26bc4c"
         ],
         "x": 95,
-        "y": 600,
+        "y": 720,
         "wires": [
             [
-                "73324a60.675cdc"
+                "e48099b7.63c278"
             ]
         ]
     },
     {
-        "id": "73324a60.675cdc",
+        "id": "e48099b7.63c278",
         "type": "function",
-        "z": "9e8643b4.332fc",
+        "z": "7508f195.894c38",
         "name": "TD2-2-Prep",
-        "func": "msg.payload = msg.req.body;\nreturn msg;",
+        "func": "msg.payload = msg.todo.data;\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "x": 210,
-        "y": 600,
+        "y": 720,
         "wires": [
             [
-                "8c2c96dd.c4534"
+                "aaac2647.d4b4a"
             ]
         ]
     },
     {
-        "id": "8c2c96dd.c4534",
+        "id": "aaac2647.d4b4a",
         "type": "connectors",
-        "z": "9e8643b4.332fc",
-        "server": "7101d4a7.05e83c",
+        "z": "7508f195.894c38",
+        "server": "7d449c5b.be903c",
         "profileKey": "paul_domino_dev",
         "routeKey": "create_store",
         "name": "TD2-2-Connector",
         "x": 410,
-        "y": 600,
+        "y": 720,
         "wires": [
             [
-                "ea42840f.fdd29"
+                "faf6fc8.06e5e"
             ]
         ]
     },
     {
-        "id": "ea42840f.fdd29",
+        "id": "faf6fc8.06e5e",
         "type": "function",
-        "z": "9e8643b4.332fc",
+        "z": "7508f195.894c38",
         "name": "TD2-2-Finalize",
-        "func": "if(msg.agilite.success){\n    try {\n      if(msg.payload.substring(0, 1) === \"<\"){\n        return node.error(\"Incorrect Username/Password. Please try again\", msg);\n      }  \n    } catch (error) {}    \n    \n    //Fix up Data Entries to be compatible with React\n    var resultData = {\n        _id:msg.payload.replicaId,\n        custom:msg.req.body.custom,\n        data:msg.payload \n    };\n    \n    msg.payload = resultData;    \n    \n    return msg;    \n}else{\n    return node.error(msg.agilite.messages[0], msg);\n}\n",
+        "func": "if(msg.agilite.success){\n    try {\n      if(msg.payload.substring(0, 1) === \"<\"){\n        return node.error(\"Incorrect Username/Password. Please try again\", msg);\n      }  \n    } catch (error) {}    \n    \n    //Fix up Data Entries to be compatible with React\n    var resultData = {\n        _id:msg.payload.replicaId,\n        custom:msg.todo.data.custom,\n        data:msg.payload \n    };\n    \n    msg.payload = resultData;    \n    \n    return msg;    \n}else{\n    return node.error(msg.agilite.messages[0], msg);\n}\n",
         "outputs": 1,
         "noerr": 0,
         "x": 620,
-        "y": 600,
+        "y": 720,
         "wires": [
             [
-                "adedddba.3dafd"
+                "40105e55.b7b848"
             ]
         ]
     },
     {
-        "id": "adedddba.3dafd",
+        "id": "40105e55.b7b848",
         "type": "link out",
-        "z": "9e8643b4.332fc",
-        "name": "Run TD-Process Result",
+        "z": "7508f195.894c38",
+        "name": "Run TD-Finalize",
         "links": [
-            "e4099329.fcc3"
+            "fa0826c8.4fddb"
         ],
         "x": 755,
-        "y": 600,
+        "y": 720,
         "wires": []
     },
     {
-        "id": "9fc8cca.e87603",
+        "id": "4b41138c.26bc4c",
         "type": "link out",
-        "z": "9e8643b4.332fc",
+        "z": "7508f195.894c38",
         "name": "Run TD2-2-Create Record",
         "links": [
-            "fb527e24.b8416"
+            "71f49470.be1684"
         ],
         "x": 315,
-        "y": 380,
+        "y": 500,
         "wires": []
     },
     {
-        "id": "95460af9.bb4348",
+        "id": "28324906.e10636",
         "type": "comment",
-        "z": "9e8643b4.332fc",
+        "z": "7508f195.894c38",
         "name": "TD2-3-Update Record",
         "info": "",
         "x": 180,
-        "y": 660,
-        "wires": []
-    },
-    {
-        "id": "606ed200.8d24b8",
-        "type": "link in",
-        "z": "9e8643b4.332fc",
-        "name": "TD2-3-Update Record",
-        "links": [
-            "c378f01a.9d22b8"
-        ],
-        "x": 95,
-        "y": 700,
-        "wires": [
-            [
-                "114a2500.3c487b"
-            ]
-        ]
-    },
-    {
-        "id": "114a2500.3c487b",
-        "type": "function",
-        "z": "9e8643b4.332fc",
-        "name": "TD2-3-Prep",
-        "func": "msg.payload = msg.req.body;\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "x": 210,
-        "y": 700,
-        "wires": [
-            [
-                "af8c59f4.b51bb8"
-            ]
-        ]
-    },
-    {
-        "id": "af8c59f4.b51bb8",
-        "type": "connectors",
-        "z": "9e8643b4.332fc",
-        "server": "7101d4a7.05e83c",
-        "profileKey": "paul_domino_dev",
-        "routeKey": "update_store",
-        "name": "TD2-3-Connector",
-        "x": 410,
-        "y": 700,
-        "wires": [
-            [
-                "1e3fbee2.9991a1"
-            ]
-        ]
-    },
-    {
-        "id": "1e3fbee2.9991a1",
-        "type": "function",
-        "z": "9e8643b4.332fc",
-        "name": "TD2-3-Finalize",
-        "func": "if(msg.agilite.success){\n    try {\n      if(msg.payload.substring(0, 1) === \"<\"){\n        return node.error(\"Incorrect Username/Password. Please try again\", msg);\n      }  \n    } catch (error) {}    \n    \n    //Fix up Data Entries to be compatible with React\n    var resultData = {\n        _id:msg.payload.replicaId,\n        custom:msg.req.body.custom,\n        data:msg.payload   \n    };\n    \n    msg.payload = resultData;    \n    \n    return msg;    \n}else{\n    return node.error(msg.agilite.messages[0], msg);\n}\n",
-        "outputs": 1,
-        "noerr": 0,
-        "x": 620,
-        "y": 700,
-        "wires": [
-            [
-                "352f4a48.d70f0e"
-            ]
-        ]
-    },
-    {
-        "id": "352f4a48.d70f0e",
-        "type": "link out",
-        "z": "9e8643b4.332fc",
-        "name": "Run TD-Process Result",
-        "links": [
-            "e4099329.fcc3"
-        ],
-        "x": 755,
-        "y": 700,
-        "wires": []
-    },
-    {
-        "id": "c378f01a.9d22b8",
-        "type": "link out",
-        "z": "9e8643b4.332fc",
-        "name": "Run TD2-3-Create Record",
-        "links": [
-            "606ed200.8d24b8"
-        ],
-        "x": 315,
-        "y": 420,
-        "wires": []
-    },
-    {
-        "id": "2d170faf.7d1d48",
-        "type": "comment",
-        "z": "9e8643b4.332fc",
-        "name": "TD3-To Do Requests",
-        "info": "",
-        "x": 130,
         "y": 780,
         "wires": []
     },
     {
-        "id": "7c1fb16e.3d4b4",
+        "id": "9be84930.f3d74",
         "type": "link in",
-        "z": "9e8643b4.332fc",
-        "name": "TD3-To Do Requests",
+        "z": "7508f195.894c38",
+        "name": "TD2-3-Update Record",
         "links": [
-            "c6260965.15d23"
+            "691b4a6a.fca7f4"
         ],
-        "x": 55,
+        "x": 95,
         "y": 820,
         "wires": [
             [
-                "600a5f6b.cafd08"
+                "f06c0bda.b9289"
             ]
         ]
     },
     {
-        "id": "600a5f6b.cafd08",
+        "id": "f06c0bda.b9289",
+        "type": "function",
+        "z": "7508f195.894c38",
+        "name": "TD2-3-Prep",
+        "func": "msg.payload = msg.todo.data;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 210,
+        "y": 820,
+        "wires": [
+            [
+                "6027071a.89f708"
+            ]
+        ]
+    },
+    {
+        "id": "6027071a.89f708",
+        "type": "connectors",
+        "z": "7508f195.894c38",
+        "server": "7d449c5b.be903c",
+        "profileKey": "paul_domino_dev",
+        "routeKey": "update_store",
+        "name": "TD2-3-Connector",
+        "x": 410,
+        "y": 820,
+        "wires": [
+            [
+                "810fa147.3d4d2"
+            ]
+        ]
+    },
+    {
+        "id": "810fa147.3d4d2",
+        "type": "function",
+        "z": "7508f195.894c38",
+        "name": "TD2-3-Finalize",
+        "func": "if(msg.agilite.success){\n    try {\n      if(msg.payload.substring(0, 1) === \"<\"){\n        return node.error(\"Incorrect Username/Password. Please try again\", msg);\n      }  \n    } catch (error) {}    \n    \n    //Fix up Data Entries to be compatible with React\n    var resultData = {\n        _id:msg.payload.replicaId,\n        custom:msg.todo.data.custom,\n        data:msg.payload   \n    };\n    \n    msg.payload = resultData;    \n    \n    return msg;    \n}else{\n    return node.error(msg.agilite.messages[0], msg);\n}\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 620,
+        "y": 820,
+        "wires": [
+            [
+                "8e136f94.b55e48"
+            ]
+        ]
+    },
+    {
+        "id": "8e136f94.b55e48",
+        "type": "link out",
+        "z": "7508f195.894c38",
+        "name": "Run TD-Finalize",
+        "links": [
+            "fa0826c8.4fddb"
+        ],
+        "x": 755,
+        "y": 820,
+        "wires": []
+    },
+    {
+        "id": "691b4a6a.fca7f4",
+        "type": "link out",
+        "z": "7508f195.894c38",
+        "name": "Run TD2-3-Create Record",
+        "links": [
+            "9be84930.f3d74"
+        ],
+        "x": 315,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "3128769e.1a64c2",
+        "type": "comment",
+        "z": "7508f195.894c38",
+        "name": "TD3-To Do Requests",
+        "info": "",
+        "x": 130,
+        "y": 900,
+        "wires": []
+    },
+    {
+        "id": "fa786340.7ce738",
+        "type": "link in",
+        "z": "7508f195.894c38",
+        "name": "TD3-To Do Requests",
+        "links": [
+            "4637c2c2.91d754"
+        ],
+        "x": 55,
+        "y": 940,
+        "wires": [
+            [
+                "7920b2a7.29a624"
+            ]
+        ]
+    },
+    {
+        "id": "7920b2a7.29a624",
         "type": "switch",
-        "z": "9e8643b4.332fc",
+        "z": "7508f195.894c38",
         "name": "TD3-Req Type",
-        "property": "req.headers[\"req-type\"]",
+        "property": "todo.reqType",
         "propertyType": "msg",
         "rules": [
             {
@@ -776,242 +934,242 @@
         "repair": false,
         "outputs": 3,
         "x": 180,
-        "y": 840,
+        "y": 960,
         "wires": [
             [
-                "2b68c2cb.5b209e"
+                "ddf0c69a.6d21a"
             ],
             [
-                "7e811a8e.55ba54"
+                "3a78dbe2.7f271c"
             ],
             [
-                "eee9e070.3c6808"
+                "8e3ce6f6.aa9ca8"
             ]
         ]
     },
     {
-        "id": "2b68c2cb.5b209e",
+        "id": "ddf0c69a.6d21a",
         "type": "link out",
-        "z": "9e8643b4.332fc",
+        "z": "7508f195.894c38",
         "name": "Run TD3-1.1-Fetch Data",
         "links": [
-            "a8fbc522.a7bc78"
+            "be89334.0f9a55"
         ],
         "x": 315,
-        "y": 800,
-        "wires": []
-    },
-    {
-        "id": "7e811a8e.55ba54",
-        "type": "link out",
-        "z": "9e8643b4.332fc",
-        "name": "Run TD3-2-Create Record",
-        "links": [
-            "c3d04d23.b982c8"
-        ],
-        "x": 315,
-        "y": 840,
-        "wires": []
-    },
-    {
-        "id": "eee9e070.3c6808",
-        "type": "link out",
-        "z": "9e8643b4.332fc",
-        "name": "Run TD3-3-Update Record",
-        "links": [
-            "319b5a34.c1e5fe"
-        ],
-        "x": 315,
-        "y": 880,
-        "wires": []
-    },
-    {
-        "id": "c6260965.15d23",
-        "type": "link out",
-        "z": "9e8643b4.332fc",
-        "name": "Run TD3-To Do Requests",
-        "links": [
-            "7c1fb16e.3d4b4"
-        ],
-        "x": 475,
-        "y": 160,
-        "wires": []
-    },
-    {
-        "id": "e8c50f68.38d98",
-        "type": "comment",
-        "z": "9e8643b4.332fc",
-        "name": "TD3-1-Fetch Data",
-        "info": "",
-        "x": 170,
         "y": 920,
         "wires": []
     },
     {
-        "id": "a8fbc522.a7bc78",
+        "id": "3a78dbe2.7f271c",
+        "type": "link out",
+        "z": "7508f195.894c38",
+        "name": "Run TD3-2-Create Record",
+        "links": [
+            "68d20ccd.45a7fc"
+        ],
+        "x": 315,
+        "y": 960,
+        "wires": []
+    },
+    {
+        "id": "8e3ce6f6.aa9ca8",
+        "type": "link out",
+        "z": "7508f195.894c38",
+        "name": "Run TD3-3-Update Record",
+        "links": [
+            "c0304337.add34"
+        ],
+        "x": 315,
+        "y": 1000,
+        "wires": []
+    },
+    {
+        "id": "4637c2c2.91d754",
+        "type": "link out",
+        "z": "7508f195.894c38",
+        "name": "Run TD3-To Do Requests",
+        "links": [
+            "fa786340.7ce738"
+        ],
+        "x": 395,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "32fb426f.610e66",
+        "type": "comment",
+        "z": "7508f195.894c38",
+        "name": "TD3-1-Fetch Data",
+        "info": "",
+        "x": 170,
+        "y": 1040,
+        "wires": []
+    },
+    {
+        "id": "be89334.0f9a55",
         "type": "link in",
-        "z": "9e8643b4.332fc",
+        "z": "7508f195.894c38",
         "name": "TD3-1.1-Fetch Data",
         "links": [
-            "2b68c2cb.5b209e"
+            "ddf0c69a.6d21a"
         ],
         "x": 115,
-        "y": 1000,
+        "y": 1120,
         "wires": [
             [
-                "7328ea9e.48094c"
+                "13d294cd.560b5b"
             ]
         ]
     },
     {
-        "id": "7328ea9e.48094c",
+        "id": "13d294cd.560b5b",
         "type": "function",
-        "z": "9e8643b4.332fc",
+        "z": "7508f195.894c38",
         "name": "TD3-1.1-Prep",
-        "func": "msg.payload = msg.req.body;\nreturn msg;",
+        "func": "msg.payload = msg.todo.data;\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "x": 240,
-        "y": 1000,
+        "y": 1120,
         "wires": [
             [
-                "171e8f53.3aa839"
+                "9048d2ac.a94fd"
             ]
         ]
     },
     {
-        "id": "171e8f53.3aa839",
+        "id": "9048d2ac.a94fd",
         "type": "connectors",
-        "z": "9e8643b4.332fc",
-        "server": "7101d4a7.05e83c",
+        "z": "7508f195.894c38",
+        "server": "7d449c5b.be903c",
         "profileKey": "paul_domino_dev",
         "routeKey": "get_my_stores",
         "name": "TD3-1.1-Connector",
         "x": 450,
-        "y": 1000,
+        "y": 1120,
         "wires": [
             [
-                "f7f937b8.c9bd88"
+                "d8440667.1e1e8"
             ]
         ]
     },
     {
-        "id": "f7f937b8.c9bd88",
+        "id": "d8440667.1e1e8",
         "type": "function",
-        "z": "9e8643b4.332fc",
+        "z": "7508f195.894c38",
         "name": "TD3-1.1-Finalize",
         "func": "if(msg.agilite.success){\n    try {\n      if(msg.payload.substring(0, 1) === \"<\"){\n        return node.error(\"Incorrect Username/Password. Please try again\", msg);\n      }  \n    } catch (error) {}    \n    \n    //Fix up Data Entries to be compatible with React\n    var resultData = [];\n    \n    for(var x in msg.payload){\n        resultData.push(\n            {\n                text:msg.payload[x].title,\n                value:msg.payload[x].replicaId\n            }\n        )\n    }\n    \n    msg.storeList = resultData.sort(sortBy(\"text\", false, function(a){return a.toUpperCase()}));\n    \n    //Setup To Do Variables for Looping\n    msg.toDoList = [];\n    msg.startIndex = 0;\n    msg.isComplete = false;\n\n    return msg;    \n}else{\n    return node.error(msg.agilite.messages[0], msg);\n}\n\n//PRIVATE FUNCTIONS\nfunction sortBy(field, reverse, primer){\n   var key = primer ? \n       function(x) {return primer(x[field])} : \n       function(x) {return x[field]};\n\n   reverse = !reverse ? 1 : -1;\n\n   return function (a, b) {\n       return a = key(a), b = key(b), reverse * ((a > b) - (b > a));\n     } \n}",
         "outputs": 1,
         "noerr": 0,
         "x": 660,
-        "y": 1000,
+        "y": 1120,
         "wires": [
             [
-                "49c6b065.6f7708"
+                "5484d73.bc098a8"
             ]
         ]
     },
     {
-        "id": "49c6b065.6f7708",
+        "id": "5484d73.bc098a8",
         "type": "link out",
-        "z": "9e8643b4.332fc",
+        "z": "7508f195.894c38",
         "name": "Run TD3-1.2-Loop",
         "links": [
-            "e9b83537.9a4218"
+            "ac9b4361.f0a8a8"
         ],
         "x": 795,
-        "y": 1000,
+        "y": 1120,
         "wires": []
     },
     {
-        "id": "9823589.cff0e28",
+        "id": "fd3b0ecf.a68528",
         "type": "comment",
-        "z": "9e8643b4.332fc",
+        "z": "7508f195.894c38",
         "name": "TD3-1.1-Get Store List",
         "info": "",
         "x": 200,
-        "y": 960,
+        "y": 1080,
         "wires": []
     },
     {
-        "id": "68ddb4c4.90ad4c",
+        "id": "32aa615b.3c77a6",
         "type": "comment",
-        "z": "9e8643b4.332fc",
+        "z": "7508f195.894c38",
         "name": "TD3-1.2-Get To Dos Per Store",
         "info": "",
         "x": 220,
-        "y": 1060,
+        "y": 1180,
         "wires": []
     },
     {
-        "id": "e9b83537.9a4218",
+        "id": "ac9b4361.f0a8a8",
         "type": "link in",
-        "z": "9e8643b4.332fc",
+        "z": "7508f195.894c38",
         "name": "TD3-1.2-Loop",
         "links": [
-            "49c6b065.6f7708",
-            "9791fd41.edc6e"
+            "5484d73.bc098a8",
+            "52bbc2c.381893c"
         ],
         "x": 115,
-        "y": 1100,
+        "y": 1220,
         "wires": [
             [
-                "b9c4fd42.68a61"
+                "35e98e05.f32842"
             ]
         ]
     },
     {
-        "id": "b9c4fd42.68a61",
+        "id": "35e98e05.f32842",
         "type": "function",
-        "z": "9e8643b4.332fc",
+        "z": "7508f195.894c38",
         "name": "TD3-1.2-Prep",
-        "func": "var status = \"\";\n\nswitch(msg.req.headers[\"req-type\"]){\n    case \"1\":\n        status = \"New\";\n        break;\n    case \"2\":\n        status = \"Reassigned\";\n        break;\n    case \"3\":\n        status = \"Complete\";\n        break;\n    case \"4\":\n        status = \"Overdue\";\n        break;\n}\n\nmsg.payload = {\n    credentials:msg.req.body.credentials,\n    status:status,\n    storeId:msg.storeList[msg.startIndex].value\n};\n\nreturn msg;",
+        "func": "var status = \"\";\n\nswitch(msg.todo.reqType){\n    case \"1\":\n        status = \"New\";\n        break;\n    case \"2\":\n        status = \"Reassigned\";\n        break;\n    case \"3\":\n        status = \"Complete\";\n        break;\n    case \"4\":\n        status = \"Overdue\";\n        break;\n}\n\nmsg.payload = {\n    credentials:msg.todo.data.credentials,\n    status:status,\n    storeId:msg.storeList[msg.startIndex].value\n};\n\nnode.warn(msg.payload);\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "x": 240,
-        "y": 1100,
+        "y": 1220,
         "wires": [
             [
-                "8dea248b.152fc8"
+                "3bd20157.ff02b6"
             ]
         ]
     },
     {
-        "id": "8dea248b.152fc8",
+        "id": "3bd20157.ff02b6",
         "type": "connectors",
-        "z": "9e8643b4.332fc",
-        "server": "7101d4a7.05e83c",
+        "z": "7508f195.894c38",
+        "server": "7d449c5b.be903c",
         "profileKey": "paul_domino_dev",
         "routeKey": "get_todos",
         "name": "TD3-1.2-Connector",
         "x": 450,
-        "y": 1100,
+        "y": 1220,
         "wires": [
             [
-                "3b44cc1c.710964"
+                "7f4e7ab.8cbf684"
             ]
         ]
     },
     {
-        "id": "3b44cc1c.710964",
+        "id": "7f4e7ab.8cbf684",
         "type": "function",
-        "z": "9e8643b4.332fc",
+        "z": "7508f195.894c38",
         "name": "TD3-1.2-Finalize",
-        "func": "if(msg.agilite.success){\n    //Add To Dos to global list\n    for(var x in msg.payload){\n        msg.toDoList.push(\n            {\n                _id:msg.payload[x].metaversalId,\n                taskName:msg.payload[x].taskName,\n                data:msg.payload[x]\n            }\n        )\n    }\n    \n    //Setup Loop Parameters\n    msg.startIndex++;\n    \n    if(msg.startIndex >= msg.storeList.length){\n        msg.isComplete = true;\n        \n        //Sort To Do List\n        msg.payload = msg.toDoList.sort(sortBy(\"taskName\", false, function(a){return a.toUpperCase()}));\n    }\n    \n    return msg;    \n}else{\n    return node.error(msg.agilite.messages[0], msg);\n}\n\n//PRIVATE FUNCTIONS\nfunction sortBy(field, reverse, primer){\n   var key = primer ? \n       function(x) {return primer(x[field])} : \n       function(x) {return x[field]};\n\n   reverse = !reverse ? 1 : -1;\n\n   return function (a, b) {\n       return a = key(a), b = key(b), reverse * ((a > b) - (b > a));\n     } \n}",
+        "func": "if(msg.agilite.success){\n    node.warn(msg.payload);\n    \n    //Add To Dos to global list\n    for(var x in msg.payload){\n        msg.toDoList.push(\n            {\n                _id:msg.payload[x].metaversalId,\n                taskName:msg.payload[x].taskName,\n                data:msg.payload[x]\n            }\n        )\n    }\n    \n    //Setup Loop Parameters\n    msg.startIndex++;\n    \n    if(msg.startIndex >= msg.storeList.length){\n        msg.isComplete = true;\n        \n        //Sort To Do List\n        msg.payload = msg.toDoList.sort(sortBy(\"taskName\", false, function(a){return a.toUpperCase()}));\n    }\n    \n    return msg;    \n}else{\n    return node.error(msg.agilite.messages[0], msg);\n}\n\n//PRIVATE FUNCTIONS\nfunction sortBy(field, reverse, primer){\n   var key = primer ? \n       function(x) {return primer(x[field])} : \n       function(x) {return x[field]};\n\n   reverse = !reverse ? 1 : -1;\n\n   return function (a, b) {\n       return a = key(a), b = key(b), reverse * ((a > b) - (b > a));\n     } \n}",
         "outputs": 1,
         "noerr": 0,
         "x": 660,
-        "y": 1100,
+        "y": 1220,
         "wires": [
             [
-                "4d491839.f03948"
+                "1fe69954.9ae6f7"
             ]
         ]
     },
     {
-        "id": "4d491839.f03948",
+        "id": "1fe69954.9ae6f7",
         "type": "switch",
-        "z": "9e8643b4.332fc",
+        "z": "7508f195.894c38",
         "name": "TD3-1.2-Looper",
         "property": "isComplete",
         "propertyType": "msg",
@@ -1027,210 +1185,1667 @@
         "repair": false,
         "outputs": 2,
         "x": 860,
-        "y": 1100,
+        "y": 1220,
         "wires": [
             [
-                "b71be5a3.6e2a98"
+                "3d291272.9a1e66"
             ],
             [
-                "9791fd41.edc6e"
+                "52bbc2c.381893c"
             ]
         ]
     },
     {
-        "id": "9791fd41.edc6e",
+        "id": "52bbc2c.381893c",
         "type": "link out",
-        "z": "9e8643b4.332fc",
+        "z": "7508f195.894c38",
         "name": "Run TD3-1.2-Loop",
         "links": [
-            "e9b83537.9a4218"
+            "ac9b4361.f0a8a8"
         ],
         "x": 1015,
-        "y": 1120,
+        "y": 1240,
         "wires": []
     },
     {
-        "id": "b71be5a3.6e2a98",
+        "id": "3d291272.9a1e66",
         "type": "link out",
-        "z": "9e8643b4.332fc",
-        "name": "Run TD-Process Result",
+        "z": "7508f195.894c38",
+        "name": "Run TD-Finalize",
         "links": [
-            "e4099329.fcc3"
+            "fa0826c8.4fddb"
         ],
         "x": 1015,
-        "y": 1080,
+        "y": 1200,
         "wires": []
     },
     {
-        "id": "1d480712.539f11",
+        "id": "4d71a573.c9e2ec",
         "type": "comment",
-        "z": "9e8643b4.332fc",
+        "z": "7508f195.894c38",
         "name": "TD3-2-Create Record",
         "info": "",
         "x": 180,
-        "y": 1160,
+        "y": 1280,
         "wires": []
     },
     {
-        "id": "c3d04d23.b982c8",
+        "id": "68d20ccd.45a7fc",
         "type": "link in",
-        "z": "9e8643b4.332fc",
+        "z": "7508f195.894c38",
         "name": "TD3-2-Create Record",
         "links": [
-            "7e811a8e.55ba54"
+            "3a78dbe2.7f271c"
         ],
         "x": 95,
-        "y": 1200,
+        "y": 1320,
         "wires": [
             [
-                "e7aac46.3c32f38"
+                "f225ae44.b9853"
             ]
         ]
     },
     {
-        "id": "e7aac46.3c32f38",
+        "id": "f225ae44.b9853",
         "type": "function",
-        "z": "9e8643b4.332fc",
+        "z": "7508f195.894c38",
         "name": "TD3-2-Prep",
-        "func": "msg.payload = msg.req.body;\nreturn msg;",
+        "func": "msg.payload = msg.todo.data;\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "x": 210,
-        "y": 1200,
+        "y": 1320,
         "wires": [
             [
-                "da2c70d9.919878"
+                "ee0d7ddc.c1ae5"
             ]
         ]
     },
     {
-        "id": "da2c70d9.919878",
+        "id": "ee0d7ddc.c1ae5",
         "type": "connectors",
-        "z": "9e8643b4.332fc",
-        "server": "7101d4a7.05e83c",
+        "z": "7508f195.894c38",
+        "server": "7d449c5b.be903c",
         "profileKey": "paul_domino_dev",
         "routeKey": "create_todo",
         "name": "TD3-2-Connector",
         "x": 410,
-        "y": 1200,
+        "y": 1320,
         "wires": [
             [
-                "eadc3608.d19418"
+                "1d1ad2b0.30091d"
             ]
         ]
     },
     {
-        "id": "eadc3608.d19418",
+        "id": "1d1ad2b0.30091d",
         "type": "function",
-        "z": "9e8643b4.332fc",
+        "z": "7508f195.894c38",
         "name": "TD3-2-Finalize",
-        "func": "if(msg.agilite.success){\n    try {\n      if(msg.payload.substring(0, 1) === \"<\"){\n        return node.error(\"Incorrect Username/Password. Please try again\", msg);\n      }  \n    } catch (error) {}    \n    \n    //Fix up Data Entries to be compatible with React\n    var resultData = {\n        _id:msg.payload.metaversalId,\n        custom:msg.req.body.custom,\n        data:msg.payload \n    };\n    \n    msg.payload = resultData;    \n    \n    return msg;    \n}else{\n    return node.error(msg.agilite.messages[0], msg);\n}",
+        "func": "if(msg.agilite.success){\n    try {\n      if(msg.payload.substring(0, 1) === \"<\"){\n        return node.error(\"Incorrect Username/Password. Please try again\", msg);\n      }  \n    } catch (error) {}    \n    \n    //Fix up Data Entries to be compatible with React\n    var resultData = {\n        _id:msg.payload.metaversalId,\n        custom:msg.todo.data.custom,\n        data:msg.payload \n    };\n    \n    msg.payload = resultData;    \n    \n    return msg;    \n}else{\n    return node.error(msg.agilite.messages[0], msg);\n}",
         "outputs": 1,
         "noerr": 0,
         "x": 620,
-        "y": 1200,
+        "y": 1320,
         "wires": [
             [
-                "7f3bae36.a6a3e8"
+                "38c08684.d2afd2"
             ]
         ]
     },
     {
-        "id": "7f3bae36.a6a3e8",
+        "id": "38c08684.d2afd2",
         "type": "link out",
-        "z": "9e8643b4.332fc",
-        "name": "Run TD-Process Result",
+        "z": "7508f195.894c38",
+        "name": "Run TD-Finalize",
         "links": [
-            "e4099329.fcc3"
+            "fa0826c8.4fddb"
         ],
         "x": 755,
-        "y": 1200,
+        "y": 1320,
         "wires": []
     },
     {
-        "id": "8f1b2d63.52758",
+        "id": "b44ff70c.1a4108",
         "type": "comment",
-        "z": "9e8643b4.332fc",
+        "z": "7508f195.894c38",
         "name": "TD3-3-Update Record",
         "info": "",
         "x": 180,
-        "y": 1260,
+        "y": 1380,
         "wires": []
     },
     {
-        "id": "319b5a34.c1e5fe",
+        "id": "c0304337.add34",
         "type": "link in",
-        "z": "9e8643b4.332fc",
+        "z": "7508f195.894c38",
         "name": "TD3-3-Update Record",
         "links": [
-            "eee9e070.3c6808"
+            "8e3ce6f6.aa9ca8"
         ],
         "x": 95,
-        "y": 1300,
+        "y": 1420,
         "wires": [
             [
-                "658394cb.46bf54"
+                "85125003.4e67f8"
             ]
         ]
     },
     {
-        "id": "658394cb.46bf54",
+        "id": "85125003.4e67f8",
         "type": "function",
-        "z": "9e8643b4.332fc",
+        "z": "7508f195.894c38",
         "name": "TD3-3-Prep",
-        "func": "msg.payload = msg.req.body;\nreturn msg;",
+        "func": "msg.payload = msg.todo.data;\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "x": 210,
-        "y": 1300,
+        "y": 1420,
         "wires": [
             [
-                "5577195f.2f39c"
+                "20eae1a5.e81e8e"
             ]
         ]
     },
     {
-        "id": "5577195f.2f39c",
+        "id": "20eae1a5.e81e8e",
         "type": "connectors",
-        "z": "9e8643b4.332fc",
-        "server": "7101d4a7.05e83c",
+        "z": "7508f195.894c38",
+        "server": "7d449c5b.be903c",
         "profileKey": "paul_domino_dev",
         "routeKey": "update_todo",
         "name": "TD3-3-Connector",
         "x": 410,
-        "y": 1300,
+        "y": 1420,
         "wires": [
             [
-                "95a7f8f4.a65628"
+                "996c12fa.9e4ed8"
             ]
         ]
     },
     {
-        "id": "95a7f8f4.a65628",
+        "id": "996c12fa.9e4ed8",
         "type": "function",
-        "z": "9e8643b4.332fc",
+        "z": "7508f195.894c38",
         "name": "TD3-3-Finalize",
-        "func": "if(msg.agilite.success){\n    try {\n      if(msg.payload.substring(0, 1) === \"<\"){\n        return node.error(\"Incorrect Username/Password. Please try again\", msg);\n      }  \n    } catch (error) {}    \n    \n    //Fix up Data Entries to be compatible with React\n    var resultData = {\n        _id:msg.payload.metaversalId,\n        custom:msg.req.body.custom,\n        data:msg.payload   \n    };\n    \n    msg.payload = resultData;    \n    \n    return msg;    \n}else{\n    return node.error(msg.agilite.messages[0], msg);\n}\n",
+        "func": "if(msg.agilite.success){\n    try {\n      if(msg.payload.substring(0, 1) === \"<\"){\n        return node.error(\"Incorrect Username/Password. Please try again\", msg);\n      }  \n    } catch (error) {}    \n    \n    //Fix up Data Entries to be compatible with React\n    var resultData = {\n        _id:msg.payload.metaversalId,\n        custom:msg.todo.data.custom,\n        data:msg.payload   \n    };\n    \n    msg.payload = resultData;    \n    \n    return msg;    \n}else{\n    return node.error(msg.agilite.messages[0], msg);\n}\n",
         "outputs": 1,
         "noerr": 0,
         "x": 620,
-        "y": 1300,
+        "y": 1420,
         "wires": [
             [
-                "b05e091e.afdd08"
+                "ae627291.e35548"
             ]
         ]
     },
     {
-        "id": "b05e091e.afdd08",
+        "id": "ae627291.e35548",
         "type": "link out",
-        "z": "9e8643b4.332fc",
-        "name": "Run TD-Process Result",
+        "z": "7508f195.894c38",
+        "name": "Run TD-Finalize",
         "links": [
-            "e4099329.fcc3"
+            "fa0826c8.4fddb"
         ],
         "x": 755,
-        "y": 1300,
+        "y": 1420,
+        "wires": []
+    },
+    {
+        "id": "94993f80.218dd",
+        "type": "link in",
+        "z": "7508f195.894c38",
+        "name": "TD1.2-Get Users",
+        "links": [
+            "ec3fbed1.aed76"
+        ],
+        "x": 75,
+        "y": 360,
+        "wires": [
+            [
+                "2f33713b.16ea2e"
+            ]
+        ]
+    },
+    {
+        "id": "2f33713b.16ea2e",
+        "type": "function",
+        "z": "7508f195.894c38",
+        "name": "TD1.2-Prep",
+        "func": "msg.payload = msg.todo.data;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 190,
+        "y": 360,
+        "wires": [
+            [
+                "82fe4ae1.60a678"
+            ]
+        ]
+    },
+    {
+        "id": "58dd1860.ef212",
+        "type": "function",
+        "z": "7508f195.894c38",
+        "name": "TD1.2-Finalize",
+        "func": "if(msg.agilite.success){\n    //Create User List for React App\n    var userList = [];\n    var entry = {};\n    var prefix = \"CN=\";\n    var suffix = \"/O=Intec\";\n    \n    for(var x in msg.payload.data){\n        entry = {\n            text:msg.payload.data[x].label,\n            value:prefix + msg.payload.data[x].label + suffix\n        };\n        \n        userList.push(entry);\n    }\n    \n    //Finalize Payload\n    msg.payload = {\n        users:userList,\n        user:msg.user\n    };\n    \n    return msg;    \n}else{\n    return node.error(msg.agilite.messages[0], msg);\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 600,
+        "y": 360,
+        "wires": [
+            [
+                "96ab9fa1.e4bdb8"
+            ]
+        ]
+    },
+    {
+        "id": "96ab9fa1.e4bdb8",
+        "type": "link out",
+        "z": "7508f195.894c38",
+        "name": "Run TD-Finalize",
+        "links": [
+            "fa0826c8.4fddb"
+        ],
+        "x": 735,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "4c6cbdba.c79834",
+        "type": "comment",
+        "z": "7508f195.894c38",
+        "name": "TD1.1-Authenticate",
+        "info": "",
+        "x": 150,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "82fe4ae1.60a678",
+        "type": "keywords",
+        "z": "7508f195.894c38",
+        "server": "7d449c5b.be903c",
+        "actionType": "1",
+        "recordId": "",
+        "profileKey": "todo_responsible_people",
+        "groupName": "",
+        "labelKey": "",
+        "valueKey": "",
+        "sortBy": "asc",
+        "name": "TD1.2-Keywords",
+        "x": 390,
+        "y": 360,
+        "wires": [
+            [
+                "58dd1860.ef212"
+            ]
+        ]
+    },
+    {
+        "id": "6308fbbb.478e04",
+        "type": "comment",
+        "z": "7508f195.894c38",
+        "name": "TD1.2-Get Users",
+        "info": "",
+        "x": 140,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "15447c1e.54176c",
+        "type": "comment",
+        "z": "faf978c7.e4831",
+        "name": "WC: Send Message",
+        "info": "",
+        "x": 210,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "988bdbcc.988f08",
+        "type": "connectors",
+        "z": "faf978c7.e4831",
+        "server": "af07bfdf.f8974",
+        "profileKey": "wc_agilite",
+        "routeKey": "send",
+        "name": "WC: Send Msg",
+        "x": 200,
+        "y": 100,
+        "wires": [
+            [
+                "940f09dd.63ced"
+            ]
+        ]
+    },
+    {
+        "id": "940f09dd.63ced",
+        "type": "function",
+        "z": "faf978c7.e4831",
+        "name": "WC: Process Result",
+        "func": "if(msg.agilite.success){\n    if(msg.payload.context && msg.payload.context.workflowStep){\n        msg.wc.context = msg.payload.context;\n        msg.wc.workflowStep = msg.payload.context.workflowStep;\n        msg.wc.responseTitle = msg.payload.context.responseTitle;\n        msg.wc.responseMessage = msg.payload.output;\n        \n        if(msg.wc.context.titleExamples){\n            msg.wc.titleExamples = msg.wc.context.titleExamples;\n            delete msg.wc.context.titleExamples;\n        }\n  \n        if(msg.wc.context.messageExamples){\n            msg.wc.messageExamples = msg.wc.context.messageExamples;\n            delete msg.wc.context.messageExamples;\n        }  \n        \n        if(msg.wc.context.performAction){\n            msg.wc.performAction = msg.wc.context.performAction;\n            delete msg.wc.context.performAction;\n        }\n    }\n}else{\n    return node.error(JSON.stringify(msg.agilite.messages[0]), msg);\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 420,
+        "y": 100,
+        "wires": [
+            [
+                "239ba780.55234"
+            ]
+        ]
+    },
+    {
+        "id": "239ba780.55234",
+        "type": "switch",
+        "z": "faf978c7.e4831",
+        "name": "WC: Check Workflow Step",
+        "property": "wc.workflowStep",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "0",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "0.1",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "1",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "2",
+                "vt": "str"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "false",
+        "outputs": 5,
+        "x": 700,
+        "y": 100,
+        "wires": [
+            [
+                "88fb40bb.8109e8"
+            ],
+            [
+                "d66e0725.29777"
+            ],
+            [
+                "812871dd.d70628"
+            ],
+            [
+                "f8c9f173.6225d"
+            ],
+            [
+                "aab2a4e2.7be268"
+            ]
+        ]
+    },
+    {
+        "id": "a15e0907.0a2e18",
+        "type": "comment",
+        "z": "faf978c7.e4831",
+        "name": "WC: Workflow Step 0",
+        "info": "",
+        "x": 200,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "3d36ca00.cf216e",
+        "type": "link in",
+        "z": "faf978c7.e4831",
+        "name": "WC: Workflow Step 0",
+        "links": [
+            "dca3d173.033cb8",
+            "88fb40bb.8109e8",
+            "287cb4ba.dd66e4"
+        ],
+        "x": 115,
+        "y": 220,
+        "wires": [
+            [
+                "e431682d.489c7"
+            ]
+        ]
+    },
+    {
+        "id": "2261a963.3f4296",
+        "type": "link out",
+        "z": "faf978c7.e4831",
+        "name": "WC: Run Finalize",
+        "links": [
+            "fd15598d.30a12"
+        ],
+        "x": 375,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "e431682d.489c7",
+        "type": "function",
+        "z": "faf978c7.e4831",
+        "name": "WC: S0-Prep 1",
+        "func": "msg.payload = {\n    cacheId:msg.wc.cacheId\n};\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 240,
+        "y": 220,
+        "wires": [
+            [
+                "54480689.b7fae8",
+                "2261a963.3f4296"
+            ]
+        ]
+    },
+    {
+        "id": "54480689.b7fae8",
+        "type": "connectors",
+        "z": "faf978c7.e4831",
+        "server": "af07bfdf.f8974",
+        "profileKey": "wc_agilite",
+        "routeKey": "delete",
+        "name": "WC: S0-Delete Context",
+        "x": 470,
+        "y": 220,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "88fb40bb.8109e8",
+        "type": "link out",
+        "z": "faf978c7.e4831",
+        "name": "WC: Run Workflow Step 0",
+        "links": [
+            "3d36ca00.cf216e"
+        ],
+        "x": 975,
+        "y": 20,
+        "wires": []
+    },
+    {
+        "id": "fd15598d.30a12",
+        "type": "link in",
+        "z": "faf978c7.e4831",
+        "name": "WC: Finalize",
+        "links": [
+            "23cf7c74.87229c",
+            "4aa3f461.4e0454",
+            "2261a963.3f4296",
+            "28072731.9b65d8",
+            "d43df89f.fef8",
+            "aab2a4e2.7be268",
+            "107cc564.997aeb"
+        ],
+        "x": 1195,
+        "y": 120,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "5610f548.f705e4",
+        "type": "comment",
+        "z": "faf978c7.e4831",
+        "name": "WC: Workflow Step 1 - New Timesheet",
+        "info": "",
+        "x": 250,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "2ec33f85.ea807",
+        "type": "link in",
+        "z": "faf978c7.e4831",
+        "name": "WC: Workflow Step 1",
+        "links": [
+            "812871dd.d70628"
+        ],
+        "x": 115,
+        "y": 500,
+        "wires": [
+            [
+                "172348a9.4e3e27"
+            ]
+        ]
+    },
+    {
+        "id": "172348a9.4e3e27",
+        "type": "switch",
+        "z": "faf978c7.e4831",
+        "name": "WC: S1-Check Perform Action",
+        "property": "wc.performAction",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "timesheet_action_submit",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "timesheet_action_confirm",
+                "vt": "str"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "false",
+        "outputs": 3,
+        "x": 290,
+        "y": 500,
+        "wires": [
+            [
+                "28a1f784.f6e238"
+            ],
+            [
+                "7d125c32.45f854"
+            ],
+            [
+                "ad7922e5.d4754"
+            ]
+        ]
+    },
+    {
+        "id": "28072731.9b65d8",
+        "type": "link out",
+        "z": "faf978c7.e4831",
+        "name": "WC: Run Finalize",
+        "links": [
+            "fd15598d.30a12"
+        ],
+        "x": 795,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "7d125c32.45f854",
+        "type": "function",
+        "z": "faf978c7.e4831",
+        "name": "WC: S1-Prep 2",
+        "func": "if(!msg.wc.context.hoursBilled)\n    msg.wc.context.hoursBilled = 0;\n\nmsg.wc.responseMessage += \"\\n*Date:* \" + msg.wc.context.date;\nmsg.wc.responseMessage += \"\\n*Client:* \" + msg.wc.context.client;\nmsg.wc.responseMessage += \"\\n*Type Of Work:* \" + msg.wc.context.typeOfWork;\nmsg.wc.responseMessage += \"\\n*Hours Spent:* \" + msg.wc.context.hoursSpent;\nmsg.wc.responseMessage += \"\\n*Hours Billed:* \" + msg.wc.context.hoursBilled;\nmsg.wc.responseMessage += \"\\n*Description:* \" + msg.wc.context.description;   \n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 560,
+        "y": 500,
+        "wires": [
+            [
+                "ad7922e5.d4754"
+            ]
+        ]
+    },
+    {
+        "id": "c3166efc.9977f",
+        "type": "connectors",
+        "z": "faf978c7.e4831",
+        "server": "af07bfdf.f8974",
+        "profileKey": "wc_agilite",
+        "routeKey": "save",
+        "name": "WC: S1-Save Context",
+        "x": 880,
+        "y": 500,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "28a1f784.f6e238",
+        "type": "function",
+        "z": "faf978c7.e4831",
+        "name": "WC: S1-Prep 1",
+        "func": "msg.payload = {\n    data:JSON.stringify({data:msg.wc.context})\n};\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 540,
+        "y": 460,
+        "wires": [
+            [
+                "e7fd0eab.9f565"
+            ]
+        ]
+    },
+    {
+        "id": "e7fd0eab.9f565",
+        "type": "connectors",
+        "z": "faf978c7.e4831",
+        "server": "af07bfdf.f8974",
+        "profileKey": "timesheet_api",
+        "routeKey": "create",
+        "name": "WC: S1-Create Timesheet",
+        "x": 770,
+        "y": 460,
+        "wires": [
+            [
+                "cbe5b3f.be50bd"
+            ]
+        ]
+    },
+    {
+        "id": "cbe5b3f.be50bd",
+        "type": "function",
+        "z": "faf978c7.e4831",
+        "name": "WC: S1-Prep Result",
+        "func": "if(msg.agilite.success){\n    msg.wc.responseTitle = \"New Timesheet\";\n    msg.wc.responseMessage = \"Timesheet successfully submitted.\";\n}else{\n    msg.wc.responseTitle = \"Timesheet Submission Failed\";\n    msg.wc.responseMessage = \"Apologies. Something went wrong with submitting the Timesheet. Please start over\";\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1020,
+        "y": 460,
+        "wires": [
+            [
+                "dca3d173.033cb8"
+            ]
+        ]
+    },
+    {
+        "id": "dca3d173.033cb8",
+        "type": "link out",
+        "z": "faf978c7.e4831",
+        "name": "WC: Run Workflow Step 0",
+        "links": [
+            "3d36ca00.cf216e"
+        ],
+        "x": 1175,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "2f04219b.dde86e",
+        "type": "comment",
+        "z": "faf978c7.e4831",
+        "name": "WC: Workflow Step 2 - Timesheet Reports",
+        "info": "",
+        "x": 260,
+        "y": 600,
+        "wires": []
+    },
+    {
+        "id": "1ad33096.e2287f",
+        "type": "link in",
+        "z": "faf978c7.e4831",
+        "name": "WC: Workflow Step 2",
+        "links": [
+            "f8c9f173.6225d"
+        ],
+        "x": 115,
+        "y": 660,
+        "wires": [
+            [
+                "e6b18c58.573f1"
+            ]
+        ]
+    },
+    {
+        "id": "e6b18c58.573f1",
+        "type": "switch",
+        "z": "faf978c7.e4831",
+        "name": "WC: S2-Check Perform Action",
+        "property": "wc.performAction",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "timesheet_report_run",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "timesheet_report_confirm",
+                "vt": "str"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "false",
+        "outputs": 3,
+        "x": 290,
+        "y": 660,
+        "wires": [
+            [
+                "9c7ae1a1.2a2cd"
+            ],
+            [
+                "2fc6d21b.6b42e6"
+            ],
+            [
+                "b906c0a8.983dc8"
+            ]
+        ]
+    },
+    {
+        "id": "2fc6d21b.6b42e6",
+        "type": "function",
+        "z": "faf978c7.e4831",
+        "name": "WC: S2-Prep 2",
+        "func": "msg.wc.responseMessage += \"\\n*From Date:* \" + msg.wc.context.dateFrom;\nmsg.wc.responseMessage += \"\\n*To Date:* \" + msg.wc.context.dateTo;\nmsg.wc.responseMessage += \"\\n*Client:* \" + msg.wc.context.client;\nmsg.wc.responseMessage += \"\\n*Type Of Work:* \" + msg.wc.context.typeOfWork;\nmsg.wc.responseMessage += \"\\n*Group By:* \" + msg.wc.context.groupBy;   \n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 560,
+        "y": 660,
+        "wires": [
+            [
+                "b906c0a8.983dc8"
+            ]
+        ]
+    },
+    {
+        "id": "7e875d5f.a50834",
+        "type": "connectors",
+        "z": "faf978c7.e4831",
+        "server": "af07bfdf.f8974",
+        "profileKey": "wc_agilite",
+        "routeKey": "save",
+        "name": "WC: S2-Save Context",
+        "x": 880,
+        "y": 660,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "4aa3f461.4e0454",
+        "type": "link out",
+        "z": "faf978c7.e4831",
+        "name": "WC: Run Finalize",
+        "links": [
+            "fd15598d.30a12"
+        ],
+        "x": 795,
+        "y": 700,
+        "wires": []
+    },
+    {
+        "id": "9c7ae1a1.2a2cd",
+        "type": "function",
+        "z": "faf978c7.e4831",
+        "name": "WC: S2-Prep 1",
+        "func": "msg.payload = {\n    data:JSON.stringify(msg.wc.context)\n};\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 560,
+        "y": 620,
+        "wires": [
+            [
+                "143a8db.9e6fc72"
+            ]
+        ]
+    },
+    {
+        "id": "143a8db.9e6fc72",
+        "type": "connectors",
+        "z": "faf978c7.e4831",
+        "server": "af07bfdf.f8974",
+        "profileKey": "timesheet_api",
+        "routeKey": "reports",
+        "name": "WC: S2-Timesheet Reports",
+        "x": 800,
+        "y": 620,
+        "wires": [
+            [
+                "95b94be0.691e28"
+            ]
+        ]
+    },
+    {
+        "id": "95b94be0.691e28",
+        "type": "function",
+        "z": "faf978c7.e4831",
+        "name": "WC: S2-Prep Result",
+        "func": "if(msg.agilite.success){\n    msg.wc.responseTitle = \"Timesheet Reports\";\n    msg.wc.responseMessage = \"\";\n    \n    var data = msg.payload.data;\n    var entry = {};\n    var newEntry = {};\n    var tempKey = \"\";\n    var hrsSpent = 0;\n    var hrsBilled = 0;\n    var entryAdded = false;\n    \n    switch(msg.wc.context.groupBy){\n        case \"-\":\n            for(var x in data){\n                entry = data[x].data;\n                newEntry = \"*Date:* \" + new Date(entry.date).toDateString();\n                newEntry += \" - *Client:* \" + entry.client;\n                newEntry += \" - *Type:* \" + entry.typeOfWork;\n                newEntry += \" - *Hrs Spent:* \" + entry.hoursSpent;\n                newEntry += \" - *Hrs Billed:* \" + entry.hoursBilled;\n                newEntry += \"\\n*Desc:* \" + entry.description;\n               \n                if(parseInt(x) > 0){\n                    msg.wc.responseMessage += \"\\n\";\n                    msg.wc.responseMessage += \"----------\";\n                    msg.wc.responseMessage += \"\\n\";                \n                }\n\n                   \n                msg.wc.responseMessage += newEntry;\n            }\n            \n            break;\n        case \"by_client\":\n            for(var x in data){\n                entry = data[x].data;\n                \n                if(tempKey === \"\")\n                    tempKey = entry.client;\n\n                if(entry.client !== tempKey){\n                    newEntry = \"*\" + tempKey + \"*\";\n                    newEntry += \" - Hrs Spent: _\" + hrsSpent + \"_\";\n                    newEntry += \" - Hrs Billed: _\" + hrsBilled + \"_\";\n                    \n                    if(entryAdded){\n                        msg.wc.responseMessage += \"\\n\";\n                    }\n                    \n                    msg.wc.responseMessage += newEntry;\n                    \n                    entryAdded = true;\n                    hrsSpent = 0;\n                    hrsBilled = 0;\n                    tempKey = entry.client;\n                }\n                \n                hrsSpent += entry.hoursSpent;\n                hrsBilled += entry.hoursBilled;\n            }\n            \n            //Add final Entry\n            if(data.length > 0){\n                newEntry = \"*\" + tempKey + \"*\";\n                newEntry += \" - Hrs Spent: _\" + hrsSpent + \"_\";\n                newEntry += \" - Hrs Billed: _\" + hrsBilled + \"_\";\n\n                if(entryAdded){\n                    msg.wc.responseMessage += \"\\n\";\n                }\n                \n                msg.wc.responseMessage += newEntry;            \n            }\n            \n            break;\n        case \"by_typeofwork\":\n            for(var x in data){\n                entry = data[x].data;\n                \n                if(tempKey === \"\")\n                    tempKey = entry.typeOfWork;\n\n                if(entry.typeOfWork !== tempKey){\n                    newEntry = \"*\" + tempKey + \"*\";\n                    newEntry += \" - Hrs Spent: _\" + hrsSpent + \"_\";\n                    newEntry += \" - Hrs Billed: _\" + hrsBilled + \"_\";\n                    \n                    if(entryAdded){\n                        msg.wc.responseMessage += \"\\n\";\n                    }\n                    \n                    msg.wc.responseMessage += newEntry;\n                    \n                    entryAdded = true;\n                    hrsSpent = 0;\n                    hrsBilled = 0;\n                    tempKey = entry.typeOfWork;\n                }\n                \n                hrsSpent += entry.hoursSpent;\n                hrsBilled += entry.hoursBilled;\n            }\n            \n            //Add final Entry\n            if(data.length > 0){\n                newEntry = \"*\" + tempKey + \"*\";\n                newEntry += \" - Hrs Spent: _\" + hrsSpent + \"_\";\n                newEntry += \" - Hrs Billed: _\" + hrsBilled + \"_\";\n\n                if(entryAdded){\n                    msg.wc.responseMessage += \"\\n\";\n                }\n                \n                msg.wc.responseMessage += newEntry;            \n            }\n            \n            break;             \n        case \"by_day\":\n            for(var x in data){\n                entry = data[x].data;\n                \n                if(tempKey === \"\")\n                    tempKey = new Date(entry.date).toDateString();\n\n                if(new Date(entry.date).toDateString() !== tempKey){\n                    newEntry = \"*\" + tempKey + \"*\";\n                    newEntry += \" - Hrs Spent: _\" + hrsSpent + \"_\";\n                    newEntry += \" - Hrs Billed: _\" + hrsBilled + \"_\";\n                    \n                    if(entryAdded){\n                        msg.wc.responseMessage += \"\\n\";\n                    }\n                    \n                    msg.wc.responseMessage += newEntry;\n                    \n                    entryAdded = true;\n                    hrsSpent = 0;\n                    hrsBilled = 0;\n                    tempKey = new Date(entry.date).toDateString();\n                }\n                \n                hrsSpent += entry.hoursSpent;\n                hrsBilled += entry.hoursBilled;\n            }\n            \n            //Add final Entry\n            if(data.length > 0){\n                newEntry = \"*\" + tempKey + \"*\";\n                newEntry += \" - Hrs Spent: _\" + hrsSpent + \"_\";\n                newEntry += \" - Hrs Billed: _\" + hrsBilled + \"_\";\n\n                if(entryAdded){\n                    msg.wc.responseMessage += \"\\n\";\n                }\n                \n                msg.wc.responseMessage += newEntry;            \n            }\n            \n            break;\n    }\n}else{\n    msg.wc.responseTitle = \"Timesheet Report Failed\";\n    msg.wc.responseMessage = \"Apologies. Something went wrong with generating the Timesheet reports. Please start over\";\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1060,
+        "y": 620,
+        "wires": [
+            [
+                "287cb4ba.dd66e4"
+            ]
+        ]
+    },
+    {
+        "id": "287cb4ba.dd66e4",
+        "type": "link out",
+        "z": "faf978c7.e4831",
+        "name": "WC: Run Workflow Step 0",
+        "links": [
+            "3d36ca00.cf216e"
+        ],
+        "x": 1215,
+        "y": 620,
+        "wires": []
+    },
+    {
+        "id": "812871dd.d70628",
+        "type": "link out",
+        "z": "faf978c7.e4831",
+        "name": "WC: Run Workflow Step 1",
+        "links": [
+            "2ec33f85.ea807"
+        ],
+        "x": 975,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "f8c9f173.6225d",
+        "type": "link out",
+        "z": "faf978c7.e4831",
+        "name": "WC: Run Workflow Step 2",
+        "links": [
+            "1ad33096.e2287f"
+        ],
+        "x": 975,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "aab2a4e2.7be268",
+        "type": "link out",
+        "z": "faf978c7.e4831",
+        "name": "WC: Run Finalize",
+        "links": [
+            "fd15598d.30a12"
+        ],
+        "x": 975,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "4852ec20.3dc64c",
+        "type": "comment",
+        "z": "faf978c7.e4831",
+        "name": "WC: Finalize",
+        "info": "",
+        "x": 1250,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "ad7922e5.d4754",
+        "type": "function",
+        "z": "faf978c7.e4831",
+        "name": "WC: S1-Prep 3",
+        "func": "msg.payload = {\n    cacheId:msg.wc.cacheId,\n    context:JSON.stringify(msg.wc.context)\n};\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 640,
+        "y": 540,
+        "wires": [
+            [
+                "28072731.9b65d8",
+                "c3166efc.9977f"
+            ]
+        ]
+    },
+    {
+        "id": "756336a8.2bfac8",
+        "type": "comment",
+        "z": "faf978c7.e4831",
+        "name": "WC: Workflow Step 0.1",
+        "info": "",
+        "x": 200,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "625035f4.433854",
+        "type": "link in",
+        "z": "faf978c7.e4831",
+        "name": "WC: Workflow Step 0.1",
+        "links": [
+            "d66e0725.29777"
+        ],
+        "x": 115,
+        "y": 340,
+        "wires": [
+            [
+                "1674b5a7.55f51a"
+            ]
+        ]
+    },
+    {
+        "id": "107cc564.997aeb",
+        "type": "link out",
+        "z": "faf978c7.e4831",
+        "name": "WC: Run Finalize",
+        "links": [
+            "fd15598d.30a12"
+        ],
+        "x": 395,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "1674b5a7.55f51a",
+        "type": "function",
+        "z": "faf978c7.e4831",
+        "name": "WC: S0.1-Prep 1",
+        "func": "msg.payload = {\n    cacheId:msg.wc.cacheId,\n    context:JSON.stringify(msg.wc.context)\n};\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 250,
+        "y": 340,
+        "wires": [
+            [
+                "9775c4ea.b8b058",
+                "107cc564.997aeb"
+            ]
+        ]
+    },
+    {
+        "id": "9775c4ea.b8b058",
+        "type": "connectors",
+        "z": "faf978c7.e4831",
+        "server": "af07bfdf.f8974",
+        "profileKey": "wc_agilite",
+        "routeKey": "save",
+        "name": "WC: S0.1-Save Context",
+        "x": 490,
+        "y": 340,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "d66e0725.29777",
+        "type": "link out",
+        "z": "faf978c7.e4831",
+        "name": "WC: Run Workflow Step 0",
+        "links": [
+            "625035f4.433854"
+        ],
+        "x": 975,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "b906c0a8.983dc8",
+        "type": "function",
+        "z": "faf978c7.e4831",
+        "name": "WC: S2-Prep 3",
+        "func": "msg.payload = {\n    cacheId:msg.wc.cacheId,\n    context:JSON.stringify(msg.wc.context)\n};\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 620,
+        "y": 700,
+        "wires": [
+            [
+                "7e875d5f.a50834",
+                "4aa3f461.4e0454"
+            ]
+        ]
+    },
+    {
+        "id": "c0fbc707.1c3ec",
+        "type": "http in",
+        "z": "50bc3390.412344",
+        "name": "WW: Webhook",
+        "url": "/api/ww/execute",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 120,
+        "y": 120,
+        "wires": [
+            [
+                "571b01d9.02eca"
+            ]
+        ]
+    },
+    {
+        "id": "571b01d9.02eca",
+        "type": "function",
+        "z": "50bc3390.412344",
+        "name": "WW: Determine Msg Type",
+        "func": "msg.ww = msg.payload;\nmsg.ww.reponse = null;\n\nif((msg.ww.type !== \"message-annotation-added\" && msg.ww.type !== \"message-created\" && msg.payload.type !== \"verification\") || msg.ww.content === \"\"){\n    msg.ww.type = \"\";\n}else{\n    if(msg.ww.type === \"message-annotation-added\"){\n        msg.ww.annotationPayload = JSON.parse(msg.ww.annotationPayload);\n    }\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 370,
+        "y": 120,
+        "wires": [
+            [
+                "17972840.e24738"
+            ]
+        ]
+    },
+    {
+        "id": "17972840.e24738",
+        "type": "switch",
+        "z": "50bc3390.412344",
+        "name": "WW: Check Req Type",
+        "property": "ww.type",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "verification",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "message-created",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "message-annotation-added",
+                "vt": "str"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "false",
+        "outputs": 4,
+        "x": 640,
+        "y": 120,
+        "wires": [
+            [
+                "8db683f1.9b3a5"
+            ],
+            [
+                "e80c5d94.b9f458",
+                "667e9ecb.7d987"
+            ],
+            [
+                "d0128d71.d7df88",
+                "667e9ecb.7d987"
+            ],
+            [
+                "667e9ecb.7d987"
+            ]
+        ]
+    },
+    {
+        "id": "f5553ab0.b2f3e8",
+        "type": "connectors",
+        "z": "50bc3390.412344",
+        "server": "af07bfdf.f8974",
+        "profileKey": "ww_agilite",
+        "routeKey": "challenge",
+        "name": "WW: Challenge Request",
+        "x": 230,
+        "y": 220,
+        "wires": [
+            [
+                "fb666f69.299688"
+            ]
+        ]
+    },
+    {
+        "id": "fb666f69.299688",
+        "type": "function",
+        "z": "50bc3390.412344",
+        "name": "WW: Provide Response Header",
+        "func": "if(msg.agilite.success){\n    //Set outbound Header\n    if(!msg.headers)\n       msg.headers = {};\n        \n    msg.headers[\"X-OUTBOUND-TOKEN\"] = msg.payload.token;\n    msg.payload = {response:msg.payload.response};\n}else{\n    return node.error(JSON.stringify(msg.agilite.messages[0]), msg);\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 530,
+        "y": 220,
+        "wires": [
+            [
+                "7ff4266.0ed4ed8",
+                "5d1c1a03.f47b4c"
+            ]
+        ]
+    },
+    {
+        "id": "bcc2d333.2fc758",
+        "type": "catch",
+        "z": "50bc3390.412344",
+        "name": "WW: Catch Errors",
+        "scope": null,
+        "x": 1130,
+        "y": 100,
+        "wires": [
+            [
+                "8fa4642b.ffb808"
+            ]
+        ]
+    },
+    {
+        "id": "8fa4642b.ffb808",
+        "type": "function",
+        "z": "50bc3390.412344",
+        "name": "WW: Prepare Error Log",
+        "func": "msg.payload = {\n    success:false,\n    title:msg.error.message,\n    data:msg.error.source\n};\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1252.1429443359375,
+        "y": 154.28594970703125,
+        "wires": [
+            [
+                "8c25ca10.f780a8"
+            ]
+        ]
+    },
+    {
+        "id": "1a2728d9.1d166f",
+        "type": "link in",
+        "z": "50bc3390.412344",
+        "name": "WW: HTTP Result",
+        "links": [
+            "7ff4266.0ed4ed8",
+            "667e9ecb.7d987"
+        ],
+        "x": 1035,
+        "y": 320,
+        "wires": [
+            [
+                "420c7d8a.38978c"
+            ]
+        ]
+    },
+    {
+        "id": "420c7d8a.38978c",
+        "type": "http response",
+        "z": "50bc3390.412344",
+        "name": "WW: HTTP Result",
+        "statusCode": "",
+        "headers": {},
+        "x": 1190.71435546875,
+        "y": 319.28570556640625,
+        "wires": []
+    },
+    {
+        "id": "bcb3d5ef.87aeb",
+        "type": "debug",
+        "z": "50bc3390.412344",
+        "name": "WW: Debug Result",
+        "active": true,
+        "console": "false",
+        "complete": "true",
+        "x": 1190,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "3e7d1c17.1fe6d4",
+        "type": "comment",
+        "z": "50bc3390.412344",
+        "name": "WW: Finalize",
+        "info": "",
+        "x": 1168.7142333984375,
+        "y": 230.42822265625,
+        "wires": []
+    },
+    {
+        "id": "8c25ca10.f780a8",
+        "type": "link out",
+        "z": "50bc3390.412344",
+        "name": "WW: Run Debug Result",
+        "links": [
+            "c18774a6.7847b"
+        ],
+        "x": 1348.571533203125,
+        "y": 92.50018310546875,
+        "wires": []
+    },
+    {
+        "id": "6a09a59f.86d9b4",
+        "type": "comment",
+        "z": "50bc3390.412344",
+        "name": "WW: Challenge Request",
+        "info": "- Accepts the Challenge request and provides the response\n- Triggers the generation of the OAuth Token",
+        "x": 150,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "c6df7e8e.d56a38",
+        "type": "link in",
+        "z": "50bc3390.412344",
+        "name": "WW: Challenge Request",
+        "links": [
+            "8db683f1.9b3a5"
+        ],
+        "x": 55,
+        "y": 220,
+        "wires": [
+            [
+                "f5553ab0.b2f3e8"
+            ]
+        ]
+    },
+    {
+        "id": "7ff4266.0ed4ed8",
+        "type": "link out",
+        "z": "50bc3390.412344",
+        "name": "WW: Run HTTP Result",
+        "links": [
+            "1a2728d9.1d166f"
+        ],
+        "x": 735,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "8db683f1.9b3a5",
+        "type": "link out",
+        "z": "50bc3390.412344",
+        "name": "WW: Run Challenge Request",
+        "links": [
+            "c6df7e8e.d56a38"
+        ],
+        "x": 835,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "b7f6aa16.cdfbe",
+        "type": "comment",
+        "z": "50bc3390.412344",
+        "name": "WW: Generated OAuth",
+        "info": "- WW OAuth Token expires every 1 hour.\n- To be safe, we generate the token every 45 minutes",
+        "x": 140,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "219d2237.67936e",
+        "type": "link in",
+        "z": "50bc3390.412344",
+        "name": "WW: Generate OAuth",
+        "links": [
+            "5d1c1a03.f47b4c"
+        ],
+        "x": 295,
+        "y": 360,
+        "wires": [
+            [
+                "f9a854ab.c60778"
+            ]
+        ]
+    },
+    {
+        "id": "5d1c1a03.f47b4c",
+        "type": "link out",
+        "z": "50bc3390.412344",
+        "name": "WW: Run Generate OAuth",
+        "links": [
+            "219d2237.67936e"
+        ],
+        "x": 735,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "56e5262c.743f58",
+        "type": "inject",
+        "z": "50bc3390.412344",
+        "name": "WW: Gen OAuth every 45 Min",
+        "topic": "",
+        "payload": "{}",
+        "payloadType": "json",
+        "repeat": "2700",
+        "crontab": "",
+        "once": true,
+        "x": 170,
+        "y": 320,
+        "wires": [
+            [
+                "f9a854ab.c60778"
+            ]
+        ]
+    },
+    {
+        "id": "f9a854ab.c60778",
+        "type": "connectors",
+        "z": "50bc3390.412344",
+        "server": "af07bfdf.f8974",
+        "profileKey": "ww_agilite",
+        "routeKey": "oauth",
+        "name": "WW: Generate OAuth",
+        "x": 460,
+        "y": 320,
+        "wires": [
+            [
+                "977d9176.7d306"
+            ]
+        ]
+    },
+    {
+        "id": "977d9176.7d306",
+        "type": "link out",
+        "z": "50bc3390.412344",
+        "name": "WW: Run Debug Result",
+        "links": [
+            "c18774a6.7847b"
+        ],
+        "x": 635,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "e80c5d94.b9f458",
+        "type": "link out",
+        "z": "50bc3390.412344",
+        "name": "WW: Run Msg Created",
+        "links": [
+            "90cbcf8a.d2ad1"
+        ],
+        "x": 835,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "667e9ecb.7d987",
+        "type": "link out",
+        "z": "50bc3390.412344",
+        "name": "WW: Run HTTP Result",
+        "links": [
+            "1a2728d9.1d166f"
+        ],
+        "x": 835,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "c625205a.8c6388",
+        "type": "comment",
+        "z": "50bc3390.412344",
+        "name": "WW: Watson Workspace Webhook",
+        "info": "Watson Workspace will trigger flows through this Webhook",
+        "x": 180,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "7bbe5eab.a21808",
+        "type": "comment",
+        "z": "50bc3390.412344",
+        "name": "WW: Send Reply",
+        "info": "",
+        "x": 120,
+        "y": 620,
+        "wires": []
+    },
+    {
+        "id": "91e5c55e.37cef",
+        "type": "link in",
+        "z": "50bc3390.412344",
+        "name": "WW: Reply",
+        "links": [
+            "7cdb58b9.396cc8"
+        ],
+        "x": 55,
+        "y": 660,
+        "wires": [
+            [
+                "8a131a36.896b4"
+            ]
+        ]
+    },
+    {
+        "id": "618a8913.dd0ef",
+        "type": "connectors",
+        "z": "50bc3390.412344",
+        "server": "af07bfdf.f8974",
+        "profileKey": "ww_agilite",
+        "routeKey": "send",
+        "name": "WW: Send Reply",
+        "x": 450,
+        "y": 640,
+        "wires": [
+            [
+                "f41bbb4d.5716c8"
+            ]
+        ]
+    },
+    {
+        "id": "e0714909.b779c",
+        "type": "function",
+        "z": "50bc3390.412344",
+        "name": "WW: Prep Msg Created Reply",
+        "func": "//Finalize logic\nvar extendedMessage = \"\";\n\nif(msg.wc.messageExamples && msg.wc.messageExamples.length > 0){\n    extendedMessage = \"\\ne.g. \";\n    extendedMessage += \"`\" + msg.wc.messageExamples.join(\"` - `\") + \"`\";\n    \n    msg.wc.responseMessage += extendedMessage;\n}\n\nif(msg.wc.titleExamples && msg.wc.titleExamples.length > 0){\n    extendedMessage = \": ACTIONS = \";\n    extendedMessage += \"( \" + msg.wc.titleExamples.join(\" / \") + \" )\";\n\n    msg.wc.responseTitle += extendedMessage;\n}    \n\n//Create Final Payload\nmsg.payload = {\n    spaceId:msg.ww.spaceId,\n    title:msg.wc.responseTitle,\n    message:msg.wc.responseMessage\n};\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 730,
+        "y": 440,
+        "wires": [
+            [
+                "7cdb58b9.396cc8"
+            ]
+        ]
+    },
+    {
+        "id": "f41bbb4d.5716c8",
+        "type": "link out",
+        "z": "50bc3390.412344",
+        "name": "WW: Run Debug Result",
+        "links": [
+            "c18774a6.7847b"
+        ],
+        "x": 635,
+        "y": 660,
+        "wires": []
+    },
+    {
+        "id": "8a131a36.896b4",
+        "type": "switch",
+        "z": "50bc3390.412344",
+        "name": "WW: Check Reply",
+        "property": "payload.message",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "neq",
+                "v": "",
+                "vt": "str"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "false",
+        "outputs": 2,
+        "x": 210,
+        "y": 660,
+        "wires": [
+            [
+                "618a8913.dd0ef"
+            ],
+            [
+                "f41bbb4d.5716c8"
+            ]
+        ]
+    },
+    {
+        "id": "c18774a6.7847b",
+        "type": "link in",
+        "z": "50bc3390.412344",
+        "name": "WW: Debug Result",
+        "links": [
+            "8c25ca10.f780a8",
+            "977d9176.7d306",
+            "f41bbb4d.5716c8"
+        ],
+        "x": 1035,
+        "y": 280,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "2133e8c2.997cd8",
+        "type": "comment",
+        "z": "50bc3390.412344",
+        "name": "WW: Msg Created",
+        "info": "",
+        "x": 130,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "90cbcf8a.d2ad1",
+        "type": "link in",
+        "z": "50bc3390.412344",
+        "name": "WW: Msg Created",
+        "links": [
+            "e80c5d94.b9f458"
+        ],
+        "x": 55,
+        "y": 440,
+        "wires": [
+            [
+                "cecc9655.50d62"
+            ]
+        ]
+    },
+    {
+        "id": "cecc9655.50d62",
+        "type": "function",
+        "z": "50bc3390.412344",
+        "name": "WW: Prep Msg Created",
+        "func": "msg.wc = {\n    triggerWords:\"watson,waston\",\n    workspaceId:\"8c9399aa-c68a-42e1-8c09-ee3feb935bf6\",\n    workflowStep:\"\",\n    performAction:\"\",\n    cacheId:msg.ww.spaceId + msg.ww.userId,\n    context:JSON.stringify({userId:msg.ww.userId, username:msg.ww.userName}),\n    message:msg.ww.content,\n    responseTitle:\"\",\n    responseMessage:\"\",\n    messageExamples:[],\n    titleExamples:[]\n};\n\nmsg.payload = msg.wc;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 210,
+        "y": 440,
+        "wires": [
+            [
+                "76bd6386.3e6c14"
+            ]
+        ]
+    },
+    {
+        "id": "7cdb58b9.396cc8",
+        "type": "link out",
+        "z": "50bc3390.412344",
+        "name": "WW: Run Reply",
+        "links": [
+            "91e5c55e.37cef"
+        ],
+        "x": 915,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "834a7921.ab2de",
+        "type": "comment",
+        "z": "50bc3390.412344",
+        "name": "WW: Msg Annotation Added",
+        "info": "",
+        "x": 160,
+        "y": 500,
+        "wires": []
+    },
+    {
+        "id": "a0a37672.c7026",
+        "type": "link in",
+        "z": "50bc3390.412344",
+        "name": "WW: Msg Annotation Added",
+        "links": [
+            "d0128d71.d7df88"
+        ],
+        "x": 55,
+        "y": 540,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "d0128d71.d7df88",
+        "type": "link out",
+        "z": "50bc3390.412344",
+        "name": "WW: Run Msg Annotation Added",
+        "links": [
+            "a0a37672.c7026"
+        ],
+        "x": 835,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "76bd6386.3e6c14",
+        "type": "subflow:faf978c7.e4831",
+        "z": "50bc3390.412344",
+        "name": "",
+        "x": 460,
+        "y": 440,
+        "wires": [
+            [
+                "e0714909.b779c"
+            ]
+        ]
+    },
+    {
+        "id": "9806503c.fdc5a",
+        "type": "function",
+        "z": "e4f3dadf.3a9fe",
+        "name": "AF-WS Prep",
+        "func": "msg.todo = {\n    connectionType:msg.req.headers[\"connection-type\"],\n    reqType:msg.req.headers[\"req-type\"],\n    data:msg.req.body\n};\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 290,
+        "y": 120,
+        "wires": [
+            [
+                "322dbd3e.e633d2"
+            ]
+        ]
+    },
+    {
+        "id": "322dbd3e.e633d2",
+        "type": "subflow:7508f195.894c38",
+        "z": "e4f3dadf.3a9fe",
+        "x": 450,
+        "y": 120,
+        "wires": [
+            [
+                "7b5f1881.c628a8"
+            ]
+        ]
+    },
+    {
+        "id": "7b5f1881.c628a8",
+        "type": "link out",
+        "z": "e4f3dadf.3a9fe",
+        "name": "Run AF-Process Result",
+        "links": [
+            "a82f60f5.d73d"
+        ],
+        "x": 555,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "fa0826c8.4fddb",
+        "type": "link in",
+        "z": "7508f195.894c38",
+        "name": "TD-Finalize",
+        "links": [
+            "96ab9fa1.e4bdb8",
+            "2e423fd7.7c099",
+            "40105e55.b7b848",
+            "8e136f94.b55e48",
+            "3d291272.9a1e66",
+            "38c08684.d2afd2",
+            "ae627291.e35548"
+        ],
+        "x": 1175,
+        "y": 100,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "b6354111.330d08",
+        "type": "comment",
+        "z": "7508f195.894c38",
+        "name": "TD-End",
+        "info": "",
+        "x": 1210,
+        "y": 40,
         "wires": []
     }
 ]

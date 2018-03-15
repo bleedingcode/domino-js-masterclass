@@ -122,8 +122,9 @@ export const processSignInResult = (data) => {
 
   if(data.success){
     tempData.signInForm = {};
-    Globals.user.commonName = data.data.commonName;
-
+    Globals.user.commonName = data.data.user.commonName;
+    Globals.userList = data.data.users;
+    
     Globals.dispatch({
       type: actions.SIGN_IN_USER
     })
