@@ -25,11 +25,11 @@ spec:
     metadata:
       labels:
         app: web-socket-server-docker
-        version: v002
+        version: v003
     spec:
       containers:
-      - name: ws-002
-        image: acragilitetest.azurecr.io/web-socket-server-docker:v0.0.2
+      - name: ws-003
+        image: acragilitetest.azurecr.io/web-socket-server-docker:v0.0.3
         imagePullPolicy: IfNotPresent
         ports:
         - name: ws-port

@@ -201,17 +201,17 @@ const toDo = (state = toDoState, action) => {
           switch(Globals.appKey){
             case "to-do-new":
               if(entry.data.status === "Active"){
-                tempArray.push = JSON.parse(JSON.stringify(entry));
+                tempArray.push(JSON.parse(JSON.stringify(entry)));
               }
               break;
             case "to-do-complete":
               if(entry.data.status === "Complete"){
-                tempArray.push = JSON.parse(JSON.stringify(entry));
+                tempArray.push(JSON.parse(JSON.stringify(entry)));
               }
               break;  
             case "to-do-overdue":
               if(entry.data.status === "Overdue"){
-                tempArray.push = JSON.parse(JSON.stringify(entry));
+                tempArray.push(JSON.parse(JSON.stringify(entry)));
               }
               break;                          
           }

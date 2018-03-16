@@ -89,8 +89,8 @@
         ],
         "out": [
             {
-                "x": 760,
-                "y": 140,
+                "x": 540,
+                "y": 40,
                 "wires": [
                     {
                         "id": "552df8f6.a8fb2",
@@ -2659,26 +2659,11 @@
         ]
     },
     {
-        "id": "10579d24.2622fb",
-        "type": "http request",
-        "z": "f8ceadb5.24992",
-        "name": "TDWS-Execute",
-        "method": "POST",
-        "ret": "obj",
-        "url": "http://127.0.0.1:6021/execute",
-        "tls": "",
-        "x": 540,
-        "y": 260,
-        "wires": [
-            []
-        ]
-    },
-    {
         "id": "adf689fb.cc6498",
         "type": "function",
         "z": "f8ceadb5.24992",
         "name": "TDWS-Prep",
-        "func": "msg.payload = {\n    data:msg.ws\n};\n\nreturn msg;",
+        "func": "var data = {\n    event: \"to-do-app-response\",\n    data:{\n        reqType: \"7\",\n        success: true,\n        messages: [],\n        data: [{\n            _id: \"8025825100536b63D3569D2061A4AAC6802582520046B372\",\n            data:{\n                metaversalId: \"8025825100536b63D3569D2061A4AAC6802582520046B372\",\n                author: \"CN=John Jardin/O=Intec\",\n                taskName: \"Test WS 4\",\n                description: \"Test WS 4\",\n                dueDate: \"2018-03-15\",\n                priority: \"High\",\n                assignedTo: \"CN=Jane Apple/O=Intec\",\n                status: \"Overdue\"                           \n            }\n        }]\n    }        \n};\n\nmsg.payload = {\n    data:JSON.stringify(msg.ws)\n};\n\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "x": 190,
@@ -2688,20 +2673,6 @@
                 "552df8f6.a8fb2"
             ]
         ]
-    },
-    {
-        "id": "6d90948.539b6ec",
-        "type": "debug",
-        "z": "f8ceadb5.24992",
-        "name": "",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "true",
-        "x": 810,
-        "y": 40,
-        "wires": []
     },
     {
         "id": "e5922bc8.4d80e",
@@ -2724,9 +2695,37 @@
         "x": 390,
         "y": 40,
         "wires": [
+            []
+        ]
+    },
+    {
+        "id": "aa8749fa.b05e48",
+        "type": "inject",
+        "z": "e4f3dadf.3a9fe",
+        "name": "",
+        "topic": "",
+        "payload": "{}",
+        "payloadType": "json",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 130,
+        "y": 200,
+        "wires": [
             [
-                "6d90948.539b6ec"
+                "c69a8155.496308"
             ]
+        ]
+    },
+    {
+        "id": "c69a8155.496308",
+        "type": "subflow:f8ceadb5.24992",
+        "z": "e4f3dadf.3a9fe",
+        "x": 330,
+        "y": 200,
+        "wires": [
+            []
         ]
     }
 ]
