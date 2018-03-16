@@ -26,11 +26,11 @@ spec:
     metadata:
       labels:
         app: react-to-do-docker
-        version: v002
+        version: v004
     spec:
       containers:
-      - name: todo-002
-        image: agilite/react-to-do-docker:0.0.2
+      - name: todo-004
+        image: agilite/react-to-do-docker:0.0.4
         imagePullPolicy: Never
         ports:
         - name: todo-port

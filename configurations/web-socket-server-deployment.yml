@@ -26,11 +26,11 @@ spec:
     metadata:
       labels:
         app: web-socket-server-docker
-        version: v002
+        version: v003
     spec:
       containers:
-      - name: ws-002
-        image: agilite/web-socket-server-docker:0.0.2
+      - name: ws-003
+        image: agilite/web-socket-server-docker:0.0.3
         imagePullPolicy: Never
         ports:
         - name: ws-port
