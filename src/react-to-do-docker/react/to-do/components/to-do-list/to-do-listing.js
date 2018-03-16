@@ -108,7 +108,7 @@ class ToDoListing extends React.Component {
                   <TableHeaderColumn>Due Date</TableHeaderColumn>
                   <TableHeaderColumn>Responsible Person</TableHeaderColumn>
                   <TableHeaderColumn>Priority</TableHeaderColumn>
-                  <TableHeaderColumn></TableHeaderColumn>
+                  <TableHeaderColumn>Store</TableHeaderColumn>
                 </TableRow>
               </TableHeader>
               <TableBody displayRowCheckbox={false}>
@@ -129,6 +129,7 @@ class ToDoListing extends React.Component {
                       dueDate={entry.data.dueDate}
                       assignedTo={entry.data.assignedTo}
                       priority={entry.data.priority}
+                      storeName={entry.data.storeName}
                       className={entry.custom ? entry.custom.status : ""}
                       onEditProfile={() => this.props.onEditProfile(entry._id)}
                       onDeleteConfirm={() => this.deleteConfirm(entry._id, entry.data.name)}

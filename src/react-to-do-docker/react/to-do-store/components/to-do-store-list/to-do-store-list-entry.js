@@ -2,7 +2,7 @@ import React from 'react';
 import {TableRowColumn, TableRow} from 'material-ui/Table';
 import ActionDelete from 'material-ui/svg-icons/action/delete';
 
-const ToDoStoreListEntry = ({ theme, title, name, type, className, onEditProfile, onDeleteProfile, onDeleteConfirm }) => (
+const ToDoStoreListEntry = ({ theme, title, name, type, replicaId, className, onEditProfile, onDeleteProfile, onDeleteConfirm }) => (
 	<TableRow
 		className={`list-entry ${className}`}
 		hoverable={true}
@@ -19,9 +19,7 @@ const ToDoStoreListEntry = ({ theme, title, name, type, className, onEditProfile
 		</TableRowColumn>
 		<TableRowColumn>{name}</TableRowColumn>
 		<TableRowColumn>{type}</TableRowColumn>
-		<TableRowColumn>
-
-  		</TableRowColumn>
+		<TableRowColumn>{replicaId}</TableRowColumn>
  	</TableRow>
 )
 

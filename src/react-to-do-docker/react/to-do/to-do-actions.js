@@ -246,6 +246,8 @@ export const processWSResponse = (data) => {
       case "2"://Fetch All Data - Assigned
       case "3"://Fetch All Data - Complete
       case "4"://Fetch All Data - Overdue
+        Globals.storeList = data.storeList;
+
         //We need to add custom object to each record
         for(var x in data.data){
           data.data[x].custom = JSON.parse(JSON.stringify(tempData.toDo.dataTemplate.custom));
@@ -253,6 +255,7 @@ export const processWSResponse = (data) => {
           data.data[x].custom.isNewDoc = false;
           data.data[x].custom.status = "";
           data.data[x].data.storeId = data.data[x].data.metaversalId.substring(0, 16);//TODO: Paul needs to provide the Store Id for me
+          data.data[x].data.storeName = _getStoreName(data.data[x].data.storeId);
         }
       
         Globals.dispatch({type: actions.FETCH_ALL_DATA, payload:{data:data.data, storeList:data.storeList}});
@@ -263,6 +266,7 @@ export const processWSResponse = (data) => {
           data.data.custom.isSavedDoc = true;
           data.data.custom.status = "";
           data.data.data.storeId = data.data.data.metaversalId.substring(0, 16);//TODO: Paul needs to provide the Store Id for me
+          data.data.data.storeName = _getStoreName(data.data.data.storeId);
 
           Globals.dispatch(updateData(data.data));
         }      
@@ -273,6 +277,7 @@ export const processWSResponse = (data) => {
           data.data.custom.isSavedDoc = true;
           data.data.custom.status = "";
           data.data.data.storeId = data.data.data.metaversalId.substring(0, 16);//TODO: Paul needs to provide the Store Id for me
+          data.data.data.storeName = _getStoreName(data.data.data.storeId);
 
           Globals.dispatch(updateData(data.data));
         }      
@@ -286,6 +291,7 @@ export const processWSResponse = (data) => {
             data.data[x].custom.isNewDoc = false;
             data.data[x].custom.status = "";
             data.data[x].data.storeId = data.data[x].data.metaversalId.substring(0, 16);//TODO: Paul needs to provide the Store Id for me
+            data.data[x].data.storeName = _getStoreName(data.data[x].data.storeId);
           }
 
           Globals.dispatch(updateUIData(data.data));
@@ -294,3 +300,16 @@ export const processWSResponse = (data) => {
     }
   }
 }
+
+const _getStoreName = (storeId) => {
+  let storeName = "";
+
+  for(var x in Globals.storeList){
+    if(Globals.storeList[x].value === storeId){
+      storeName = Globals.storeList[x].text;
+      break;
+    }
+  }
+
+  return storeName;
+};

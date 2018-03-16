@@ -72,6 +72,35 @@
         ]
     },
     {
+        "id": "f8ceadb5.24992",
+        "type": "subflow",
+        "name": "To Do Web Socket",
+        "info": "To use this Subflow, populate the following object:\n\nmsg.ws = {\n    event:\"{event-name}\",\n    data:{\n\t    reqType: \"{request-type}\",\n\t    success: {boolean},\n    \tmessages: {array},\n\t    data: {Array or JSON} \n    }\n};",
+        "in": [
+            {
+                "x": 60,
+                "y": 40,
+                "wires": [
+                    {
+                        "id": "adf689fb.cc6498"
+                    }
+                ]
+            }
+        ],
+        "out": [
+            {
+                "x": 760,
+                "y": 140,
+                "wires": [
+                    {
+                        "id": "552df8f6.a8fb2",
+                        "port": 0
+                    }
+                ]
+            }
+        ]
+    },
+    {
         "id": "7d449c5b.be903c",
         "type": "agilite-login",
         "z": "",
@@ -90,7 +119,7 @@
         "upload": false,
         "swaggerDoc": "",
         "x": 110,
-        "y": 120,
+        "y": 80,
         "wires": [
             [
                 "9806503c.fdc5a"
@@ -135,7 +164,6 @@
         "y": 380,
         "wires": [
             [
-                "6b04ec9c.3647dc",
                 "2e83b864.eebdf8"
             ]
         ]
@@ -264,89 +292,8 @@
         "name": "AF-Start",
         "info": "",
         "x": 100,
-        "y": 80,
-        "wires": []
-    },
-    {
-        "id": "cef78c93.aaf58",
-        "type": "inject",
-        "z": "e4f3dadf.3a9fe",
-        "name": "AF-WS Trigger",
-        "topic": "",
-        "payload": "{}",
-        "payloadType": "json",
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "x": 140,
         "y": 40,
-        "wires": [
-            [
-                "2ab07b52.65f734"
-            ]
-        ]
-    },
-    {
-        "id": "5024f116.4445e",
-        "type": "http request",
-        "z": "e4f3dadf.3a9fe",
-        "name": "AF-WS Execute",
-        "method": "POST",
-        "ret": "obj",
-        "url": "http://127.0.0.1:6021/execute",
-        "tls": "",
-        "x": 1180,
-        "y": 480,
-        "wires": [
-            [
-                "19a6a168.f8c90f"
-            ]
-        ]
-    },
-    {
-        "id": "d76e9a4e.f666d",
-        "type": "function",
-        "z": "e4f3dadf.3a9fe",
-        "name": "AF-WS Finalize",
-        "func": "msg.payload = {\n    \"event\":\"to-do-app-response\",\n    \"data\":{\n    \t\"reqType\": \"1\",\n    \t\"success\": true,\n    \t\"messages\": [],\n    \t\"data\": {\n    \t\t\"users\": [{\n    \t\t\t\"text\": \"David Oak\",\n    \t\t\t\"value\": \"David Oak\"\n    \t\t}, {\n    \t\t\t\"text\": \"Jane Apple\",\n    \t\t\t\"value\": \"Jane Apple\"\n    \t\t}, {\n    \t\t\t\"text\": \"John Jardin\",\n    \t\t\t\"value\": \"John Jardin\"\n    \t\t}, {\n    \t\t\t\"text\": \"Paul Withers\",\n    \t\t\t\"value\": \"Paul Withers\"\n    \t\t}, {\n    \t\t\t\"text\": \"Steve Maple\",\n    \t\t\t\"value\": \"Steve Maple\"\n    \t\t}],\n    \t\t\"user\": {\n    \t\t\t\"username\": \"CN=David Oak/O=Intec\",\n    \t\t\t\"commonName\": \"David Oak\",\n    \t\t\t\"access\": {\n    \t\t\t\t\"allowDelete\": false\n    \t\t\t}\n    \t\t}\n    \t}\n    }\n};\n\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "x": 1140,
-        "y": 440,
-        "wires": [
-            [
-                "5024f116.4445e"
-            ]
-        ]
-    },
-    {
-        "id": "19a6a168.f8c90f",
-        "type": "debug",
-        "z": "e4f3dadf.3a9fe",
-        "name": "AF-WS Debug",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "payload",
-        "x": 1200,
-        "y": 520,
         "wires": []
-    },
-    {
-        "id": "2ab07b52.65f734",
-        "type": "function",
-        "z": "e4f3dadf.3a9fe",
-        "name": "AF-WS Prep",
-        "func": "msg.todo = {\n    connectionType:\"to-do-app-requests\",\n    reqType:\"1\",\n    data:{\n        credentials: \"ZGF2aWQgb2FrOlNFQVNkM20w\"\n    }\n};\n\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "x": 330,
-        "y": 40,
-        "wires": [
-            []
-        ]
     },
     {
         "id": "eb089260.68be98",
@@ -1749,8 +1696,8 @@
         "links": [
             "fd15598d.30a12"
         ],
-        "x": 795,
-        "y": 600,
+        "x": 655,
+        "y": 620,
         "wires": []
     },
     {
@@ -1761,8 +1708,8 @@
         "func": "msg.wc.responseMessage += \"\\n*Task Name:* \" + msg.wc.context.taskName;  \nmsg.wc.responseMessage += \"\\n*Description:* \" + msg.wc.context.description;  \nmsg.wc.responseMessage += \"\\n*Due Date:* \" + msg.wc.context.dueDate;\nmsg.wc.responseMessage += \"\\n*Assigned To:* \" + msg.wc.context.assignedTo;\nmsg.wc.responseMessage += \"\\n*Priority:* \" + msg.wc.context.priority;\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
-        "x": 580,
-        "y": 540,
+        "x": 540,
+        "y": 500,
         "wires": [
             [
                 "ad7922e5.d4754"
@@ -1777,8 +1724,8 @@
         "profileKey": "wc_todo",
         "routeKey": "save",
         "name": "WC: S1-Save Context",
-        "x": 880,
-        "y": 560,
+        "x": 740,
+        "y": 580,
         "wires": [
             []
         ]
@@ -1824,8 +1771,8 @@
         "links": [
             "3d36ca00.cf216e"
         ],
-        "x": 1215,
-        "y": 460,
+        "x": 1255,
+        "y": 400,
         "wires": []
     },
     {
@@ -1870,8 +1817,8 @@
         "func": "msg.payload = {\n    cacheId:msg.wc.cacheId,\n    context:JSON.stringify(msg.wc.context)\n};\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
-        "x": 620,
-        "y": 580,
+        "x": 540,
+        "y": 600,
         "wires": [
             [
                 "28072731.9b65d8",
@@ -2520,7 +2467,7 @@
         "outputs": 1,
         "noerr": 0,
         "x": 290,
-        "y": 120,
+        "y": 80,
         "wires": [
             [
                 "322dbd3e.e633d2"
@@ -2533,7 +2480,7 @@
         "z": "e4f3dadf.3a9fe",
         "name": "",
         "x": 450,
-        "y": 120,
+        "y": 80,
         "wires": [
             [
                 "7b5f1881.c628a8"
@@ -2549,7 +2496,7 @@
             "a82f60f5.d73d"
         ],
         "x": 555,
-        "y": 120,
+        "y": 80,
         "wires": []
     },
     {
@@ -2638,20 +2585,6 @@
         ]
     },
     {
-        "id": "4955d99d.a97748",
-        "type": "debug",
-        "z": "50bc3390.412344",
-        "name": "",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "true",
-        "x": 1150,
-        "y": 380,
-        "wires": []
-    },
-    {
         "id": "c7075d3a.2fdae",
         "type": "keywords",
         "z": "faf978c7.e4831",
@@ -2677,7 +2610,7 @@
         "type": "function",
         "z": "faf978c7.e4831",
         "name": "WC: S1-Prep 1",
-        "func": "var username = \"\";\nvar storeId = \"\";\n\n//Get Current user\nfor(var x in msg.users){\n    if(msg.users[x].value === msg.ww.userId){\n        username = msg.users[x].label;\n        break;\n    }\n}\n\n//Get Config Details\nfor(var x in msg.payload.data){\n    switch(msg.payload.data[x].label){\n        case \"todo_store_id\":\n            storeId = msg.payload.data[x].value;\n            break;\n    }\n}\n\nmsg.todo = {\n    connectionType:\"to-do-requests\",\n    reqType:\"5\",\n    data:{\n        credentials: \"ZGF2aWQgb2FrOlNFQVNkM20w\",\n        record:{\n            metaversalId: '',\n            author: username,\n            storeId: storeId,\n            taskName: msg.wc.context.taskName,\n            description: msg.wc.context.description,\n            dueDate: msg.wc.context.dueDate,\n            priority: msg.wc.context.priority,\n            assignedTo: msg.wc.context.assignedTo,\n            status: 'New'\n        }\n    }\n};\n\nreturn msg;",
+        "func": "var username = \"\";\nvar storeId = \"\";\nvar wwToken = \"\";\nvar connectionType = \"\";\nvar reqType = \"\";\nvar defaultStatus = \"\";\n\n//Get Current user\nfor(var x in msg.users){\n    if(msg.users[x].value === msg.ww.userId){\n        username = msg.users[x].label;\n        break;\n    }\n}\n\n//Get Config Details\nmsg.config = {};\n\nfor(var x in msg.payload.data){\n    msg.config[msg.payload.data[x].label] = msg.payload.data[x].value;\n}\n\nmsg.todo = {\n    connectionType:msg.config.ww_connection_type,\n    reqType:msg.config.ww_req_type,\n    data:{\n        credentials:\"\",\n        wwToken:msg.config.ww_token,\n        wwUsername:\"CN=\" + username + \"/O=Intec\",\n        record:{\n            metaversalId: \"\",\n            author: username,\n            storeId: msg.config.todo_store_id,\n            taskName: msg.wc.context.taskName,\n            description: msg.wc.context.description,\n            dueDate: msg.wc.context.dueDate,\n            priority: msg.wc.context.priority,\n            assignedTo: msg.wc.context.assignedTo,\n            status: msg.config.ww_default_status\n        }\n    }\n};\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "x": 880,
@@ -2710,77 +2643,90 @@
         ]
     },
     {
-        "id": "f5cda3a0.e28928",
-        "type": "function",
-        "z": "e4f3dadf.3a9fe",
-        "name": "TEST",
-        "func": "var username = \"John Jardin\";\nvar storeId = \"8025825000743869\";\n\nmsg.todo = {\n    connectionType:\"to-do-requests\",\n    reqType:\"5\",\n    data:{\n        credentials: \"ZGF2aWQgb2FrOlNFQVNkM20w\",\n        record:{\n            metaversalId: \"\",\n            author: username,\n            storeId: storeId,\n            taskName: \"TEST DUMMY 1\",\n            description: \"Test Description\",\n            dueDate: \"2018-03-15\",\n            priority: \"High\",\n            assignedTo: \"CN=John Jardin/O=Intec\",\n            status: 'New'\n        }\n    }\n};\n\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "x": 270,
-        "y": 240,
-        "wires": [
-            [
-                "8134816.67afc8"
-            ]
-        ]
-    },
-    {
-        "id": "2d2defc3.8aba2",
-        "type": "inject",
-        "z": "e4f3dadf.3a9fe",
-        "name": "",
-        "topic": "",
-        "payload": "{}",
-        "payloadType": "json",
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "x": 110,
-        "y": 240,
-        "wires": [
-            [
-                "f5cda3a0.e28928"
-            ]
-        ]
-    },
-    {
-        "id": "8134816.67afc8",
-        "type": "subflow:7508f195.894c38",
-        "z": "e4f3dadf.3a9fe",
-        "x": 410,
-        "y": 240,
-        "wires": [
-            [
-                "58a3d1c4.549968"
-            ]
-        ]
-    },
-    {
-        "id": "58a3d1c4.549968",
-        "type": "link out",
-        "z": "e4f3dadf.3a9fe",
-        "name": "Run AF-Process Result",
-        "links": [
-            "a82f60f5.d73d"
-        ],
-        "x": 535,
-        "y": 240,
-        "wires": []
-    },
-    {
         "id": "d0463996.3d76d8",
         "type": "function",
         "z": "faf978c7.e4831",
-        "name": "WC: S1-Prep Result",
-        "func": "if(msg.agilite.success){\n    msg.wc.responseTitle = \"New To Do\";\n    msg.wc.responseMessage = \"To Do successfully created\";\n}else{\n    msg.wc.responseTitle = \"To Do Submission Failed\";\n    msg.wc.responseMessage = \"Apologies. Something went wrong with submitting the To Do. Please start over\";\n}\n\nreturn msg;",
+        "name": "WC: S1-Prep Web Socket",
+        "func": "msg.ws = {\n    event: msg.config.ww_web_socket_event,\n    data:{\n\t    reqType: msg.config.ww_web_socket_req_type,\n\t    success: true,\n    \tmessages: [],\n\t    data: [msg.payload] \n    }\n};\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
-        "x": 1160,
+        "x": 990,
+        "y": 520,
+        "wires": [
+            [
+                "e5922bc8.4d80e"
+            ]
+        ]
+    },
+    {
+        "id": "10579d24.2622fb",
+        "type": "http request",
+        "z": "f8ceadb5.24992",
+        "name": "TDWS-Execute",
+        "method": "POST",
+        "ret": "obj",
+        "url": "http://127.0.0.1:6021/execute",
+        "tls": "",
+        "x": 540,
+        "y": 260,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "adf689fb.cc6498",
+        "type": "function",
+        "z": "f8ceadb5.24992",
+        "name": "TDWS-Prep",
+        "func": "msg.payload = {\n    data:msg.ws\n};\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 190,
+        "y": 40,
+        "wires": [
+            [
+                "552df8f6.a8fb2"
+            ]
+        ]
+    },
+    {
+        "id": "6d90948.539b6ec",
+        "type": "debug",
+        "z": "f8ceadb5.24992",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "x": 810,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "e5922bc8.4d80e",
+        "type": "subflow:f8ceadb5.24992",
+        "z": "faf978c7.e4831",
+        "x": 1230,
         "y": 520,
         "wires": [
             []
+        ]
+    },
+    {
+        "id": "552df8f6.a8fb2",
+        "type": "connectors",
+        "z": "f8ceadb5.24992",
+        "server": "7d449c5b.be903c",
+        "profileKey": "todo_ws",
+        "routeKey": "execute",
+        "name": "TDWS-Connector",
+        "x": 390,
+        "y": 40,
+        "wires": [
+            [
+                "6d90948.539b6ec"
+            ]
         ]
     }
 ]

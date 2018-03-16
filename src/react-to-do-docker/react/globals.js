@@ -37,6 +37,7 @@ const globals = {
     },
     appKey:"home",
     userList:[],
+    storeList:[],
     title:"React To Do Portal",
     version:"0.0.3",
     releaseDate:"14th March 2018",

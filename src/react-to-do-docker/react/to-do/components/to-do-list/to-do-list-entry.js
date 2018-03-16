@@ -2,7 +2,7 @@ import React from 'react';
 import {TableRowColumn, TableRow} from 'material-ui/Table';
 import ActionDelete from 'material-ui/svg-icons/action/delete';
 
-const ToDoListEntry = ({ theme, author, taskName, description, dueDate, assignedTo, priority, className, onEditProfile, onDeleteProfile, onDeleteConfirm }) => (
+const ToDoListEntry = ({ theme, author, taskName, description, dueDate, assignedTo, priority, storeName, className, onEditProfile, onDeleteProfile, onDeleteConfirm }) => (
 	<TableRow
 		className={`list-entry ${className}`}
 		hoverable={true}
@@ -22,8 +22,7 @@ const ToDoListEntry = ({ theme, author, taskName, description, dueDate, assigned
 		<TableRowColumn>{dueDate}</TableRowColumn>
 		<TableRowColumn>{assignedTo}</TableRowColumn>
 		<TableRowColumn>{priority}</TableRowColumn>
-		<TableRowColumn>
-  	</TableRowColumn>
+		<TableRowColumn>{storeName}</TableRowColumn>
  	</TableRow>
 )
 

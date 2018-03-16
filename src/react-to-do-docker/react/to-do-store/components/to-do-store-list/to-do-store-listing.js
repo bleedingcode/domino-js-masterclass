@@ -105,7 +105,7 @@ class ToDoStoreListing extends React.Component {
                   <TableHeaderColumn>Title</TableHeaderColumn>
                   <TableHeaderColumn>Name</TableHeaderColumn>
                   <TableHeaderColumn>Type</TableHeaderColumn>
-                  <TableHeaderColumn></TableHeaderColumn>
+                  <TableHeaderColumn>Id</TableHeaderColumn>
                 </TableRow>
               </TableHeader>
               <TableBody displayRowCheckbox={false}>
@@ -123,6 +123,7 @@ class ToDoStoreListing extends React.Component {
                       title={entry.data.title}
                       name={entry.data.name}
                       type={entry.data.type}
+                      replicaId={entry.data.replicaId}
                       className={entry.custom ? entry.custom.status : ""}
                       onEditProfile={() => this.props.onEditProfile(entry._id)}
                       onDeleteConfirm={() => this.deleteConfirm(entry._id, entry.data.name)}

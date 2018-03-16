@@ -13,6 +13,8 @@ const toDo = (state = toDoState, action) => {
 
       tempEntry._id = new Date().getTime().toString();
       tempEntry.custom.tempId = tempEntry._id;
+      tempEntry.data.author = Globals.user.commonName;
+      
       tempData.toDo.activeEntry = tempEntry;
 
       return Object.assign({}, state, {
