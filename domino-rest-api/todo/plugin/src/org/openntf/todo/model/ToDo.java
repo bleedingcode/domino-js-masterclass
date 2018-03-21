@@ -290,12 +290,14 @@ public class ToDo implements Serializable {
 		return true;
 	}
 
-	public void checkOverdue() {
+	public boolean checkOverdue() {
 		LocalDate dt1 = LocalDate.now();
 		LocalDate dt2 = getDueDate().toLocalDate();
 		if (dt1.isAfter(dt2)) {
 			setStatus(Status.OVERDUE);
+			return true;
 		}
+		return false;
 	}
 
 	public boolean serializeToStore(Store store) {

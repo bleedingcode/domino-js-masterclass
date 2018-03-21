@@ -21,6 +21,7 @@ Bundle-ClassPath: .,
  lib/guava.jar
 Import-Package: javax.servlet;version="2.5.0",
  javax.servlet.http;version="2.5.0",
+ org.apache.commons.logging;version="1.0.4",
  org.eclipse.core.runtime
 Bundle-Activator: org.openntf.todo.Activator
 Bundle-ActivationPolicy: lazy

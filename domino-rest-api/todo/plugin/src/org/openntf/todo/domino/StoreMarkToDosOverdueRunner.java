@@ -15,14 +15,14 @@
  ******************************************************************************/
 package org.openntf.todo.domino;
 
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
+import javax.ws.rs.core.MediaType;
+
 import org.openntf.domino.Database;
 import org.openntf.domino.Document;
 import org.openntf.domino.View;
@@ -33,10 +33,8 @@ import org.openntf.domino.utils.Factory.SessionType;
 import org.openntf.domino.xots.AbstractXotsRunnable;
 import org.openntf.domino.xots.Tasklet;
 import org.openntf.domino.xots.Tasklet.Context;
-import org.openntf.domino.xots.XotsUtil;
 import org.openntf.todo.json.RequestBuilder;
 import org.openntf.todo.model.ToDo;
-import org.openntf.todo.model.ToDo.Status;
 import org.openntf.todo.v1.ToDosResource.ViewType;
 
 /**
@@ -70,46 +68,43 @@ public class StoreMarkToDosOverdueRunner extends AbstractXotsRunnable {
 	 */
 	@Override
 	public void run() {
-		DefaultHttpClient client = new DefaultHttpClient();
 		try {
 			// Get the Store NSF, get view by date
 			Database db = Factory.getSession(SessionType.NATIVE).getDatabase(replicaId);
-			View view = db.getView(ViewType.DATE.name());
+			View view = ToDoStoreFactory.getInstance().getView(db, ViewType.DATE);
 			ViewNavigator nav = view.createViewNav();
 			List<ToDo> todos = new ArrayList<ToDo>();
-			Date dt = new Date();
 			for (ViewEntry ent : nav) {
 				// If due before now and Active, set to Overdue. Else abort
-				if (dt.after(ent.getColumnValue("byDueDate", Date.class))) {
-					Document doc = ent.getDocument();
-					String thisStatus = doc.getItemValueString("status");
-					if (Status.ACTIVE.getValue().equals(thisStatus)) {
-						doc.replaceItemValue("status", Status.OVERDUE.getValue());
-						doc.save();
-						ToDo todo = ToDoStoreFactory.getInstance().deserializeToDoFromDoc(doc);
-						todos.add(todo);
-					}
-				} else {
-					break;
+				Document doc = ent.getDocument();
+				ToDo todo = ToDoStoreFactory.getInstance().deserializeToDoFromDoc(doc);
+				if (todo.checkOverdue()) {
+					todos.add(todo);
 				}
 			}
 
 			// Post all ToDos that were marked overdue to Next URL
+			System.out.println(nextUrl);
 			if (!todos.isEmpty()) {
-				HttpPost post = new HttpPost(nextUrl);
+				URL url = new URL(nextUrl);
+				HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+				conn.setDoOutput(true);
+				conn.setRequestMethod("POST");
+				conn.setRequestProperty("Content-Type", MediaType.APPLICATION_JSON);
 				RequestBuilder<List<ToDo>> builder = new RequestBuilder(ToDo.class);
-				StringEntity payload = new StringEntity(builder.buildJson(todos));
-				post.setEntity(payload);
-				HttpResponse response = client.execute(post);
-				if (response.getStatusLine().getStatusCode() != 200) {
-					System.out.println("Operation failed: " + response.getStatusLine().getStatusCode());
+				OutputStream os = conn.getOutputStream();
+				String body = builder.buildJson(todos);
+				os.write(body.getBytes());
+
+				conn.connect();
+				if (conn.getResponseCode() == 201 || conn.getResponseCode() == 200) {
+					System.out.println("Chain request sent successfully");
+				} else {
+					System.out.println("ERROR SENDING REQUEST: " + conn.getResponseCode());
 				}
 			}
 		} catch (Exception e) {
-			XotsUtil.handleException(e, getContext());
-		} finally {
-			// End HTTP connection
-			client.getConnectionManager().shutdown();
+			e.printStackTrace();
 		}
 	}
 
