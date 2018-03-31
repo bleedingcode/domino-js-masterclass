@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: openntf-todo-cloudant-service-deployment
+  labels:
+    app: openntf-todo-cloudant-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: openntf-todo-cloudant-service
+  template:
+    metadata:
+      labels:
+        app: openntf-todo-cloudant-service
+    spec:
+      containers:
+      - name: openntf-todo-cloudant-service
+        image: registry.ng.bluemix.net/openntf/openntf-todo-cloudant-service:latest
+        ports:
+        - containerPort: 8089
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: openntf-todo-cloudant-service-deployment
+spec:
+  selector:
+    app: openntf-todo-cloudant-service
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8089
