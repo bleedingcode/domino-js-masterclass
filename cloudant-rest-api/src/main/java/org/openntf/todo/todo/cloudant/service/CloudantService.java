@@ -29,9 +29,6 @@ public class CloudantService {
     private String account;
     private String password;
     private String username;
-
-    //@Value("${cloudant.catalog}")
-    //private String catalogDatabaseName;
     
     private boolean connected = false;
     
@@ -48,7 +45,6 @@ public class CloudantService {
 
     @PostConstruct
     public void connect() {
-        //databaseCatalog = cloudant.database(catalogDatabaseName, false);
         loadDatabases();
         connected = true;
     }

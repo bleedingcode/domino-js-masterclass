@@ -1,0 +1,34 @@
+server:
+  port: 8088
+
+api:
+  token: X-TODO-API-KEY
+  key: i49chtnbea5h1dfolcqoh2qght
+
+logging:
+  level:
+    root: INFO
+    org:
+      springframework:
+        security: ERROR
+
+info:
+  app:
+    name: OpenNTF Cloudant Todo Service
+    version: 0.0.1-SNAPSHOT
+    description: OpenNTF Cloudant Todo Service
+
+spring:
+  application:
+    name: OpenNTF Cloudant Todo Service
+
+management:
+  server:
+    servlet:
+      context-path: /actuator
+
+cloudant:
+  url:
+  username:
+  password:
+  account:

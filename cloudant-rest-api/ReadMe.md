@@ -1,6 +1,6 @@
-#HR Assistant (Spring boot version)
+#OpenNTF Cloudant Rest API (Spring boot version)
 
-HR Assistant is a cognitive HR application
+OpenNTF Cloudant Rest API is extra service for this project
 
 ###Build runnable JAR file
 mvn package
@@ -9,7 +9,7 @@ mvn package
 mvn package docker:build
 
 ####Run in Docker
-docker run -p 8089:8089 -t elstarit/hrassistant-boot
+docker run -p 8088:8088 -t openntf/openntf-todo-cloudant-service
 
 ####Stop Docker container
 docker ps
@@ -29,6 +29,6 @@ mvn spring-boot:run -Dspring-boot.run.profiles=prod
 
 ##Push to CloudFoundry
 ```
-bluemix login -u flinden68@elstarit.nl -o flinden68@elstarit.nl -s Demo
-bluemix app push hrassistant-boot
+bluemix login -u username -o org -s Demo
+bluemix app push openntf-todo-cloudant-service
 ```
