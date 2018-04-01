@@ -36,6 +36,15 @@ import java.io.IOException;
 @Slf4j
 public class AuthenticationFilter extends GenericFilterBean {
 
+  @Value("${api.token}")
+  private String apiToken;
+
+  @Value("${api.key}")
+  private String apiKey;
+
+  @Value("${api.user}")
+  private String userName;
+
   private AuthenticationManager authenticationManager;
 
   public AuthenticationFilter(AuthenticationManager authenticationManager) {
@@ -48,16 +57,21 @@ public class AuthenticationFilter extends GenericFilterBean {
     HttpServletResponse httpResponse = asHttp(response);
 
     Optional<String> token = Optional.fromNullable(httpRequest.getHeader("X-TODO-API-KEY"));
+    Optional<String> username = Optional.fromNullable(httpRequest.getHeader("X-TODO-USER-KEY"));
 
     try {
       if (!token.isPresent()) {
         SecurityContextHolder.clearContext();
         httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED);
       }else{
-        log.debug("Trying to authenticate user by X-TODO-API-KEY method. Token: {}", token);
-        processTokenAuthentication(token);
-        //httpRequest.getSession().setAttribute("access-token", token);
-        log.debug("AuthenticationFilter is passing request down the filter chain");
+        if(token.get().equals("i49chtnbea5h1dfolcqoh2qght")) {
+          log.debug("Trying to authenticate user by X-TODO-API-KEY method. Token: {}", token);
+          processTokenAuthentication(token, username);
+          log.debug("AuthenticationFilter is passing request down the filter chain");
+        }else{
+          SecurityContextHolder.clearContext();
+          httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+        }
       }
 
       chain.doFilter(request, response);
@@ -81,13 +95,13 @@ public class AuthenticationFilter extends GenericFilterBean {
     return (HttpServletResponse) response;
   }
 
-  private void processTokenAuthentication(Optional<String> token) {
-    Authentication resultOfAuthentication = tryToAuthenticateWithToken(token);
+  private void processTokenAuthentication(Optional<String> token, Optional<String> username) {
+    Authentication resultOfAuthentication = tryToAuthenticateWithToken(token, username);
     SecurityContextHolder.getContext().setAuthentication(resultOfAuthentication);
   }
 
-  private Authentication tryToAuthenticateWithToken(Optional<String> token) {
-    PreAuthenticatedAuthenticationToken requestAuthentication = new PreAuthenticatedAuthenticationToken(token, null);
+  private Authentication tryToAuthenticateWithToken(Optional<String> token, Optional<String> username) {
+    PreAuthenticatedAuthenticationToken requestAuthentication = new PreAuthenticatedAuthenticationToken(username, token);
     return tryToAuthenticate(requestAuthentication);
   }
 

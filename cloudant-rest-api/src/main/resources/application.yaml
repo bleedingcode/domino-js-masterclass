@@ -1,10 +1,6 @@
 server:
   port: 8088
 
-api:
-  token: X-TODO-API-KEY
-  key: i49chtnbea5h1dfolcqoh2qght
-
 logging:
   level:
     root: INFO
@@ -28,7 +24,7 @@ management:
       context-path: /actuator
 
 cloudant:
-  url:
-  username:
-  password:
-  account:
+  url: https://dd8d5879-c2cf-4ef6-b5cc-ffd1be023f50-bluemix.cloudant.com/
+  username: dd8d5879-c2cf-4ef6-b5cc-ffd1be023f50-bluemix
+  password: f12122d6b55da9faf847da6efa48259adf5ee23c0665c3e9bb3a0d3bb9d7ec67
+  account: dd8d5879-c2cf-4ef6-b5cc-ffd1be023f50-bluemix:f12122d6b55da9faf847da6efa48259adf5ee23c0665c3e9bb3a0d3bb9d7ec67@dd8d5879-c2cf-4ef6-b5cc-ffd1be023f50-bluemix
