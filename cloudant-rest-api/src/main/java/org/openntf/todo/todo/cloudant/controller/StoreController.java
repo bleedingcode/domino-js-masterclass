@@ -29,7 +29,7 @@ public class StoreController {
             @ApiResponse(code = 200, message = "Return mine store"),
             @ApiResponse(code = 400, message = "Store not found"),
             @ApiResponse(code = 500, message = "Internal error, go check the logs")})
-    @RequestMapping(method = RequestMethod.GET, value = "/mine")
+    @RequestMapping(method = RequestMethod.GET, value = "/mine", produces = "application/json")
     public ResponseEntity<?> getMyStore() {
         String myStorePath = Util.constructDatabaseName(Util.retrieveAuthenticationToken(), Store.StoreType.PERSONAL);
         try {
@@ -49,7 +49,7 @@ public class StoreController {
             @ApiResponse(code = 400, message = "Title, type or name are not provided"),
             @ApiResponse(code = 409, message = "Store already exist"),
             @ApiResponse(code = 500, message = "Internal error, go check the logs")})
-    @RequestMapping(method = RequestMethod.POST)
+    @RequestMapping(method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
     public ResponseEntity<?> createStore(@RequestBody Store passedStore) {
         try {
             //Validate the input
@@ -91,7 +91,7 @@ public class StoreController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Return the updated store"),
             @ApiResponse(code = 500, message = "Internal error, go check the logs")})
-    @RequestMapping(method = RequestMethod.PATCH, value="/{store}/updateTitle")
+    @RequestMapping(method = RequestMethod.PATCH, value="/{store}/updateTitle", produces = "application/json")
     public ResponseEntity<?> updateTitle(final @PathVariable(value = "store") String storeKey,
                                          final @RequestHeader(value = "title") String title){
 
@@ -111,7 +111,7 @@ public class StoreController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Return the store"),
             @ApiResponse(code = 500, message = "Internal error, go check the logs")})
-    @RequestMapping(method = RequestMethod.GET, value="/{store}")
+    @RequestMapping(method = RequestMethod.GET, value="/{store}", produces = "application/json")
     public ResponseEntity<?> getStoreInfo(final @PathVariable(value = "store") String storeKey){
 
         try {
@@ -130,7 +130,7 @@ public class StoreController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Return the user"),
             @ApiResponse(code = 500, message = "Internal error, go check the logs")})
-    @RequestMapping(method = RequestMethod.GET, value="/{store}/access", consumes = "application/json")
+    @RequestMapping(method = RequestMethod.GET, value="/{store}/access", consumes = "application/json", produces = "application/json")
     public ResponseEntity<?> queryAccess(final @PathVariable(value = "store") String storeKey){
 
         try {
@@ -148,7 +148,7 @@ public class StoreController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Return the user"),
             @ApiResponse(code = 500, message = "Internal error, go check the logs")})
-    @RequestMapping(method = RequestMethod.POST, value="/{store}/access")
+    @RequestMapping(method = RequestMethod.POST, value="/{store}/access", produces = "application/json", consumes = "application/json")
     public ResponseEntity<?> updateAccess(final @PathVariable(value = "store") String storeKey, @RequestBody User[] users){
 
         try {

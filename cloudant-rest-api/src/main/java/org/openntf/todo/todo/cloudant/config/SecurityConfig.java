@@ -23,29 +23,24 @@ import javax.servlet.http.HttpServletResponse;
 //@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-  private static final String[] AUTH_WHITELIST = {
-          // -- swagger ui
-          "/v2/api-docs",
-          "/swagger-resources",
-          "/swagger-resources/**",
-          "/configuration/ui",
-          "/configuration/security",
-          "/swagger-ui.html",
-          "/webjars/**"
-          // other public endpoints of your API may be appended to this array
-  };
-
   @Override
   protected void configure(HttpSecurity http) throws Exception {
     http.
       csrf().disable().
             sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).
       and().
+
       authorizeRequests().
-            antMatchers(AUTH_WHITELIST).permitAll().
-      anyRequest().authenticated().
+            antMatchers("/v2/api-docs", "/configuration/ui", "/swagger-resources", "/configuration/security", "/swagger-ui.html", "/webjars/**").permitAll().
+      antMatchers(
+            "/v2/api-docs",
+            "/swagger-resources",
+            "/swagger-resources/configuration/ui",
+            "/swagger-resources/configuration/security")
+            .permitAll().
+            anyRequest().authenticated().
       and().
-      anonymous().disable().
+      //anonymous().disable().
       exceptionHandling().authenticationEntryPoint(unauthorizedEntryPoint());
 
     http.addFilterBefore(new AuthenticationFilter(authenticationManager()), BasicAuthenticationFilter.class);

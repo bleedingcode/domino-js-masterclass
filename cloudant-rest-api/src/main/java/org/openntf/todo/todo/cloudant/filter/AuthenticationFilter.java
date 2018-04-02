@@ -59,18 +59,22 @@ public class AuthenticationFilter extends GenericFilterBean {
     Optional<String> token = Optional.fromNullable(httpRequest.getHeader("X-TODO-API-KEY"));
     Optional<String> username = Optional.fromNullable(httpRequest.getHeader("X-TODO-USER-KEY"));
 
+    String resourcePath = new UrlPathHelper().getPathWithinApplication(httpRequest);
+
     try {
-      if (!token.isPresent()) {
-        SecurityContextHolder.clearContext();
-        httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED);
-      }else{
-        if(token.get().equals("i49chtnbea5h1dfolcqoh2qght")) {
-          log.debug("Trying to authenticate user by X-TODO-API-KEY method. Token: {}", token);
-          processTokenAuthentication(token, username);
-          log.debug("AuthenticationFilter is passing request down the filter chain");
-        }else{
+      if(resourcePath.contains("/v1")) {
+        if (!token.isPresent()) {
           SecurityContextHolder.clearContext();
           httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+        } else {
+          if (token.get().equals("i49chtnbea5h1dfolcqoh2qght")) {
+            log.debug("Trying to authenticate user by X-TODO-API-KEY method. Token: {}", token);
+            processTokenAuthentication(token, username);
+            log.debug("AuthenticationFilter is passing request down the filter chain");
+          } else {
+            SecurityContextHolder.clearContext();
+            httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+          }
         }
       }
 

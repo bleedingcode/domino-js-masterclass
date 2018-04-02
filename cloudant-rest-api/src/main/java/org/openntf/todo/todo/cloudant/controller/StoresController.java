@@ -30,7 +30,7 @@ public class StoresController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Return all the stores"),
             @ApiResponse(code = 500, message = "Internal error, go check the logs")})
-    @RequestMapping(method = RequestMethod.GET, value = "")
+    @RequestMapping(method = RequestMethod.GET, value = "", produces = "application/json")
     public ResponseEntity<?> getStores() {
         try {
             List<Store> stores = storeService.getStoresForCurrentUser();

@@ -40,7 +40,7 @@ public class ToDoController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Return the new Todo"),
             @ApiResponse(code = 500, message = "Internal error, go check the logs")})
-    @RequestMapping(method = RequestMethod.POST, value = "/{key}")
+    @RequestMapping(method = RequestMethod.POST, value = "/{key}", produces = "application/json", consumes = "application/json")
     public ResponseEntity<?> addToDo(@PathVariable(value = "key") String storeKey, @RequestBody ToDo todo) {
         try {
             String dbName = Util.determineStoreTypeAndReturnDatabaseName(storeKey);
@@ -64,7 +64,7 @@ public class ToDoController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Return the Todo"),
             @ApiResponse(code = 500, message = "Internal error, go check the logs")})
-    @RequestMapping(method = RequestMethod.GET, value = "/{key}")
+    @RequestMapping(method = RequestMethod.GET, value = "/{key}", produces = "application/json")
     public ResponseEntity<?> getToDo(@PathVariable(value = "key") String metaversalId) {
         try {
             ToDo todo = todoService.getToDoFromMetaversalId(metaversalId);
@@ -78,7 +78,7 @@ public class ToDoController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Return the updated Todo"),
             @ApiResponse(code = 500, message = "Internal error, go check the logs")})
-    @RequestMapping(method = RequestMethod.PATCH, value = "/{key}")
+    @RequestMapping(method = RequestMethod.PATCH, value = "/{key}", produces = "application/json", consumes = "application/json")
     public ResponseEntity<?> updateToDo(@PathVariable(value = "key") String metaversalId, @RequestBody ToDo todo) {
         try {
             Map<String, String> metaData = Util.parseMetaversalId(metaversalId);
@@ -130,7 +130,7 @@ public class ToDoController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Return success"),
             @ApiResponse(code = 500, message = "Internal error, go check the logs")})
-    @RequestMapping(method = RequestMethod.POST, value = "/{toDoId}/reassign")
+    @RequestMapping(method = RequestMethod.POST, value = "/{toDoId}/reassign", consumes = "application/json")
     public ResponseEntity<?> reassignToDo(@PathVariable(value = "toDoId") String metaversalId, @RequestBody User user) {
         try {
             Map<String, String> metaData = Util.parseMetaversalId(metaversalId);
