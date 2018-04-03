@@ -21,30 +21,9 @@ import java.util.List;
 import static springfox.documentation.builders.PathSelectors.regex;
 
 @SpringBootApplication
-@EnableSwagger2
 public class Application {
 
 	public static void main(String[] args) {
 		SpringApplication.run(Application.class, args);
-	}
-
-	@Bean
-	public Docket api() {
-		return new Docket(DocumentationType.SWAGGER_2)
-				.apiInfo(apiInfo())
-				//.securitySchemes(apiKeys())
-				.select()
-				.paths(regex("/v1.*"))
-				.build();
-	}
-
-	private ApiInfo apiInfo() {
-		return new ApiInfoBuilder()
-				.title("Cloudant Todo Service")
-				.description("Cloudant Todo Service")
-				.license("Apache License Version 2.0")
-				.version("2.0")
-
-				.build();
 	}
 }
