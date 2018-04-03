@@ -40,8 +40,8 @@ public class Application {
 
 	private ApiInfo apiInfo() {
 		return new ApiInfoBuilder()
-				.title("Cloudant Todo Servuce")
-				.description("Cloudant Todo Servuce")
+				.title("Cloudant Todo Service")
+				.description("Cloudant Todo Service")
 				.license("Apache License Version 2.0")
 				.version("2.0")
 
