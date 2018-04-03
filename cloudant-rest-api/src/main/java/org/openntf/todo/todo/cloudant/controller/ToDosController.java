@@ -1,8 +1,6 @@
 package org.openntf.todo.todo.cloudant.controller;
 
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.openntf.todo.todo.cloudant.model.Store;
 import org.openntf.todo.todo.cloudant.model.ToDo;
@@ -28,6 +26,10 @@ public class ToDosController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Return all Todo's by status"),
             @ApiResponse(code = 500, message = "Internal error, go check the logs")})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-TODO-API-KEY", value = "", required = true, dataType = "string", paramType = "header"),
+            @ApiImplicitParam(name = "X-TODO-USER-KEY", value = "", required = false, dataType = "string", paramType = "header")
+    })
     @RequestMapping(method = RequestMethod.GET, value = "/{store}/findByStatus", produces = "application/json")
     public ResponseEntity<?> findByStatus(@PathVariable(value = "store") String storeKey, @RequestParam("status") String status) {
         try {
@@ -42,6 +44,10 @@ public class ToDosController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Return Todo's by status and username"),
             @ApiResponse(code = 500, message = "Internal error, go check the logs")})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-TODO-API-KEY", value = "", required = true, dataType = "string", paramType = "header"),
+            @ApiImplicitParam(name = "X-TODO-USER-KEY", value = "", required = false, dataType = "string", paramType = "header")
+    })
     @RequestMapping(method = RequestMethod.GET, value = "/{store}/findByAssigneeAndStatus", produces = "application/json")
     public ResponseEntity<?> findByAssigneeAndStatus(@PathVariable(value = "store") String storeKey, @RequestParam("status") String status, @RequestParam("username") String username) {
         try {
@@ -56,6 +62,10 @@ public class ToDosController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Return Todo's by status and priority"),
             @ApiResponse(code = 500, message = "Internal error, go check the logs")})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-TODO-API-KEY", value = "", required = true, dataType = "string", paramType = "header"),
+            @ApiImplicitParam(name = "X-TODO-USER-KEY", value = "", required = false, dataType = "string", paramType = "header")
+    })
     @RequestMapping(method = RequestMethod.GET, value = "/{store}/findByPriorityAndStatus", produces = "application/json")
     public ResponseEntity<?> findByPriorityAndStatus(@PathVariable(value = "store") String storeKey, @RequestParam("status") String status, @RequestParam("priority") String priority) {
         try {
@@ -70,6 +80,10 @@ public class ToDosController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Return Todo's by start and end date"),
             @ApiResponse(code = 500, message = "Internal error, go check the logs")})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-TODO-API-KEY", value = "", required = true, dataType = "string", paramType = "header"),
+            @ApiImplicitParam(name = "X-TODO-USER-KEY", value = "", required = false, dataType = "string", paramType = "header")
+    })
     @RequestMapping(method = RequestMethod.GET, value = "/{store}/findByDate", produces = "application/json")
     public ResponseEntity<?> getToDosByDate(@PathVariable(value = "store") String storeKey, @RequestParam(value = "startDate") String startDate, @RequestParam(value = "endDate") String endDate) {
         try {

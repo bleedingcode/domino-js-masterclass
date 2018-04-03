@@ -1,9 +1,7 @@
 package org.openntf.todo.todo.cloudant.controller;
 
 import com.cloudant.client.api.model.Response;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.openntf.todo.todo.cloudant.ToDoConstants;
@@ -40,6 +38,10 @@ public class ToDoController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Return the new Todo"),
             @ApiResponse(code = 500, message = "Internal error, go check the logs")})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-TODO-API-KEY", value = "", required = true, dataType = "string", paramType = "header"),
+            @ApiImplicitParam(name = "X-TODO-USER-KEY", value = "", required = false, dataType = "string", paramType = "header")
+    })
     @RequestMapping(method = RequestMethod.POST, value = "/{key}", produces = "application/json", consumes = "application/json")
     public ResponseEntity<?> addToDo(@PathVariable(value = "key") String storeKey, @RequestBody ToDo todo) {
         try {
@@ -64,6 +66,10 @@ public class ToDoController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Return the Todo"),
             @ApiResponse(code = 500, message = "Internal error, go check the logs")})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-TODO-API-KEY", value = "", required = true, dataType = "string", paramType = "header"),
+            @ApiImplicitParam(name = "X-TODO-USER-KEY", value = "", required = false, dataType = "string", paramType = "header")
+    })
     @RequestMapping(method = RequestMethod.GET, value = "/{key}", produces = "application/json")
     public ResponseEntity<?> getToDo(@PathVariable(value = "key") String metaversalId) {
         try {
@@ -78,6 +84,10 @@ public class ToDoController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Return the updated Todo"),
             @ApiResponse(code = 500, message = "Internal error, go check the logs")})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-TODO-API-KEY", value = "", required = true, dataType = "string", paramType = "header"),
+            @ApiImplicitParam(name = "X-TODO-USER-KEY", value = "", required = false, dataType = "string", paramType = "header")
+    })
     @RequestMapping(method = RequestMethod.PATCH, value = "/{key}", produces = "application/json", consumes = "application/json")
     public ResponseEntity<?> updateToDo(@PathVariable(value = "key") String metaversalId, @RequestBody ToDo todo) {
         try {
@@ -110,6 +120,10 @@ public class ToDoController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "success"),
             @ApiResponse(code = 500, message = "Internal error, go check the logs")})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-TODO-API-KEY", value = "", required = true, dataType = "string", paramType = "header"),
+            @ApiImplicitParam(name = "X-TODO-USER-KEY", value = "", required = false, dataType = "string", paramType = "header")
+    })
     @RequestMapping(method = RequestMethod.DELETE, value = "/{key}")
     public ResponseEntity<?> deleteToDo(@PathVariable(value = "key")final String metaversalId) {
         try {
@@ -130,6 +144,10 @@ public class ToDoController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Return success"),
             @ApiResponse(code = 500, message = "Internal error, go check the logs")})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-TODO-API-KEY", value = "", required = true, dataType = "string", paramType = "header"),
+            @ApiImplicitParam(name = "X-TODO-USER-KEY", value = "", required = false, dataType = "string", paramType = "header")
+    })
     @RequestMapping(method = RequestMethod.POST, value = "/{toDoId}/reassign", consumes = "application/json")
     public ResponseEntity<?> reassignToDo(@PathVariable(value = "toDoId") String metaversalId, @RequestBody User user) {
         try {
@@ -154,6 +172,10 @@ public class ToDoController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Return the success"),
             @ApiResponse(code = 500, message = "Internal error, go check the logs")})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-TODO-API-KEY", value = "", required = true, dataType = "string", paramType = "header"),
+            @ApiImplicitParam(name = "X-TODO-USER-KEY", value = "", required = false, dataType = "string", paramType = "header")
+    })
     @RequestMapping(method = RequestMethod.POST, value = "/{toDoId}/complete")
     public ResponseEntity<?> completeToDo(@PathVariable(value = "toDoId") String metaversalId) {
         try {
@@ -168,6 +190,10 @@ public class ToDoController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Return success"),
             @ApiResponse(code = 500, message = "Internal error, go check the logs")})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-TODO-API-KEY", value = "", required = true, dataType = "string", paramType = "header"),
+            @ApiImplicitParam(name = "X-TODO-USER-KEY", value = "", required = false, dataType = "string", paramType = "header")
+    })
     @RequestMapping(method = RequestMethod.POST, value = "/{toDoId}/reopen")
     public ResponseEntity<?> reopenToDo(@PathVariable(value = "toDoId") String metaversalId) {
         try {

@@ -1,8 +1,6 @@
 package org.openntf.todo.todo.cloudant.controller;
 
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.openntf.todo.todo.cloudant.Util;
 import org.openntf.todo.todo.cloudant.exceptions.DatabaseModuleException;
@@ -30,6 +28,10 @@ public class StoresController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Return all the stores"),
             @ApiResponse(code = 500, message = "Internal error, go check the logs")})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-TODO-API-KEY", value = "", required = true, dataType = "string", paramType = "header"),
+            @ApiImplicitParam(name = "X-TODO-USER-KEY", value = "", required = false, dataType = "string", paramType = "header")
+    })
     @RequestMapping(method = RequestMethod.GET, value = "", produces = "application/json")
     public ResponseEntity<?> getStores() {
         try {
@@ -44,6 +46,10 @@ public class StoresController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Return all the stores"),
             @ApiResponse(code = 500, message = "Internal error, go check the logs")})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-TODO-API-KEY", value = "", required = true, dataType = "string", paramType = "header"),
+            @ApiImplicitParam(name = "X-TODO-USER-KEY", value = "", required = false, dataType = "string", paramType = "header")
+    })
     @RequestMapping(method = RequestMethod.GET, value = "/todos/markOverdue")
     public ResponseEntity<?> markOverdue(final @RequestHeader(value = "updateUrl") String nextUrl) {
         try {

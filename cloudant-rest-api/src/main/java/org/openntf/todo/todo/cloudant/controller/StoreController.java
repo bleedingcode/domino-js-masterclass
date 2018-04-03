@@ -1,8 +1,6 @@
 package org.openntf.todo.todo.cloudant.controller;
 
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.openntf.todo.todo.cloudant.Util;
 import org.openntf.todo.todo.cloudant.exceptions.DatabaseModuleException;
@@ -29,6 +27,10 @@ public class StoreController {
             @ApiResponse(code = 200, message = "Return mine store"),
             @ApiResponse(code = 400, message = "Store not found"),
             @ApiResponse(code = 500, message = "Internal error, go check the logs")})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-TODO-API-KEY", value = "", required = true, dataType = "string", paramType = "header"),
+            @ApiImplicitParam(name = "X-TODO-USER-KEY", value = "", required = false, dataType = "string", paramType = "header")
+    })
     @RequestMapping(method = RequestMethod.GET, value = "/mine", produces = "application/json")
     public ResponseEntity<?> getMyStore() {
         String myStorePath = Util.constructDatabaseName(Util.retrieveAuthenticationToken(), Store.StoreType.PERSONAL);
@@ -49,6 +51,10 @@ public class StoreController {
             @ApiResponse(code = 400, message = "Title, type or name are not provided"),
             @ApiResponse(code = 409, message = "Store already exist"),
             @ApiResponse(code = 500, message = "Internal error, go check the logs")})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-TODO-API-KEY", value = "", required = true, dataType = "string", paramType = "header"),
+            @ApiImplicitParam(name = "X-TODO-USER-KEY", value = "", required = false, dataType = "string", paramType = "header")
+    })
     @RequestMapping(method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
     public ResponseEntity<?> createStore(@RequestBody Store passedStore) {
         try {
@@ -91,6 +97,10 @@ public class StoreController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Return the updated store"),
             @ApiResponse(code = 500, message = "Internal error, go check the logs")})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-TODO-API-KEY", value = "", required = true, dataType = "string", paramType = "header"),
+            @ApiImplicitParam(name = "X-TODO-USER-KEY", value = "", required = false, dataType = "string", paramType = "header")
+    })
     @RequestMapping(method = RequestMethod.PATCH, value="/{store}/updateTitle", produces = "application/json")
     public ResponseEntity<?> updateTitle(final @PathVariable(value = "store") String storeKey,
                                          final @RequestHeader(value = "title") String title){
@@ -111,6 +121,10 @@ public class StoreController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Return the store"),
             @ApiResponse(code = 500, message = "Internal error, go check the logs")})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-TODO-API-KEY", value = "", required = true, dataType = "string", paramType = "header"),
+            @ApiImplicitParam(name = "X-TODO-USER-KEY", value = "", required = false, dataType = "string", paramType = "header")
+    })
     @RequestMapping(method = RequestMethod.GET, value="/{store}", produces = "application/json")
     public ResponseEntity<?> getStoreInfo(final @PathVariable(value = "store") String storeKey){
 
@@ -130,6 +144,10 @@ public class StoreController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Return the user"),
             @ApiResponse(code = 500, message = "Internal error, go check the logs")})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-TODO-API-KEY", value = "", required = true, dataType = "string", paramType = "header"),
+            @ApiImplicitParam(name = "X-TODO-USER-KEY", value = "", required = false, dataType = "string", paramType = "header")
+    })
     @RequestMapping(method = RequestMethod.GET, value="/{store}/access", consumes = "application/json", produces = "application/json")
     public ResponseEntity<?> queryAccess(final @PathVariable(value = "store") String storeKey){
 
@@ -148,6 +166,10 @@ public class StoreController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Return the user"),
             @ApiResponse(code = 500, message = "Internal error, go check the logs")})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-TODO-API-KEY", value = "", required = true, dataType = "string", paramType = "header"),
+            @ApiImplicitParam(name = "X-TODO-USER-KEY", value = "", required = false, dataType = "string", paramType = "header")
+    })
     @RequestMapping(method = RequestMethod.POST, value="/{store}/access", produces = "application/json", consumes = "application/json")
     public ResponseEntity<?> updateAccess(final @PathVariable(value = "store") String storeKey, @RequestBody User[] users){
 

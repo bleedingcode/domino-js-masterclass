@@ -1,8 +1,6 @@
 package org.openntf.todo.todo.cloudant.controller;
 
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.openntf.todo.todo.cloudant.Util;
 import org.openntf.todo.todo.cloudant.model.Store;
@@ -31,7 +29,11 @@ public class UserController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Return current user"),
             @ApiResponse(code = 500, message = "Internal error, go check the logs")})
-    @RequestMapping(method = RequestMethod.GET, value = "")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-TODO-API-KEY", value = "", required = true, dataType = "string", paramType = "header"),
+            @ApiImplicitParam(name = "X-TODO-USER-KEY", value = "", required = false, dataType = "string", paramType = "header")
+    })
+    @RequestMapping(method = RequestMethod.GET, value = "", produces = "application/json")
     public ResponseEntity<?> getCurrentUser() {
         try {
             User user = new User(Util.retrieveAuthenticationToken());
@@ -45,7 +47,11 @@ public class UserController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Return the user by name"),
             @ApiResponse(code = 500, message = "Internal error, go check the logs")})
-    @RequestMapping(method = RequestMethod.GET, value = "/{username}")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-TODO-API-KEY", value = "", required = true, dataType = "string", paramType = "header"),
+            @ApiImplicitParam(name = "X-TODO-USER-KEY", value = "", required = false, dataType = "string", paramType = "header")
+    })
+    @RequestMapping(method = RequestMethod.GET, value = "/{username}", produces = "application/json")
     public ResponseEntity<?> getUserByName(final @RequestParam(value = "username") String username) {
         try {
             User user = new User(username);
