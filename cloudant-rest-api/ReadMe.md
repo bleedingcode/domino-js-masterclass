@@ -32,3 +32,23 @@ mvn spring-boot:run -Dspring-boot.run.profiles=prod
 bluemix login -u username -o org -s Demo
 bluemix app push openntf-todo-cloudant-service
 ```
+
+###Some remarks
+```
+{
+    "metaversalId": "team_test_access!!8c8947232ced4c9c9351a5f07bd38612",
+    "author": "Frank van der Linden",
+    "taskName": "New task11aaaaaaa",
+    "description": "my description",
+    "dueDate": "2018-10-20",
+    "priority": "LOW",
+    "assignedTo": "Frank van der Linden",
+    "status": "ACTIVE",
+    "id": "8c8947232ced4c9c9351a5f07bd38612",
+    "rev": "1-284ffedb897e2ea485b3c9e4ea7fc18a"
+}
+```
+
+Cloudant handles documents a little bit different.
+I construct the metaversalId by the database name and the id.
+The id and rev are really important for Cloudant, but the API takes care of the rev.
