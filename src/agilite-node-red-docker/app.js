@@ -11,6 +11,7 @@ var settings = {
     userDir:__dirname + "/flows/",
     flowFile: 'flows.json',
     httpRequestTimeout: 300000,
+    httpNodeCors: { origin: "*", methods: ['GET','PUT','POST','DELETE'] },
     adminAuth: require("./user-authentication"),
     functionGlobalContext: {},
     editorTheme:{

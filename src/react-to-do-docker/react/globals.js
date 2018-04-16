@@ -19,7 +19,7 @@ let deployment = {
   azure:{
     apiUrl:protocol + "//" + hostName + ":30010",
     nodeRedUrl:protocol + "//" + hostName + ":30011",
-    wsUrl:"http://52.234.229.85:30021",
+    wsUrl:"http://13.82.84.108:30021",
     imgUrl:protocol + "//" + hostName + ":" + port + "/public/images"    
   }  
 };
@@ -39,8 +39,8 @@ const globals = {
     userList:[],
     storeList:[],
     title:"React To Do Portal",
-    version:"0.0.4",
-    releaseDate:"16th March 2018",
+    version:"0.0.5",
+    releaseDate:"9th April 2018",
     apiUrl:deployment[deployment.deployType].apiUrl,
     imgUrl:deployment[deployment.deployType].imgUrl,
     nodeRedUrl:deployment[deployment.deployType].nodeRedUrl,

@@ -28,7 +28,7 @@ spec:
     spec:
       containers:
       - name: agilite-admin-portal-523-1
-        image: acragilitetest.azurecr.io/agilite-admin-portal-docker:v5.2.3-1
+        image: acragilitedemo.azurecr.io/agilite-admin-portal-docker:v5.2.3-1
         imagePullPolicy: IfNotPresent
         ports:
         - name: a-admin-port
