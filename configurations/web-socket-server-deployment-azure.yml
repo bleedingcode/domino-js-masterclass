@@ -29,7 +29,7 @@ spec:
     spec:
       containers:
       - name: ws-003
-        image: acragilitetest.azurecr.io/web-socket-server-docker:v0.0.3
+        image: acragilitedemo.azurecr.io/web-socket-server-docker:v0.0.3
         imagePullPolicy: IfNotPresent
         ports:
         - name: ws-port

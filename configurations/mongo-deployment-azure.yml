@@ -27,7 +27,7 @@ spec:
     spec:
       containers:
       - name: mongo-34
-        image: acragilitetest.azurecr.io/mongo:v3.4
+        image: acragilitedemo.azurecr.io/mongo:v3.4
         imagePullPolicy: IfNotPresent
         ports:
         - name: mongo-port
