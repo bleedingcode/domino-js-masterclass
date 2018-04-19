@@ -84,15 +84,18 @@ const toDo = (state = toDoState, action) => {
         }
       })
     case actions.FETCH_ALL_DATA:
+	// Pass all the data fetched via Node-RED into the app and confirm we're ready for "New" button to display
       return Object.assign({}, state, {
         header:{
           ...state.header,
           dataLoaded:true
         },
-        data:action.payload.data,
+		data:action.payload.data,
+		// Also update storeList from database
         storeList:action.payload.storeList
       })
     case actions.RESET_LOADING:
+		// Set that data is not yet loaded. This is done on switching a menu in core-actions and is used to hide "New" button
       return Object.assign({}, state, {
         header:{
           ...state.header,

@@ -2,6 +2,10 @@ import React from 'react';
 import {TableRowColumn, TableRow} from 'material-ui/Table';
 import ActionDelete from 'material-ui/svg-icons/action/delete';
 
+/*
+	Component for an individual ToDo entry in the "view"
+*/
+
 const ToDoListEntry = ({ theme, author, taskName, description, dueDate, assignedTo, priority, storeName, className, onEditProfile, onDeleteProfile, onDeleteConfirm }) => (
 	<TableRow
 		className={`list-entry ${className}`}

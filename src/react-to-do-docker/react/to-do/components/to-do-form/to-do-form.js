@@ -14,10 +14,15 @@ import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import DatePicker from 'material-ui/DatePicker';
 
+/*
+	Component for the to do form
+*/
+
 class ToDoForm extends React.Component {
 	constructor(props){
 		super(props);
 
+		// Load properties from the active entry
 		this.state = {
 			entry:tempData.toDo.activeEntry,
 			priority:tempData.toDo.activeEntry.data.priority,
@@ -28,6 +33,7 @@ class ToDoForm extends React.Component {
 		};
 	}
 
+	// onChange event to update the current entry from fields
 	onChange(key, value){
 		switch(key){
 			case "inputStoreId":
@@ -55,6 +61,7 @@ class ToDoForm extends React.Component {
 		}
 	}
 
+	// Emit HTML for the browser
 	render(){
 		return(
 			<form

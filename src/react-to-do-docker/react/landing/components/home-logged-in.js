@@ -4,6 +4,10 @@ import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'mat
 import FlatButton from 'material-ui/FlatButton';
 import globals from '../../globals';
 
+/*
+	Main welcome screen, once the user has logged in. No properties are used, so there doesn't need to be a container.
+*/
+
 const HomeLoggedIn = () => (
   <div className="col-xs-12">
     <div className="col-xs-12">

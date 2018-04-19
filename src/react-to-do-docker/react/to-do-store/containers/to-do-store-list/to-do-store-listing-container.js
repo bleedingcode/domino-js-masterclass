@@ -2,6 +2,11 @@ import { connect } from 'react-redux';
 import { editProfile, deleteProfile, createProfile, filterList } from '../../to-do-store-actions';
 import ToDoStoreListing from '../../components/to-do-store-list/to-do-store-listing';
 
+/*
+	Wrapper to map state to the to-do-store-listing component
+*/
+
+// Function to filter the stores based on title, name or type
 const getListing = (listing, listFilter) => {
   listFilter = listFilter.toLowerCase();
 
@@ -16,6 +21,7 @@ const getListing = (listing, listFilter) => {
   }
 }
 
+// Mapping the state to the properties of the component
 const mapStateToProps = (state) => {
   return {
     title:state.toDoStore.header.viewTitle,
@@ -26,6 +32,7 @@ const mapStateToProps = (state) => {
   }
 }
 
+// Mapping functions for the component
 const mapDispatchToProps = (dispatch) => {
   return {
     onCreateProfile: () => {
@@ -43,6 +50,7 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
+// Mapping properties and functions to the to-do-store-list component
 const ToDoStoreListingContainer = connect(
   mapStateToProps,
   mapDispatchToProps

@@ -9,7 +9,12 @@ import Globals from '../../globals';
 import ToDoStoreListingContainer from '../containers/to-do-store-list/to-do-store-listing-container';
 import ToDoStoreFormContainer from '../containers/to-do-store-form/to-do-store-form-container';
 
+/*
+	to-do-store-app manages "form" and "view" for the ToDoStores
+*/
+
 class ToDoStoreApp extends React.Component {
+	// Connect web socket and fetch the list of stores
 	componentDidMount(){
 		let props = this.props;
 		//Pace.restart();
@@ -17,6 +22,7 @@ class ToDoStoreApp extends React.Component {
 		connectWebSocket(function(){
 			props.fetchAllData();
 
+			// Looks like this isn't set elsewhere. Maybe a function to allow everything to be reset???
 			if(tempData.globals.resetToDoStore){
 				props.resetState();
 				tempData.globals.resetToDoStore = false;
@@ -24,10 +30,12 @@ class ToDoStoreApp extends React.Component {
 		});
 	}
 
+	// Disconnect web socket
 	componentWillUnmount(){
 		disconnectWebSocket();
 	}
 
+	// Emit HTML to the browser
 	render(){
 		return(
 		<div className="container-fluid" style={{marginTop:20}}>

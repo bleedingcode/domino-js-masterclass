@@ -2,6 +2,11 @@ import { connect } from 'react-redux';
 import { editProfile, deleteProfile, createProfile, filterList } from '../../to-do-actions';
 import ToDoListing from '../../components/to-do-list/to-do-listing';
 
+/*
+	Mapping state and actions to the to-do-listing component
+*/
+
+// Function to filter the view on all columns
 const getListing = (listing, listFilter) => {
   listFilter = listFilter.toLowerCase();
 
@@ -17,6 +22,7 @@ const getListing = (listing, listFilter) => {
   }
 }
 
+// Pass properties to the component from the state
 const mapStateToProps = (state) => {
   return {
     title:state.toDo.header.viewTitle,
@@ -27,6 +33,7 @@ const mapStateToProps = (state) => {
   }
 }
 
+// Mapping functions for the component
 const mapDispatchToProps = (dispatch) => {
   return {
     onCreateProfile: () => {
@@ -44,6 +51,7 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
+// Connecting properties and functions to the to-do-listing component
 const ToDoListingContainer = connect(
   mapStateToProps,
   mapDispatchToProps

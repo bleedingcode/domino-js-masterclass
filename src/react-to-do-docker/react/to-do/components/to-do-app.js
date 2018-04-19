@@ -9,11 +9,17 @@ import Globals from '../../globals';
 import ToDoListingContainer from '../containers/to-do-list/to-do-listing-container';
 import ToDoFormContainer from '../containers/to-do-form/to-do-form-container';
 
+/*
+	
+*/
+
 class ToDoApp extends React.Component {
+	// Triggered on opening a todo view
 	componentDidMount(){
 		let props = this.props;		
 		//Pace.restart();
 
+		// Connect websocket, fetch data for this "view" and reset state, as required
 		connectWebSocket(function(){
 			props.fetchAllData(props.app);
 
@@ -24,10 +30,12 @@ class ToDoApp extends React.Component {
 		});
 	}
 
+	// Disconnect web socket
 	componentWillUnmount(){
 		disconnectWebSocket();
 	}
 
+	// Emit HTML for this page
 	render(){
 		return(
       		<div className="container-fluid" style={{marginTop:20}}>

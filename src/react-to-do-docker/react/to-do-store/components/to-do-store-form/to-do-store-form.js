@@ -12,23 +12,33 @@ import TextField from 'material-ui/TextField';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 
+/*
+	Form for a ToDo Store (NSF containing ToDos)
+*/
+
 class ToDoStoreForm extends React.Component {
 	constructor(){
 		super();
 
+		// Load state from tempData.toDoStore
+		// toDoStore.activeEntry is the entry being created / edited
+		// toDoStore.activeEntry.custom is the customTemplate fields that get used for processing purposes, but are not stored into the database. So things like whether it's a new doc / saved doc / id etc get set depending on whether it's create or edit
 		this.state = {
 			entry:tempData.toDoStore.activeEntry,
 			type:tempData.toDoStore.activeEntry.data.type,
 			isNewDoc:tempData.toDoStore.activeEntry.custom.isNewDoc
 		};
 
+		// Bind the setType function to the component itself. Not sure why onChange function isn't bound though
 		this.setType = this.setType.bind(this);
 	}
 
+	// Change the type in the state. Should this be in a reducer?
 	setType(value){
 		this.setState({type:value});
 	}
 
+	// onChange event for each field
 	onChange(key, value){
 		switch(key){
 			case "inputTitle":
@@ -38,12 +48,14 @@ class ToDoStoreForm extends React.Component {
 				this.state.entry.data.name = value;
 				break;
 			case "inputType":
+				// inputType set on both the data and the top-level
 				this.state.entry.data.type = value;
 				this.setType(value);
 				break;
 		}
 	}
 
+	// Emit the HTML to the browser. Form's submit property is bound to onSubmitClick in to-do-store-form-container
 	render(){
 		return(
 			<form

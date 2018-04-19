@@ -27,10 +27,10 @@ import MainAppContainer from './containers/main-app-container'
 
 //Setup Reducers
 const indexReducerWrapper = combineReducers({
-  main,
-  toDo,
-  toDoStore,
-  landing
+	main,
+	toDo,
+	toDoStore,
+	landing
 });
 
 //Create Store with Middleware
@@ -45,8 +45,8 @@ Globals.dispatch = store.dispatch;
 
 //CHECKS FOR WHEN APP LOADS
 const initLogin = () => {
-  store.dispatch({type: actions.SIGN_OUT_USER});
-  store.dispatch({type: landingActions.INIT_HOME_PAGE});
+	store.dispatch({type: actions.SIGN_OUT_USER});
+	store.dispatch({type: landingActions.INIT_HOME_PAGE});
 }
 
 //Check if there are url parameters
@@ -54,32 +54,32 @@ var url = new URL(location.href);
 var params = getQueryParams(url.search);
 
 if(params.a){
-  //We need to perform an action
-  switch (params.a) {
-    case "r"://Registration Form
-      store.dispatch({type: "INIT_REGISTER_FORM", key:params.key});
+	//We need to perform an action
+	switch (params.a) {
+	case 'r'://Registration Form
+		store.dispatch({type: 'INIT_REGISTER_FORM', key:params.key});
 
-      break;
-    case "pr"://Password Reset
-    if(params.key){
-      store.dispatch({type: "INIT_RESET_FORM", key:params.key});
-    }else{
-      initLogin();
-    }
+		break;
+	case 'pr'://Password Reset
+		if(params.key){
+			store.dispatch({type: 'INIT_RESET_FORM', key:params.key});
+		}else{
+			initLogin();
+		}
 
-    break;      
-    default:
-      initLogin();
-  }
+		break;      
+	default:
+		initLogin();
+	}
 }else{
-  initLogin();
+	initLogin();
 }
 
 ReactDOM.render(
-  <Provider store={store}>
-    <MuiThemeProvider>
-      <MainAppContainer  />
-    </MuiThemeProvider>
-  </Provider>,
-  document.getElementById('react-main')
+	<Provider store={store}>
+		<MuiThemeProvider>
+			<MainAppContainer  />
+		</MuiThemeProvider>
+	</Provider>,
+	document.getElementById('react-main')
 )

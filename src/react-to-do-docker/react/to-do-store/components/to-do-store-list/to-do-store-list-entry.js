@@ -2,6 +2,10 @@ import React from 'react';
 import {TableRowColumn, TableRow} from 'material-ui/Table';
 import ActionDelete from 'material-ui/svg-icons/action/delete';
 
+/*
+	Component for HTML to emit for individual entry in the to-do-store-listing
+*/
+
 const ToDoStoreListEntry = ({ theme, title, name, type, replicaId, className, onEditProfile, onDeleteProfile, onDeleteConfirm }) => (
 	<TableRow
 		className={`list-entry ${className}`}
