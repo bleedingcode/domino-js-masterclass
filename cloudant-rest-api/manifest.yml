@@ -1,0 +1,7 @@
+applications:
+  - name: openntf-todo-cloudant-service
+    instances: 1
+    memory: 768M
+    disk_quota: 512M
+    path: target/openntf-todo-cloudant-service.jar
+    host: openntf-todo-cloudant-service

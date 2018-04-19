@@ -1,0 +1,30 @@
+server:
+  port: 8088
+
+logging:
+  level:
+    root: INFO
+    org:
+      springframework:
+        security: ERROR
+
+info:
+  app:
+    name: OpenNTF Cloudant Todo Service
+    version: 0.0.1-SNAPSHOT
+    description: OpenNTF Cloudant Todo Service
+
+spring:
+  application:
+    name: OpenNTF Cloudant Todo Service
+
+management:
+  server:
+    servlet:
+      context-path: /actuator
+
+cloudant:
+  url: https://dd8d5879-c2cf-4ef6-b5cc-ffd1be023f50-bluemix.cloudant.com/
+  username: dd8d5879-c2cf-4ef6-b5cc-ffd1be023f50-bluemix
+  password: f12122d6b55da9faf847da6efa48259adf5ee23c0665c3e9bb3a0d3bb9d7ec67
+  account: dd8d5879-c2cf-4ef6-b5cc-ffd1be023f50-bluemix:f12122d6b55da9faf847da6efa48259adf5ee23c0665c3e9bb3a0d3bb9d7ec67@dd8d5879-c2cf-4ef6-b5cc-ffd1be023f50-bluemix

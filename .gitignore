@@ -11,4 +11,29 @@ domino-rest-api/todo/buildNumber.properties
 domino-rest-api/todo/feature/buildNumber.properties
 domino-rest-api/todo/update/buildNumber.properties
 domino-rest-api/todo/plugin/buildNumber.properties
-8598.pdf
+
+
+cloudant-rest-api/target/
+!.mvn/wrapper/maven-wrapper.jar
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
