@@ -70,7 +70,8 @@ class HomeAnonymousSignIn extends React.Component {
 				{/* Header */}
 				<div className="col-xs-12">
 					<center>
-						<img src={globals.imgUrl + "/ibm-think-banner.jpg"} style={{ width: 400 }} />
+						{/*<img src={globals.imgUrl + "/ibm-think-banner.jpg"} style={{ width: 400 }} />*/}
+						<img src={globals.imgUrl + "/EngageLogo_Ani.gif"} style={{ width: 400 }} />
 						<h1>Welcome to the React To Do App Portal</h1>
 						<h3>Sign in below to access the Portal</h3>
 					</center>
