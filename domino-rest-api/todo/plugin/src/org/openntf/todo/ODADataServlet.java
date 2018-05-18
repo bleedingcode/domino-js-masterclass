@@ -91,7 +91,7 @@ public class ODADataServlet extends AbstractRestServlet {
 			response.addHeader("Access-Control-Allow-Headers", "Content-Type");
 			response.addHeader("Access-Control-Max-Age", "86400");
 			if (StringUtils.isNotEmpty(request.getHeader("X-TODO-API-KEY"))) {
-				// If X-TODO-APIP-KEY, use application-specific authentication regardless
+				// If X-TODO-API-KEY, use application-specific authentication regardless
 				IAuthenticationFactory factory = new ApplicationAuthenticationFactory();
 				if (!factory.isAuthenticated(request)) {
 					response.sendError(401); // Not Authenticated, abort immediately
