@@ -12,9 +12,9 @@ let deployment = {
 		imgUrl: protocol + '//' + hostName + ':' + port + '/public/images'
 	},
 	local: {
-		apiUrl: 'http//192.168.99.100:30010',
-		nodeRedUrl: 'http//192.168.99.100:30011',
-		wsUrl: protocol + '//' + hostName + ':6021',
+		apiUrl: 'http://52.168.50.173:30010',
+		nodeRedUrl: 'http://localhost:6011',
+		wsUrl: 'http://13.82.84.108:30021',
 		imgUrl: protocol + '//' + hostName + ':' + port + '/public/images'
 	},
 	azure: {
@@ -46,7 +46,7 @@ const globals = {
 	apiUrl: deployment[deployment.deployType].apiUrl,
 	imgUrl: deployment[deployment.deployType].imgUrl,
 	nodeRedUrl: deployment[deployment.deployType].nodeRedUrl,
-	wsUrl: deployment[deployment.deployType].wsUrl
+	wsUrl: deployment[deployment.deployType].wsUrl,
 	deployType: deployment.deployType,
 	ws: null,
 	dispatch: null,
