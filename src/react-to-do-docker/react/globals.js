@@ -20,7 +20,7 @@ let deployment = {
 	azure: {
 		apiUrl: protocol + '//' + hostName + ':30010',
 		nodeRedUrl: protocol + '//' + hostName + ':30011',
-		wsUrl: 'http://13.82.84.108:30021',
+		wsUrl:"http://168.61.34.205:30021",
 		imgUrl: protocol + '//' + hostName + ':' + port + '/public/images'
 	}
 };
