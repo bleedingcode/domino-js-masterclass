@@ -62,7 +62,7 @@ const initEvents = function(io){
                     ToDo.updateRecord("to-do-requests", data, function(result){
                         IOServer.sockets.sockets[data.socketId].emit("to-do-response", result);
                     });
-                    break;                                       
+					break;
             }
         });        
     }); 

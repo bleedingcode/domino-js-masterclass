@@ -37,7 +37,7 @@ const toDo = (state = toDoState, action) => {
           ...state.header,
           facet:'form'
         }
-      })
+	  })
     case actions.DELETE_DOCUMENT:
       var tmpIndex = state.data.findIndex(t => t._id === action.id);
       var tmpArray = state.data.concat();

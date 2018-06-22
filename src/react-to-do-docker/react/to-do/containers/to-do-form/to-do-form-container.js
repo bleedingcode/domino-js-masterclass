@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { confirmCancel, validateSubmit } from '../../to-do-logic';
+import { confirmCancel, validateSubmit, markComplete } from '../../to-do-logic';
 import ToDoForm from '../../components/to-do-form/to-do-form';
 
 /*
@@ -23,7 +23,10 @@ const mapDispatchToProps = (dispatch) => {
     },
     onSubmitClick: (state) => {
       validateSubmit(dispatch, state)
-    }
+	},
+	onCompleteClick: (state) => {
+	  markComplete(dispatch, state)
+	}
   }
 }
 

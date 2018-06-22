@@ -18,7 +18,7 @@ export const actions = {
 	FETCH_ALL_DATA: 'FETCH_ALL_TODO_DATA',
 	UPDATE_DATA: 'UPDATE_TODO_DATA',
 	UPDATE_UI_DATA: 'UPDATE_TODO_UI_DATA',
-	RESET_LOADING: 'RESET_TODO_LOADING'
+	RESET_LOADING: 'RESET_TODO_LOADING',
 }
 
 /*
@@ -76,6 +76,54 @@ export const updateUIData = (data) => {
 	return {
 		type: actions.UPDATE_UI_DATA,
 		data
+	}
+}
+
+export const markCompleteReopen = (state, isComplete) => {
+	return dispatch => {
+		let tempArray = state.data.concat();
+		let tempIndex = 0;
+		let activeEntry = tempData.toDo.activeEntry;
+		var entry = {};
+		var reqType = 8;
+
+		// Call submitProfile, which will also update the state. Ideally, Mark Complete / ReOpen should only be available in read only mode
+		dispatch(submitProfile(state));
+
+		// Status will be changed on backend
+		if (isComplete) {
+			activeEntry.data.status = "Complete";
+			reqType = "8";
+		} else {
+			activeEntry.data.status = "Active";
+			reqType = "9";
+		}
+		
+		//Update Entry in State
+		tempIndex = tempArray.findIndex(t => t._id === activeEntry._id);
+		tempArray[tempIndex] = activeEntry;
+
+		//Add Entry to queue, or update existing entry in queue
+		tempIndex = tempData.toDo.data.findIndex(t => t._id === activeEntry._id);
+
+		if (tempIndex > -1) {
+			//Update the existing entry
+			tempData.toDo.data[tempIndex] = activeEntry;
+		} else {
+			//Add Entry to queue
+			tempData.toDo.data.push(JSON.parse(JSON.stringify(activeEntry)));
+		}
+
+		let params = {
+			reqType: reqType,
+			socketId: Globals.user.socketId,
+			username: Globals.user.username,
+			password: Globals.user.password,
+			record: JSON.parse(JSON.stringify(activeEntry))
+		};
+
+		Globals.ws.emit('to-do-requests', params);
+		
 	}
 }
 

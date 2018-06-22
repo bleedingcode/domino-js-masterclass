@@ -7,6 +7,7 @@ import {Card, CardActions, CardText} from 'material-ui/Card';
 import FlatButton from 'material-ui/FlatButton';
 import ActionDone from 'material-ui/svg-icons/action/done';
 import ContentClear from 'material-ui/svg-icons/content/clear';
+import ActionThumbUp from 'material-ui/svg-icons/action/thumb-up';
 import AppBar from 'material-ui/AppBar';
 import Checkbox from 'material-ui/Checkbox';
 import TextField from 'material-ui/TextField';
@@ -172,6 +173,17 @@ class ToDoForm extends React.Component {
 									onTouchTap={e => {
 										e.preventDefault()
 										this.props.onCancelClick()
+									}}
+								/>
+								<FlatButton
+									icon={<ActionThumbUp />}
+									label="Mark Complete"
+									secondary={true}
+									style={{color:this.props.theme.warningColor}}
+									onTouchTap={e => {
+										e.preventDefault()
+										console.log(this.props.state)
+										this.props.onCompleteClick(this.props.state)
 									}}
 								/>
 							</div>

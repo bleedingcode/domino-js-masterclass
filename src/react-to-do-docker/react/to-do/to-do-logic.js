@@ -2,7 +2,7 @@ import IOClient from 'socket.io-client';
 import _ from 'lodash';
 import { processWSResponse } from './to-do-actions';
 
-import { cancelProfile, submitProfile } from './to-do-actions';
+import { cancelProfile, submitProfile, markCompleteReopen } from './to-do-actions';
 import { postPendingData } from '../core/core-logic';
 import tempData from '../temp-data-store/temp-data';
 import Globals from '../globals';
@@ -36,6 +36,16 @@ export const disconnectWebSocket = () => {
 	return true;
 }
 
+export const markComplete = (dispatch, state) => {
+	let entry;
+	entry = tempData.toDo.activeEntry.data;
+
+	if (_validate(entry)) {
+		dispatch(markCompleteReopen(state, true));
+	}
+	return true;
+}
+
 // Cancel editing of a document
 export const confirmCancel = (dispatch) => {
 	dispatch(cancelProfile());
@@ -44,15 +54,21 @@ export const confirmCancel = (dispatch) => {
 
 // Validate Form before submitting
 export const validateSubmit = (dispatch, state) => {
+	let entry;
+	entry = tempData.toDo.activeEntry.data;
+	
+	if (_validate(entry)) {
+		dispatch(submitProfile(state));
+	}
+	return true;
+}
+
+const _validate = (entry) => {
 	let result = true;
-	let result2 = true;
 	let htmlContent = "";
 	let htmlStart = "<div><ul>"
 	let htmlEnd = "</ul></div>"
 	let html = "";
-	let entry;
-
-	entry = tempData.toDo.activeEntry.data;
 
 	//Validate Fields
 	if (entry.taskName === "") {
@@ -82,9 +98,10 @@ export const validateSubmit = (dispatch, state) => {
 
 	if (result) {
 		tmpDiv.innerHTML = "";
-		dispatch(submitProfile(state));
 	} else {
 		html = htmlStart + htmlContent + htmlEnd;
 		tmpDiv.innerHTML = html;
 	}
+
+	return result;
 }
