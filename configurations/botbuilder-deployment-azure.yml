@@ -1,0 +1,22 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: botbuilder-deployment
+spec:
+  selector:
+    matchLabels:
+      app: botbuilder-docker
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: botbuilder-docker
+        version: v105
+    spec:
+      containers:
+      - name: botbuilder-105
+        image: acragilitedemo.azurecr.io/botbuilder-docker:v1.0.5
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: botbuilder-port
+          containerPort: 6022

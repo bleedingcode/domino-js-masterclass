@@ -53,3 +53,4 @@ configurations/cert-manager-wstodo-agilite-io-prod-azure.yml
 cert-manager-todo-agilite-io-staging-azure.yml
 cert-manager-ws-agilite-io-prod-azure.yml
 package-lock.json
+cert-manager-botbuilder-agilite-io-prod-azure.yml
