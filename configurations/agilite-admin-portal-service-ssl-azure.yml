@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: agilite-admin-service
+spec:
+  ports:
+  - port: 30013
+    targetPort: a-admin-port
+    protocol: TCP
+  selector:
+    app: agilite-admin-portal

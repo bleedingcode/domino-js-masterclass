@@ -18,9 +18,9 @@ let deployment = {
 		imgUrl: protocol + '//' + hostName + ':' + port + '/public/images'
 	},
 	azure: {
-		apiUrl: protocol + '//' + hostName + ':30010',
-		nodeRedUrl: protocol + '//' + hostName + ':30011',
-		wsUrl:"http://168.61.34.205:30021",
+		apiUrl: 'https://apidemo.agilite.io',
+		nodeRedUrl: 'https://nodereddemo.agilite.io',
+		wsUrl:'https://wsdemo.agilite.io',
 		imgUrl: protocol + '//' + hostName + ':' + port + '/public/images'
 	}
 };
@@ -41,28 +41,8 @@ const globals = {
 	userList: [],
 	storeList: [],
 	title: 'React To Do Portal',
-	version: '0.0.5',
-	releaseDate: '16th March 2018',
-	apiUrl: deployment[deployment.deployType].apiUrl,
-	imgUrl: deployment[deployment.deployType].imgUrl,
-	nodeRedUrl: deployment[deployment.deployType].nodeRedUrl,
-	wsUrl: deployment[deployment.deployType].wsUrl,
-	deployType: deployment.deployType,
-	ws: null,
-	dispatch: null,
-	tempCallback: null,
-	user: {
-		socketId: '',
-		username: '',
-		password: '',
-		commonName: ''
-	},
-	appKey: 'home',
-	userList: [],
-	storeList: [],
-	title: 'React To Do Portal',
-	version: '0.0.5',
-	releaseDate: '16th March 2018',
+	version: '0.0.7',
+	releaseDate: '18th July 2018',
 	apiUrl: deployment[deployment.deployType].apiUrl,
 	imgUrl: deployment[deployment.deployType].imgUrl,
 	nodeRedUrl: deployment[deployment.deployType].nodeRedUrl,

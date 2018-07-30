@@ -11,11 +11,11 @@ spec:
     metadata:
       labels:
         app: react-to-do-docker
-        version: v005-1
+        version: v007
     spec:
       containers:
-      - name: todo-005-1
-        image: acragilitedemo.azurecr.io/react-to-do-docker:v0.0.5-1
+      - name: todo-007
+        image: acragilitedemo.azurecr.io/react-to-do-docker:v0.0.7
         imagePullPolicy: IfNotPresent
         ports:
         - name: todo-port
