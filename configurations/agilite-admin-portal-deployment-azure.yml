@@ -11,11 +11,11 @@ spec:
     metadata:
       labels:
         app: agilite-admin-portal
-        version: v541
+        version: v542
     spec:
       containers:
-      - name: agilite-admin-portal-541
-        image: acragilitedemo.azurecr.io/agilite-admin-portal-docker:v5.4.1
+      - name: agilite-admin-portal-542
+        image: acragilitedemo.azurecr.io/agilite-admin-portal-docker:v5.4.2
         imagePullPolicy: IfNotPresent
         ports:
         - name: a-admin-port
