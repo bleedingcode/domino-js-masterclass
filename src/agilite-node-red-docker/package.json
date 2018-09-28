@@ -1,7 +1,7 @@
 {
   "name": "agilite-node-red-docker",
   "private": false,
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Agilit-e Node-RED Docker",
   "main": "app.js",
   "scripts": {
@@ -11,16 +11,18 @@
   "license": "Apache-2.0",
   "repository": {},
   "engines": {
-    "node": ">=4"
+    "node": "8.9.1"
   },
   "dependencies": {
-    "axios": "0.17.1",
-    "express": "4.16.2",
-    "node-red": "0.18.2",
-    "node-red-contrib-agilite": "5.4.2",
-    "node-red-contrib-agilite-utils": "5.4.1",
+    "axios": "0.18.0",
+    "compression": "1.7.3",
+    "dotenv": "6.0.0",
+    "express": "4.16.3",
+    "node-red": "0.19.1",
+    "node-red-contrib-agilite": "5.4.6",
+    "node-red-contrib-agilite-utils": "5.4.2",
     "node-red-contrib-fullsplitter": "0.0.2",
     "node-red-contrib-globalgetset": "2.0.3",
-    "node-red-contrib-mssql": "0.0.7"
+    "when": "3.7.8"
   }
 }
