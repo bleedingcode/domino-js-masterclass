@@ -11,11 +11,11 @@ spec:
     metadata:
       labels:
         app: agilite-api-server
-        version: v542
+        version: v543-1
     spec:
       containers:
-      - name: agilite-api-server-542
-        image: acragilitedemo.azurecr.io/agilite-api-server-docker:v5.4.2
+      - name: agilite-api-server-543-1
+        image: acragilitedemo.azurecr.io/agilite-api-server-docker:v5.4.3-1
         imagePullPolicy: IfNotPresent
         ports:
         - name: a-api-port

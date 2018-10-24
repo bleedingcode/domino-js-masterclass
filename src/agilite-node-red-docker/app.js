@@ -19,12 +19,12 @@ var settings = {
           title: "Node-RED (Agilit-e)"
       },
       header:{
-        title:"Node-RED (Agilite-e)"
+        title:"Node-RED (Agilit-e)"
       }
     },
     editorTheme:{
       projects:{
-        enabled:true
+        enabled:false
       }
     },
     flowFilePretty: true

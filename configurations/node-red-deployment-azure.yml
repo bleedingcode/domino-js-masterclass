@@ -11,11 +11,11 @@ spec:
     metadata:
       labels:
         app: agilite-node-red-docker
-        version: v007
+        version: v009
     spec:
       containers:
-      - name: anrd-007
-        image: acragilitedemo.azurecr.io/agilite-node-red-docker:v0.0.7
+      - name: anrd-009
+        image: acragilitedemo.azurecr.io/agilite-node-red-docker:v0.0.9
         imagePullPolicy: IfNotPresent
         ports:
         - name: anrd-port
